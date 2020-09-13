@@ -1,0 +1,368 @@
+<html>
+<head>
+<title>
+Compiler Construction with Java
+</title>
+<meta name="keywords"
+content="tools, documentation, download">
+<meta name="description"
+content="Freeware and Commercial Resources for Compiler Writers">
+</head>
+<body>
+<body bgcolor="white">
+<table>
+
+<table cellpadding=20>
+
+<tr>
+
+<td valiagn=top>
+<img src="modern.gif">
+</td>
+
+<td valign=top>
+<font face="helvetica" size="-1">
+<a href="index.html">THE CATALOG OF COMPILER CONSTRUCTION TOOLS</a><br>
+</font>
+<h1>
+<font color="red">Compiler Construction with Java</font>
+</h1>
+</td>
+
+</tr>
+
+
+<tr>
+<td valign=top>
+<font face="helvetica" size="-1">
+
+<a href="kits.html">Compiler<br>Construction<br>Kits</a><p>
+<a href="lexparse.html">Lexer and Parser<br>Generators</a><p>
+<a href="trafo.html">Trees and<br>Transformation</a><p>
+<a href="attribute.html">Attribute Grammar<br>Systems</a><p>
+<a href="backend.html">Backend<br>Generators</a><p>
+<a href="optim.html">Program Analysis<br>and Optimisation</a><p>
+<a href="env.html">Environment<br>Generators<p>
+<a href="infra.html">Tools, Frameworks,<br>Infrastructure</a><p>
+<a href="java.html">Compiler<br>Construction<br>with Java</a>
+</font>
+
+</td>
+<td valign=top>
+<dl>
+<dt>
+<font color="red" size=4>
+<b>ANTLR</b>
+</font>
+</dt>
+<dd>
+<p>
+ANTLR 2.xx is a completely redesigned version, which has been reimplemented
+in Java and generates Java.
+ANTLR 2.xx embodies all three
+previous tools of PCCTS, generalizing the notion of scanning, parsing, and tree walking into the simple notion
+of applying grammatical structure to an input stream--whether it be a stream of characters, tokens, or tree
+nodes.
+<p>
+<a href="../www.antlr.org/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>BYACC/JAVA</b>
+</font>
+</dt>
+<dd>
+<p>
+BYACC/Java is an extension of the Berkeley v 1.8 YACC-compatible
+parser generator
+A "-j" flag has been added
+which will cause BYACC to generate Java source code, instead.
+<p>
+<a href="../byaccj.sourceforge.net/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>COCO/JAVA</b>
+</font>
+</dt>
+<dd>
+<p>
+The Java version of CoCo, a scanner and parser generator.
+<p>
+<a href="http://www.ssw.uni-linz.ac.at/Projects/Coco/Coco.html#Java">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>CUP</b>
+</font>
+</dt>
+<dd>
+<p>
+An LALR parser generator for Java.
+<p>
+<a href="http://www.cs.princeton.edu/~appel/modern/java/CUP/why.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>GENERIC INTERPRETER</b>
+</font>
+</dt>
+<dd>
+<p>
+Produces standalone or embedded interpreters and compilers written in Java.
+A Language is specified on the fly, and source streams written in the
+language can be interpreted at any time, even as the language evolves.
+Supports LL(1), LR(0), SLR(1) and LR(1).
+<p>
+<a href="http://www.csupomona.edu/~carich/gi/">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JACCIE</b>
+</font>
+</dt>
+<dd>
+<p>
+Jaccie is an educational tool for visualizing compiling techniques. 
+It consists of scanner/parser generators. 
+Users can choose between 
+LL(1), LR(0), SLR(1), LALR(1), and LR(1) parser generators. 
+<p>
+<a href="http://www2-data.informatik.unibw-muenchen.de/Research/Tools/JACCIE">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JAVACC</b>
+</font>
+</dt>
+<dd>
+<p>
+Java Compiler Compiler, Sun's parser generator
+that produces parsers in Java from grammar
+specifications written in a LEX/YACC-like manner.
+Completely written in Java.
+Top-down parsing (recursive descent) with variable lookahead.
+<p>
+<a href="http://javacc.dev.java.net">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JAX</b>
+</font>
+</dt>
+<dd>
+<p>
+Jax is a java lex compiler that generates scanners from regular expressions
+embedded in a skeleton java file.
+Jax is not [f]lex, and in particular,
+does not permit defining macros or context dependent expression matching.
+<p>
+<a href="http://linux4u.jinr.ru/usoft/WWW/www_blackdown.org/kbs/jax.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JAY</b>
+</font>
+</dt>
+<dd>
+<p>
+A version of BSD Yacc that generates Java code.
+<p>
+<a href="../www.informatik.uni-osnabrueck.de/alumni/bernd/jay/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JB</b>
+</font>
+</dt>
+<dd>
+<p>
+The jb system takes parsers generated using the Gnu Bison parser generator
+system and translates them to execute in Java (tm). Jb takes the C file
+output by Bison and scans it to extract the parse tables and constants. Jb
+then scans various template files specified by the user and inserts the
+extracted information at specified points in the templates.
+Jb provides two methods of generating corresponding lexers.
+(1) the jb system can also take lexers generated using the
+Gnu flex generator and translate them to execute in Java.
+(2) A generic ad-hoc lexer that can be modified to produce
+lexers for typical programming languages.
+<p>
+<a href="http://www.cs.colorado.edu/serl/misc/jb.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JELL</b>
+</font>
+</dt>
+<dd>
+<p>
+Jell is a parser generator that generates recursive descent
+parsers from LL(1) grammars. You can also embed extra directives
+to get past any of that tricky non LL(1) stuff.
+<p>
+<a href="http://linux4u.jinr.ru/usoft/WWW/www_blackdown.org/kbs/jell.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JFLEX</b>
+</font>
+</dt>
+<dd>
+<p>
+JFlex is a lexical analyzer generator for Java with 
+full Unicode support and builtin support for the CUP parser generator.
+<p>
+<a href="../www.jflex.de/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JLEX</b>
+</font>
+</dt>
+<dd>
+<p>
+JLex is a lexical analyzer generator, that can be used in combination with CUP.
+<p>
+<a href="http://www.cs.princeton.edu/~appel/modern/java/JLex/">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>JTB</b>
+</font>
+</dt>
+<dd>
+<p>
+The Java Tree Builder is to be used with the JavaCC parser generator.
+It takes a plain JavaCC grammar file as input
+and automatically generates the following:  
+a set of syntax tree classes based on the productions in the grammar,
+utilizing the Visitor design pattern; 
+a Visitor superclass whose default methods simply visit the children of the 
+current node; 
+a JavaCC grammar with the proper annotations to build the syntax tree 
+during parsing.
+<p>
+<a href="../compilers.cs.ucla.edu/jtb/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>LOLO</b>
+</font>
+</dt>
+<dd>
+<p>
+lolo extracts symbols from a sequence of input characters belonging
+to the ASCII or Unicode sets. lolo scanners can be extended without
+access to the source code: symbol recognizers can be derived by
+inheritance and an executing scanner can be reconfigured for
+different contexts. Recognizer actions are represented by objects
+which may be replaced at any time. Recognizers need not be based
+on finite state automata; therefore, lolo can recognize
+symbols that systems like lex cannot recognize directly. 
+<p>
+<a href="../luna2.informatik.uni-osnabrueck.de/alumni/bernd/lolo/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>OOPS</b>
+</font>
+</dt>
+<dd>
+<p>
+Oops is an object-oriented parser generator implemented in Java.
+Oops takes a grammar written in EBNF, checks that it is indeed LL(1),
+i.e., suitable for recursive descent parsing,
+and produces a parser as a set of serialized objects.
+<p>
+<a href="../luna2.informatik.uni-osnabrueck.de/alumni/bernd/oops/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>PAT</b>
+</font>
+</dt>
+<dd>
+<p>
+Package COM.stevesoft.pat enables a java application or applet
+to compile and use perl5 regular expressions.
+It also does text substitutions.
+The package works by converting the regular expression
+into a singly-linked list of Pattern objects,
+each of which knows how to match its own piece of text.
+Because of this, it is possible for you to extend the
+pattern matching capability of this package by
+making your own classes from Pattern. 
+<p>
+<a href="http://www.javaregex.com/">MORE ...</a>
+<hr>
+<p>
+</dd>
+<dt>
+<font color="red" size=4>
+<b>SABLE CC</b>
+</font>
+</dt>
+<dd>
+<p>
+SableCC is an object-oriented framework that generates compilers
+(and interpreters) in the Java programming language.
+It uses object-oriented techniques to automatically build a strictly
+typed abstract syntax tree that matches the grammar of the compiled language
+and simplifies debugging.
+It generates tree-walker classes using an extended version
+of the visitor design pattern which enables the implementation
+of actions on the nodes of the abstract syntax tree using inheritance.
+<p>
+<a href="../www.sablecc.org/index.html">MORE ...</a>
+<hr>
+<p>
+</dd>
+</dl>
+<br>
+<br>
+<br>
+<font size="-1" face="helvetica">
+COPYRIGHT &copy; 1996-2006<br>
+<a href="http://www.first.fhg.de/en/generative">
+GERMAN NATIONAL RESEARCH CENTER FOR INFORMATION TECHNOLOGY<br>
+FRAUNHOFER INSTITUTE FOR COMPUTER ARCHITECTURE AND SOFTWARE TECHNOLOGY<br>
+</a>
+</font>
+</td>
+</tr>
+</table>
+</body>
+</html>

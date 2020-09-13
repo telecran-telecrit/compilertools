@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - Conditions for Using Bison</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_1.html">previous</A>, <A HREF="bison_3.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC2" HREF="index.html#SEC2">Conditions for Using Bison</A></H1>
+
+<P>
+As of Bison version 1.24, we have changed the distribution terms for
+<CODE>yyparse</CODE> to permit using Bison's output in non-free programs.
+Formerly, Bison parsers could be used only in programs that were free
+software.
+
+</P>
+<P>
+The other GNU programming tools, such as the GNU C compiler, have never
+had such a requirement.  They could always be used for non-free
+software.  The reason Bison was different was not due to a special
+policy decision; it resulted from applying the usual General Public
+License to all of the Bison source code.
+
+</P>
+<P>
+The output of the Bison utility--the Bison parser file--contains a
+verbatim copy of a sizable piece of Bison, which is the code for the
+<CODE>yyparse</CODE> function.  (The actions from your grammar are inserted
+into this function at one point, but the rest of the function is not
+changed.)  When we applied the GPL terms to the code for <CODE>yyparse</CODE>,
+the effect was to restrict the use of Bison output to free software.
+
+</P>
+<P>
+We didn't change the terms because of sympathy for people who want to
+make software proprietary.  <STRONG>Software should be free.</STRONG>  But we
+concluded that limiting Bison's use to free software was doing little to
+encourage people to make other software free.  So we decided to make the
+practical conditions for using Bison match the practical conditions for
+using the other GNU tools.
+
+</P>
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_1.html">previous</A>, <A HREF="bison_3.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

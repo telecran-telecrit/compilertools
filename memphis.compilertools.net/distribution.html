@@ -1,0 +1,110 @@
+<HTML>
+
+<head>
+<title>The MEMPHIS Tree Builder & Tree Walker Tool: Distribution</title>
+
+<META name="keywords"
+content="C/C++, abstract syntax, trees, tree builder, tree walker,
+pattern matching, compiler construction, language translation">
+
+<META name="description"
+content="Download the Memphis Tree Builder & Tree Walker Tool">
+
+</head>
+<body bgcolor="#f9c674">
+
+<TABLE cellspacing=20>
+
+<TR>
+
+<TD>
+<img src="croco.gif">
+</TD>
+
+<TD valign=top align=left>
+<a href="index.html">The Memphis Tree Builder & Tree Walker Tool</a>
+<H1>
+Distribution
+</H1>
+</TD>
+
+</TR>
+
+<TR>
+
+<!-- MENU -->
+<TD valign=top align=center>
+<font face="helvetica">
+<A HREF="index.html">Memphis</A>
+<br>
+<A HREF="examples.html">Examples</A>
+<br>
+<A HREF="manuals.html">Manuals</A>
+<br>
+Distribution
+</font>
+<p>
+</TD>
+
+<!-- MAINPART -->
+<TD>
+Memphis is freely available
+for noncommercial usage.
+<p>
+Memphis is distributed as platform independent C code.
+The installation files are currently prepared for Unix.
+
+<h3>Download</h3>
+<img src="diskdown.gif" border=0>&nbsp;&nbsp;&nbsp;
+<a href="http://memphis.compilertools.net/memphis-1.9.tar.gz">
+<font face="helvetica" size="+3"><b>memphis-1.9.tar.gz</b></font>
+</a>
+<h3>Unpacking</h3>
+To unpack the distribution type
+<pre>
+   gunzip memphis-1.9.tar.gz
+   tar -xvf memphis-1.9.tar
+</pre>
+This creates a directory <tt>memphis</tt> with the following subdirectories
+<ul>
+<li><tt>memphis</tt><br>
+The C code of the Memphis precompiler
+<li><tt>mrts</tt><br>
+Contains a simple module to be linked with Memphis programs
+<li><tt>examples</tt><br>
+Some small examples
+<li><tt>doc</tt><br>
+The documentation
+</ul>
+<h3>Installation</h3>
+To install the Memphis precompiler go to directory <tt>memphis</tt>
+and type
+<pre>
+   build
+</pre>
+You also need a small library function that has to be linked
+to your Memphis programs.
+To provide this go to directory <tt>mrts</tt>
+and type
+<pre>
+   build
+</pre>
+<h3>Test</h3>
+To test your installation go to directory <tt>examples/trees</tt>
+and type
+<pre>
+   build
+</pre>
+<p>
+<h3>Support</h3>
+Please send questions and bug reports to
+<a href="mailto:f.w.schroeer@first.fraunhofer.de">f.w.schroeer@first.fraunhofer.de</a>.
+</TD>
+</TR>
+
+<!-- END MAINPART -->
+
+</TABLE>
+
+</body>
+</html>

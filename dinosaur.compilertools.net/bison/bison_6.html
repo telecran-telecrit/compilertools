@@ -1,0 +1,1404 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - Bison Grammar Files</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_5.html">previous</A>, <A HREF="bison_7.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC34" HREF="index.html#SEC34">Bison Grammar Files</A></H1>
+
+<P>
+Bison takes as input a context-free grammar specification and produces a
+C-language function that recognizes correct instances of the grammar.
+
+</P>
+<P>
+The Bison grammar input file conventionally has a name ending in <SAMP>`.y'</SAMP>.
+
+</P>
+
+
+
+<H2><A NAME="SEC35" HREF="index.html#SEC35">Outline of a Bison Grammar</A></H2>
+
+<P>
+A Bison grammar file has four main sections, shown here with the
+appropriate delimiters:
+
+</P>
+
+<PRE>
+%{
+<VAR>C declarations</VAR>
+%}
+
+<VAR>Bison declarations</VAR>
+
+%%
+<VAR>Grammar rules</VAR>
+%%
+
+<VAR>Additional C code</VAR>
+</PRE>
+
+<P>
+Comments enclosed in <SAMP>`/* ... */'</SAMP> may appear in any of the sections.
+
+</P>
+
+
+
+<H3><A NAME="SEC36" HREF="index.html#SEC36">The C Declarations Section</A></H3>
+<P>
+<A NAME="IDX50"></A>
+<A NAME="IDX51"></A>
+
+</P>
+<P>
+The <VAR>C declarations</VAR> section contains macro definitions and
+declarations of functions and variables that are used in the actions in the
+grammar rules.  These are copied to the beginning of the parser file so
+that they precede the definition of <CODE>yyparse</CODE>.  You can use
+<SAMP>`#include'</SAMP> to get the declarations from a header file.  If you don't
+need any C declarations, you may omit the <SAMP>`%{'</SAMP> and <SAMP>`%}'</SAMP>
+delimiters that bracket this section.
+
+</P>
+
+
+<H3><A NAME="SEC37" HREF="index.html#SEC37">The Bison Declarations Section</A></H3>
+<P>
+<A NAME="IDX52"></A>
+<A NAME="IDX53"></A>
+
+</P>
+<P>
+The <VAR>Bison declarations</VAR> section contains declarations that define
+terminal and nonterminal symbols, specify precedence, and so on.
+In some simple grammars you may not need any declarations.
+See section <A HREF="bison_6.html#SEC49">Bison Declarations</A>.
+
+</P>
+
+
+<H3><A NAME="SEC38" HREF="index.html#SEC38">The Grammar Rules Section</A></H3>
+<P>
+<A NAME="IDX54"></A>
+<A NAME="IDX55"></A>
+
+</P>
+<P>
+The <STRONG>grammar rules</STRONG> section contains one or more Bison grammar
+rules, and nothing else.  See section <A HREF="bison_6.html#SEC41">Syntax of Grammar Rules</A>.
+
+</P>
+<P>
+There must always be at least one grammar rule, and the first
+<SAMP>`%%'</SAMP> (which precedes the grammar rules) may never be omitted even
+if it is the first thing in the file.
+
+</P>
+
+
+<H3><A NAME="SEC39" HREF="index.html#SEC39">The Additional C Code Section</A></H3>
+<P>
+<A NAME="IDX56"></A>
+<A NAME="IDX57"></A>
+
+</P>
+<P>
+The <VAR>additional C code</VAR> section is copied verbatim to the end of
+the parser file, just as the <VAR>C declarations</VAR> section is copied to
+the beginning.  This is the most convenient place to put anything
+that you want to have in the parser file but which need not come before
+the definition of <CODE>yyparse</CODE>.  For example, the definitions of
+<CODE>yylex</CODE> and <CODE>yyerror</CODE> often go here.  See section <A HREF="bison_7.html#SEC59">Parser C-Language Interface</A>.
+
+</P>
+<P>
+If the last section is empty, you may omit the <SAMP>`%%'</SAMP> that separates it
+from the grammar rules.
+
+</P>
+<P>
+The Bison parser itself contains many static variables whose names start
+with <SAMP>`yy'</SAMP> and many macros whose names start with <SAMP>`YY'</SAMP>.  It is a
+good idea to avoid using any such names (except those documented in this
+manual) in the additional C code section of the grammar file.
+
+</P>
+
+
+<H2><A NAME="SEC40" HREF="index.html#SEC40">Symbols, Terminal and Nonterminal</A></H2>
+<P>
+<A NAME="IDX58"></A>
+<A NAME="IDX59"></A>
+<A NAME="IDX60"></A>
+<A NAME="IDX61"></A>
+
+</P>
+<P>
+<STRONG>Symbols</STRONG> in Bison grammars represent the grammatical classifications
+of the language.
+
+</P>
+<P>
+A <STRONG>terminal symbol</STRONG> (also known as a <STRONG>token type</STRONG>) represents a
+class of syntactically equivalent tokens.  You use the symbol in grammar
+rules to mean that a token in that class is allowed.  The symbol is
+represented in the Bison parser by a numeric code, and the <CODE>yylex</CODE>
+function returns a token type code to indicate what kind of token has been
+read.  You don't need to know what the code value is; you can use the
+symbol to stand for it.
+
+</P>
+<P>
+A <STRONG>nonterminal symbol</STRONG> stands for a class of syntactically equivalent
+groupings.  The symbol name is used in writing grammar rules.  By convention,
+it should be all lower case.
+
+</P>
+<P>
+Symbol names can contain letters, digits (not at the beginning),
+underscores and periods.  Periods make sense only in nonterminals.
+
+</P>
+<P>
+There are three ways of writing terminal symbols in the grammar:
+
+</P>
+
+<UL>
+<LI>
+
+A <STRONG>named token type</STRONG> is written with an identifier, like an
+identifier in C.  By convention, it should be all upper case.  Each
+such name must be defined with a Bison declaration such as
+<CODE>%token</CODE>.  See section <A HREF="bison_6.html#SEC50">Token Type Names</A>.
+
+<LI>
+
+<A NAME="IDX62"></A>
+<A NAME="IDX63"></A>
+<A NAME="IDX64"></A>
+A <STRONG>character token type</STRONG> (or <STRONG>literal character token</STRONG>) is
+written in the grammar using the same syntax used in C for character
+constants; for example, <CODE>'+'</CODE> is a character token type.  A
+character token type doesn't need to be declared unless you need to
+specify its semantic value data type (see section <A HREF="bison_6.html#SEC44">Data Types of Semantic Values</A>), associativity, or precedence (see section <A HREF="bison_8.html#SEC71">Operator Precedence</A>).
+
+By convention, a character token type is used only to represent a
+token that consists of that particular character.  Thus, the token
+type <CODE>'+'</CODE> is used to represent the character <SAMP>`+'</SAMP> as a
+token.  Nothing enforces this convention, but if you depart from it,
+your program will confuse other readers.
+
+All the usual escape sequences used in character literals in C can be
+used in Bison as well, but you must not use the null character as a
+character literal because its ASCII code, zero, is the code <CODE>yylex</CODE>
+returns for end-of-input (see section <A HREF="bison_7.html#SEC62">Calling Convention for <CODE>yylex</CODE></A>).
+
+<LI>
+
+<A NAME="IDX65"></A>
+<A NAME="IDX66"></A>
+<A NAME="IDX67"></A>
+A <STRONG>literal string token</STRONG> is written like a C string constant; for
+example, <CODE>"&#60;="</CODE> is a literal string token.  A literal string token
+doesn't need to be declared unless you need to specify its semantic
+value data type (see section <A HREF="bison_6.html#SEC44">Data Types of Semantic Values</A>), associativity, precedence
+(see section <A HREF="bison_8.html#SEC71">Operator Precedence</A>).
+
+You can associate the literal string token with a symbolic name as an
+alias, using the <CODE>%token</CODE> declaration (see section <A HREF="bison_6.html#SEC50">Token Type Names</A>).  If you don't do that, the lexical analyzer has to
+retrieve the token number for the literal string token from the
+<CODE>yytname</CODE> table (see section <A HREF="bison_7.html#SEC62">Calling Convention for <CODE>yylex</CODE></A>).
+
+<STRONG>WARNING</STRONG>: literal string tokens do not work in Yacc.
+
+By convention, a literal string token is used only to represent a token
+that consists of that particular string.  Thus, you should use the token
+type <CODE>"&#60;="</CODE> to represent the string <SAMP>`&#60;='</SAMP> as a token.  Bison
+does not enforces this convention, but if you depart from it, people who
+read your program will be confused.
+
+All the escape sequences used in string literals in C can be used in
+Bison as well.  A literal string token must contain two or more
+characters; for a token containing just one character, use a character
+token (see above).
+</UL>
+
+<P>
+How you choose to write a terminal symbol has no effect on its
+grammatical meaning.  That depends only on where it appears in rules and
+on when the parser function returns that symbol.
+
+</P>
+<P>
+The value returned by <CODE>yylex</CODE> is always one of the terminal symbols
+(or 0 for end-of-input).  Whichever way you write the token type in the
+grammar rules, you write it the same way in the definition of <CODE>yylex</CODE>.
+The numeric code for a character token type is simply the ASCII code for
+the character, so <CODE>yylex</CODE> can use the identical character constant to
+generate the requisite code.  Each named token type becomes a C macro in
+the parser file, so <CODE>yylex</CODE> can use the name to stand for the code.
+(This is why periods don't make sense in terminal symbols.)  
+See section <A HREF="bison_7.html#SEC62">Calling Convention for <CODE>yylex</CODE></A>.
+
+</P>
+<P>
+If <CODE>yylex</CODE> is defined in a separate file, you need to arrange for the
+token-type macro definitions to be available there.  Use the <SAMP>`-d'</SAMP>
+option when you run Bison, so that it will write these macro definitions
+into a separate header file <TT>`<VAR>name</VAR>.tab.h'</TT> which you can include
+in the other source files that need it.  See section <A HREF="bison_12.html#SEC87">Invoking Bison</A>.
+
+</P>
+<P>
+The symbol <CODE>error</CODE> is a terminal symbol reserved for error recovery
+(see section <A HREF="bison_9.html#SEC81">Error Recovery</A>); you shouldn't use it for any other purpose.
+In particular, <CODE>yylex</CODE> should never return this value.
+
+</P>
+
+
+<H2><A NAME="SEC41" HREF="index.html#SEC41">Syntax of Grammar Rules</A></H2>
+<P>
+<A NAME="IDX68"></A>
+<A NAME="IDX69"></A>
+<A NAME="IDX70"></A>
+
+</P>
+<P>
+A Bison grammar rule has the following general form:
+
+</P>
+
+<PRE>
+<VAR>result</VAR>: <VAR>components</VAR>...
+        ;
+</PRE>
+
+<P>
+where <VAR>result</VAR> is the nonterminal symbol that this rule describes
+and <VAR>components</VAR> are various terminal and nonterminal symbols that
+are put together by this rule (see section <A HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>).  
+
+</P>
+<P>
+For example,
+
+</P>
+
+<PRE>
+exp:      exp '+' exp
+        ;
+</PRE>
+
+<P>
+says that two groupings of type <CODE>exp</CODE>, with a <SAMP>`+'</SAMP> token in between,
+can be combined into a larger grouping of type <CODE>exp</CODE>.
+
+</P>
+<P>
+Whitespace in rules is significant only to separate symbols.  You can add
+extra whitespace as you wish.
+
+</P>
+<P>
+Scattered among the components can be <VAR>actions</VAR> that determine
+the semantics of the rule.  An action looks like this:
+
+</P>
+
+<PRE>
+{<VAR>C statements</VAR>}
+</PRE>
+
+<P>
+Usually there is only one action and it follows the components.
+See section <A HREF="bison_6.html#SEC46">Actions</A>.
+
+</P>
+<P>
+<A NAME="IDX71"></A>
+Multiple rules for the same <VAR>result</VAR> can be written separately or can
+be joined with the vertical-bar character <SAMP>`|'</SAMP> as follows:
+
+</P>
+
+<PRE>
+<VAR>result</VAR>:    <VAR>rule1-components</VAR>...
+        | <VAR>rule2-components</VAR>...
+        ...
+        ;
+</PRE>
+
+<P>
+They are still considered distinct rules even when joined in this way.
+
+</P>
+<P>
+If <VAR>components</VAR> in a rule is empty, it means that <VAR>result</VAR> can
+match the empty string.  For example, here is how to define a
+comma-separated sequence of zero or more <CODE>exp</CODE> groupings:
+
+</P>
+
+<PRE>
+expseq:   /* empty */
+        | expseq1
+        ;
+
+expseq1:  exp
+        | expseq1 ',' exp
+        ;
+</PRE>
+
+<P>
+It is customary to write a comment <SAMP>`/* empty */'</SAMP> in each rule
+with no components.
+
+</P>
+
+
+<H2><A NAME="SEC42" HREF="index.html#SEC42">Recursive Rules</A></H2>
+<P>
+<A NAME="IDX72"></A>
+
+</P>
+<P>
+A rule is called <STRONG>recursive</STRONG> when its <VAR>result</VAR> nonterminal appears
+also on its right hand side.  Nearly all Bison grammars need to use
+recursion, because that is the only way to define a sequence of any number
+of somethings.  Consider this recursive definition of a comma-separated
+sequence of one or more expressions:
+
+</P>
+
+<PRE>
+expseq1:  exp
+        | expseq1 ',' exp
+        ;
+</PRE>
+
+<P>
+<A NAME="IDX73"></A>
+<A NAME="IDX74"></A>
+Since the recursive use of <CODE>expseq1</CODE> is the leftmost symbol in the
+right hand side, we call this <STRONG>left recursion</STRONG>.  By contrast, here
+the same construct is defined using <STRONG>right recursion</STRONG>:
+
+</P>
+
+<PRE>
+expseq1:  exp
+        | exp ',' expseq1
+        ;
+</PRE>
+
+<P>
+Any kind of sequence can be defined using either left recursion or
+right recursion, but you should always use left recursion, because it
+can parse a sequence of any number of elements with bounded stack
+space.  Right recursion uses up space on the Bison stack in proportion
+to the number of elements in the sequence, because all the elements
+must be shifted onto the stack before the rule can be applied even
+once.  See section <A HREF="bison_8.html#SEC68">The Bison Parser Algorithm</A>, for
+further explanation of this.
+
+</P>
+<P>
+<A NAME="IDX75"></A>
+<STRONG>Indirect</STRONG> or <STRONG>mutual</STRONG> recursion occurs when the result of the
+rule does not appear directly on its right hand side, but does appear
+in rules for other nonterminals which do appear on its right hand
+side.  
+
+</P>
+<P>
+For example:
+
+</P>
+
+<PRE>
+expr:     primary
+        | primary '+' primary
+        ;
+
+primary:  constant
+        | '(' expr ')'
+        ;
+</PRE>
+
+<P>
+defines two mutually-recursive nonterminals, since each refers to the
+other.
+
+</P>
+
+
+<H2><A NAME="SEC43" HREF="index.html#SEC43">Defining Language Semantics</A></H2>
+<P>
+<A NAME="IDX76"></A>
+<A NAME="IDX77"></A>
+
+</P>
+<P>
+The grammar rules for a language determine only the syntax.  The semantics
+are determined by the semantic values associated with various tokens and
+groupings, and by the actions taken when various groupings are recognized.
+
+</P>
+<P>
+For example, the calculator calculates properly because the value
+associated with each expression is the proper number; it adds properly
+because the action for the grouping <SAMP>`<VAR>x</VAR> + <VAR>y</VAR>'</SAMP> is to add
+the numbers associated with <VAR>x</VAR> and <VAR>y</VAR>.
+
+</P>
+
+
+
+<H3><A NAME="SEC44" HREF="index.html#SEC44">Data Types of Semantic Values</A></H3>
+<P>
+<A NAME="IDX78"></A>
+<A NAME="IDX79"></A>
+<A NAME="IDX80"></A>
+<A NAME="IDX81"></A>
+
+</P>
+<P>
+In a simple program it may be sufficient to use the same data type for
+the semantic values of all language constructs.  This was true in the
+RPN and infix calculator examples (see section <A HREF="bison_5.html#SEC16">Reverse Polish Notation Calculator</A>).
+
+</P>
+<P>
+Bison's default is to use type <CODE>int</CODE> for all semantic values.  To
+specify some other type, define <CODE>YYSTYPE</CODE> as a macro, like this:
+
+</P>
+
+<PRE>
+#define YYSTYPE double
+</PRE>
+
+<P>
+This macro definition must go in the C declarations section of the grammar
+file (see section <A HREF="bison_6.html#SEC35">Outline of a Bison Grammar</A>).
+
+</P>
+
+
+<H3><A NAME="SEC45" HREF="index.html#SEC45">More Than One Value Type</A></H3>
+
+<P>
+In most programs, you will need different data types for different kinds
+of tokens and groupings.  For example, a numeric constant may need type
+<CODE>int</CODE> or <CODE>long</CODE>, while a string constant needs type <CODE>char *</CODE>,
+and an identifier might need a pointer to an entry in the symbol table.
+
+</P>
+<P>
+To use more than one data type for semantic values in one parser, Bison
+requires you to do two things:
+
+</P>
+
+<UL>
+<LI>
+
+Specify the entire collection of possible data types, with the
+<CODE>%union</CODE> Bison declaration (see section <A HREF="bison_6.html#SEC52">The Collection of Value Types</A>).
+
+<LI>
+
+Choose one of those types for each symbol (terminal or nonterminal)
+for which semantic values are used.  This is done for tokens with the
+<CODE>%token</CODE> Bison declaration (see section <A HREF="bison_6.html#SEC50">Token Type Names</A>) and for groupings
+with the <CODE>%type</CODE> Bison declaration (see section <A HREF="bison_6.html#SEC53">Nonterminal Symbols</A>).
+</UL>
+
+
+
+<H3><A NAME="SEC46" HREF="index.html#SEC46">Actions</A></H3>
+<P>
+<A NAME="IDX82"></A>
+<A NAME="IDX83"></A>
+<A NAME="IDX84"></A>
+
+</P>
+<P>
+An action accompanies a syntactic rule and contains C code to be executed
+each time an instance of that rule is recognized.  The task of most actions
+is to compute a semantic value for the grouping built by the rule from the
+semantic values associated with tokens or smaller groupings.
+
+</P>
+<P>
+An action consists of C statements surrounded by braces, much like a
+compound statement in C.  It can be placed at any position in the rule; it
+is executed at that position.  Most rules have just one action at the end
+of the rule, following all the components.  Actions in the middle of a rule
+are tricky and used only for special purposes (see section <A HREF="bison_6.html#SEC48">Actions in Mid-Rule</A>).
+
+</P>
+<P>
+The C code in an action can refer to the semantic values of the components
+matched by the rule with the construct <CODE>$<VAR>n</VAR></CODE>, which stands for
+the value of the <VAR>n</VAR>th component.  The semantic value for the grouping
+being constructed is <CODE>$$</CODE>.  (Bison translates both of these constructs
+into array element references when it copies the actions into the parser
+file.)
+
+</P>
+<P>
+Here is a typical example:
+
+</P>
+
+<PRE>
+exp:    ...
+        | exp '+' exp
+            { $$ = $1 + $3; }
+</PRE>
+
+<P>
+This rule constructs an <CODE>exp</CODE> from two smaller <CODE>exp</CODE> groupings
+connected by a plus-sign token.  In the action, <CODE>$1</CODE> and <CODE>$3</CODE>
+refer to the semantic values of the two component <CODE>exp</CODE> groupings,
+which are the first and third symbols on the right hand side of the rule.
+The sum is stored into <CODE>$$</CODE> so that it becomes the semantic value of
+the addition-expression just recognized by the rule.  If there were a
+useful semantic value associated with the <SAMP>`+'</SAMP> token, it could be
+referred to as <CODE>$2</CODE>.
+</P>
+<P>
+<A NAME="IDX85"></A>
+If you don't specify an action for a rule, Bison supplies a default:
+<CODE>$$ = $1</CODE>.  Thus, the value of the first symbol in the rule becomes
+the value of the whole rule.  Of course, the default rule is valid only
+if the two data types match.  There is no meaningful default action for
+an empty rule; every empty rule must have an explicit action unless the
+rule's value does not matter.
+
+</P>
+<P>
+<CODE>$<VAR>n</VAR></CODE> with <VAR>n</VAR> zero or negative is allowed for reference
+to tokens and groupings on the stack <EM>before</EM> those that match the
+current rule.  This is a very risky practice, and to use it reliably
+you must be certain of the context in which the rule is applied.  Here
+is a case in which you can use this reliably:
+
+</P>
+
+<PRE>
+foo:      expr bar '+' expr  { ... }
+        | expr bar '-' expr  { ... }
+        ;
+
+bar:      /* empty */
+        { previous_expr = $0; }
+        ;
+</PRE>
+
+<P>
+As long as <CODE>bar</CODE> is used only in the fashion shown here, <CODE>$0</CODE>
+always refers to the <CODE>expr</CODE> which precedes <CODE>bar</CODE> in the
+definition of <CODE>foo</CODE>.
+
+</P>
+
+
+<H3><A NAME="SEC47" HREF="index.html#SEC47">Data Types of Values in Actions</A></H3>
+<P>
+<A NAME="IDX86"></A>
+<A NAME="IDX87"></A>
+
+</P>
+<P>
+If you have chosen a single data type for semantic values, the <CODE>$$</CODE>
+and <CODE>$<VAR>n</VAR></CODE> constructs always have that data type.
+
+</P>
+<P>
+If you have used <CODE>%union</CODE> to specify a variety of data types, then you
+must declare a choice among these types for each terminal or nonterminal
+symbol that can have a semantic value.  Then each time you use <CODE>$$</CODE> or
+<CODE>$<VAR>n</VAR></CODE>, its data type is determined by which symbol it refers to
+in the rule.  In this example,
+</P>
+
+<PRE>
+exp:    ...
+        | exp '+' exp
+            { $$ = $1 + $3; }
+</PRE>
+
+<P>
+<CODE>$1</CODE> and <CODE>$3</CODE> refer to instances of <CODE>exp</CODE>, so they all
+have the data type declared for the nonterminal symbol <CODE>exp</CODE>.  If
+<CODE>$2</CODE> were used, it would have the data type declared for the
+terminal symbol <CODE>'+'</CODE>, whatever that might be.
+</P>
+<P>
+Alternatively, you can specify the data type when you refer to the value,
+by inserting <SAMP>`&#60;<VAR>type</VAR>&#62;'</SAMP> after the <SAMP>`$'</SAMP> at the beginning of the
+reference.  For example, if you have defined types as shown here:
+
+</P>
+
+<PRE>
+%union {
+  int itype;
+  double dtype;
+}
+</PRE>
+
+<P>
+then you can write <CODE>$&#60;itype&#62;1</CODE> to refer to the first subunit of the
+rule as an integer, or <CODE>$&#60;dtype&#62;1</CODE> to refer to it as a double.
+
+</P>
+
+
+<H3><A NAME="SEC48" HREF="index.html#SEC48">Actions in Mid-Rule</A></H3>
+<P>
+<A NAME="IDX88"></A>
+<A NAME="IDX89"></A>
+
+</P>
+<P>
+Occasionally it is useful to put an action in the middle of a rule.
+These actions are written just like usual end-of-rule actions, but they
+are executed before the parser even recognizes the following components.
+
+</P>
+<P>
+A mid-rule action may refer to the components preceding it using
+<CODE>$<VAR>n</VAR></CODE>, but it may not refer to subsequent components because
+it is run before they are parsed.
+
+</P>
+<P>
+The mid-rule action itself counts as one of the components of the rule.
+This makes a difference when there is another action later in the same rule
+(and usually there is another at the end): you have to count the actions
+along with the symbols when working out which number <VAR>n</VAR> to use in
+<CODE>$<VAR>n</VAR></CODE>.
+
+</P>
+<P>
+The mid-rule action can also have a semantic value.  The action can set
+its value with an assignment to <CODE>$$</CODE>, and actions later in the rule
+can refer to the value using <CODE>$<VAR>n</VAR></CODE>.  Since there is no symbol
+to name the action, there is no way to declare a data type for the value
+in advance, so you must use the <SAMP>`$&#60;...&#62;'</SAMP> construct to specify a
+data type each time you refer to this value.
+
+</P>
+<P>
+There is no way to set the value of the entire rule with a mid-rule
+action, because assignments to <CODE>$$</CODE> do not have that effect.  The
+only way to set the value for the entire rule is with an ordinary action
+at the end of the rule.
+
+</P>
+<P>
+Here is an example from a hypothetical compiler, handling a <CODE>let</CODE>
+statement that looks like <SAMP>`let (<VAR>variable</VAR>) <VAR>statement</VAR>'</SAMP> and
+serves to create a variable named <VAR>variable</VAR> temporarily for the
+duration of <VAR>statement</VAR>.  To parse this construct, we must put
+<VAR>variable</VAR> into the symbol table while <VAR>statement</VAR> is parsed, then
+remove it afterward.  Here is how it is done:
+
+</P>
+
+<PRE>
+stmt:   LET '(' var ')'
+                { $&#60;context&#62;$ = push_context ();
+                  declare_variable ($3); }
+        stmt    { $$ = $6;
+                  pop_context ($&#60;context&#62;5); }
+</PRE>
+
+<P>
+As soon as <SAMP>`let (<VAR>variable</VAR>)'</SAMP> has been recognized, the first
+action is run.  It saves a copy of the current semantic context (the
+list of accessible variables) as its semantic value, using alternative
+<CODE>context</CODE> in the data-type union.  Then it calls
+<CODE>declare_variable</CODE> to add the new variable to that list.  Once the
+first action is finished, the embedded statement <CODE>stmt</CODE> can be
+parsed.  Note that the mid-rule action is component number 5, so the
+<SAMP>`stmt'</SAMP> is component number 6.
+
+</P>
+<P>
+After the embedded statement is parsed, its semantic value becomes the
+value of the entire <CODE>let</CODE>-statement.  Then the semantic value from the
+earlier action is used to restore the prior list of variables.  This
+removes the temporary <CODE>let</CODE>-variable from the list so that it won't
+appear to exist while the rest of the program is parsed.
+
+</P>
+<P>
+Taking action before a rule is completely recognized often leads to
+conflicts since the parser must commit to a parse in order to execute the
+action.  For example, the following two rules, without mid-rule actions,
+can coexist in a working parser because the parser can shift the open-brace
+token and look at what follows before deciding whether there is a
+declaration or not:
+
+</P>
+
+<PRE>
+compound: '{' declarations statements '}'
+        | '{' statements '}'
+        ;
+</PRE>
+
+<P>
+But when we add a mid-rule action as follows, the rules become nonfunctional:
+
+</P>
+
+<PRE>
+compound: { prepare_for_local_variables (); }
+          '{' declarations statements '}'
+        | '{' statements '}'
+        ;
+</PRE>
+
+<P>
+Now the parser is forced to decide whether to run the mid-rule action
+when it has read no farther than the open-brace.  In other words, it
+must commit to using one rule or the other, without sufficient
+information to do it correctly.  (The open-brace token is what is called
+the <STRONG>look-ahead</STRONG> token at this time, since the parser is still
+deciding what to do about it.  See section <A HREF="bison_8.html#SEC69">Look-Ahead Tokens</A>.)
+
+</P>
+<P>
+You might think that you could correct the problem by putting identical
+actions into the two rules, like this:
+
+</P>
+
+<PRE>
+compound: { prepare_for_local_variables (); }
+          '{' declarations statements '}'
+        | { prepare_for_local_variables (); }
+          '{' statements '}'
+        ;
+</PRE>
+
+<P>
+But this does not help, because Bison does not realize that the two actions
+are identical.  (Bison never tries to understand the C code in an action.)
+
+</P>
+<P>
+If the grammar is such that a declaration can be distinguished from a
+statement by the first token (which is true in C), then one solution which
+does work is to put the action after the open-brace, like this:
+
+</P>
+
+<PRE>
+compound: '{' { prepare_for_local_variables (); }
+          declarations statements '}'
+        | '{' statements '}'
+        ;
+</PRE>
+
+<P>
+Now the first token of the following declaration or statement,
+which would in any case tell Bison which rule to use, can still do so.
+
+</P>
+<P>
+Another solution is to bury the action inside a nonterminal symbol which
+serves as a subroutine:
+
+</P>
+
+<PRE>
+subroutine: /* empty */
+          { prepare_for_local_variables (); }
+        ;
+
+compound: subroutine
+          '{' declarations statements '}'
+        | subroutine
+          '{' statements '}'
+        ;
+</PRE>
+
+<P>
+Now Bison can execute the action in the rule for <CODE>subroutine</CODE> without
+deciding which rule for <CODE>compound</CODE> it will eventually use.  Note that
+the action is now at the end of its rule.  Any mid-rule action can be
+converted to an end-of-rule action in this way, and this is what Bison
+actually does to implement mid-rule actions.
+
+</P>
+
+
+<H2><A NAME="SEC49" HREF="index.html#SEC49">Bison Declarations</A></H2>
+<P>
+<A NAME="IDX90"></A>
+<A NAME="IDX91"></A>
+
+</P>
+<P>
+The <STRONG>Bison declarations</STRONG> section of a Bison grammar defines the symbols
+used in formulating the grammar and the data types of semantic values.
+See section <A HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>.
+
+</P>
+<P>
+All token type names (but not single-character literal tokens such as
+<CODE>'+'</CODE> and <CODE>'*'</CODE>) must be declared.  Nonterminal symbols must be
+declared if you need to specify which data type to use for the semantic
+value (see section <A HREF="bison_6.html#SEC45">More Than One Value Type</A>).
+
+</P>
+<P>
+The first rule in the file also specifies the start symbol, by default.
+If you want some other symbol to be the start symbol, you must declare
+it explicitly (see section <A HREF="bison_4.html#SEC8">Languages and Context-Free Grammars</A>).
+
+</P>
+
+
+
+<H3><A NAME="SEC50" HREF="index.html#SEC50">Token Type Names</A></H3>
+<P>
+<A NAME="IDX92"></A>
+<A NAME="IDX93"></A>
+<A NAME="IDX94"></A>
+<A NAME="IDX95"></A>
+
+</P>
+<P>
+The basic way to declare a token type name (terminal symbol) is as follows:
+
+</P>
+
+<PRE>
+%token <VAR>name</VAR>
+</PRE>
+
+<P>
+Bison will convert this into a <CODE>#define</CODE> directive in
+the parser, so that the function <CODE>yylex</CODE> (if it is in this file)
+can use the name <VAR>name</VAR> to stand for this token type's code.
+
+</P>
+<P>
+Alternatively, you can use <CODE>%left</CODE>, <CODE>%right</CODE>, or <CODE>%nonassoc</CODE>
+instead of <CODE>%token</CODE>, if you wish to specify precedence.
+See section <A HREF="bison_6.html#SEC51">Operator Precedence</A>.
+
+</P>
+<P>
+You can explicitly specify the numeric code for a token type by appending
+an integer value in the field immediately following the token name:
+
+</P>
+
+<PRE>
+%token NUM 300
+</PRE>
+
+<P>
+It is generally best, however, to let Bison choose the numeric codes for
+all token types.  Bison will automatically select codes that don't conflict
+with each other or with ASCII characters.
+
+</P>
+<P>
+In the event that the stack type is a union, you must augment the
+<CODE>%token</CODE> or other token declaration to include the data type
+alternative delimited by angle-brackets (see section <A HREF="bison_6.html#SEC45">More Than One Value Type</A>).  
+
+</P>
+<P>
+For example:
+
+</P>
+
+<PRE>
+%union {              /* define stack type */
+  double val;
+  symrec *tptr;
+}
+%token &#60;val&#62; NUM      /* define token NUM and its type */
+</PRE>
+
+<P>
+You can associate a literal string token with a token type name by
+writing the literal string at the end of a <CODE>%token</CODE>
+declaration which declares the name.  For example:
+
+</P>
+
+<PRE>
+%token arrow "=&#62;"
+</PRE>
+
+<P>
+For example, a grammar for the C language might specify these names with
+equivalent literal string tokens:
+
+</P>
+
+<PRE>
+%token  &#60;operator&#62;  OR      "||"
+%token  &#60;operator&#62;  LE 134  "&#60;="
+%left  OR  "&#60;="
+</PRE>
+
+<P>
+Once you equate the literal string and the token name, you can use them
+interchangeably in further declarations or the grammar rules.  The
+<CODE>yylex</CODE> function can use the token name or the literal string to
+obtain the token type code number (see section <A HREF="bison_7.html#SEC62">Calling Convention for <CODE>yylex</CODE></A>).
+
+</P>
+
+
+<H3><A NAME="SEC51" HREF="index.html#SEC51">Operator Precedence</A></H3>
+<P>
+<A NAME="IDX96"></A>
+<A NAME="IDX97"></A>
+<A NAME="IDX98"></A>
+
+</P>
+<P>
+Use the <CODE>%left</CODE>, <CODE>%right</CODE> or <CODE>%nonassoc</CODE> declaration to
+declare a token and specify its precedence and associativity, all at
+once.  These are called <STRONG>precedence declarations</STRONG>.
+See section <A HREF="bison_8.html#SEC71">Operator Precedence</A>, for general information on operator precedence.
+
+</P>
+<P>
+The syntax of a precedence declaration is the same as that of
+<CODE>%token</CODE>: either
+
+</P>
+
+<PRE>
+%left <VAR>symbols</VAR>...
+</PRE>
+
+<P>
+or
+
+</P>
+
+<PRE>
+%left &#60;<VAR>type</VAR>&#62; <VAR>symbols</VAR>...
+</PRE>
+
+<P>
+And indeed any of these declarations serves the purposes of <CODE>%token</CODE>.
+But in addition, they specify the associativity and relative precedence for
+all the <VAR>symbols</VAR>:
+
+</P>
+
+<UL>
+<LI>
+
+The associativity of an operator <VAR>op</VAR> determines how repeated uses
+of the operator nest: whether <SAMP>`<VAR>x</VAR> <VAR>op</VAR> <VAR>y</VAR> <VAR>op</VAR>
+<VAR>z</VAR>'</SAMP> is parsed by grouping <VAR>x</VAR> with <VAR>y</VAR> first or by
+grouping <VAR>y</VAR> with <VAR>z</VAR> first.  <CODE>%left</CODE> specifies
+left-associativity (grouping <VAR>x</VAR> with <VAR>y</VAR> first) and
+<CODE>%right</CODE> specifies right-associativity (grouping <VAR>y</VAR> with
+<VAR>z</VAR> first).  <CODE>%nonassoc</CODE> specifies no associativity, which
+means that <SAMP>`<VAR>x</VAR> <VAR>op</VAR> <VAR>y</VAR> <VAR>op</VAR> <VAR>z</VAR>'</SAMP> is
+considered a syntax error.
+
+<LI>
+
+The precedence of an operator determines how it nests with other operators.
+All the tokens declared in a single precedence declaration have equal
+precedence and nest together according to their associativity.
+When two tokens declared in different precedence declarations associate,
+the one declared later has the higher precedence and is grouped first.
+</UL>
+
+
+
+<H3><A NAME="SEC52" HREF="index.html#SEC52">The Collection of Value Types</A></H3>
+<P>
+<A NAME="IDX99"></A>
+<A NAME="IDX100"></A>
+<A NAME="IDX101"></A>
+
+</P>
+<P>
+The <CODE>%union</CODE> declaration specifies the entire collection of possible
+data types for semantic values.  The keyword <CODE>%union</CODE> is followed by a
+pair of braces containing the same thing that goes inside a <CODE>union</CODE> in
+C.  
+
+</P>
+<P>
+For example:
+
+</P>
+
+<PRE>
+%union {
+  double val;
+  symrec *tptr;
+}
+</PRE>
+
+<P>
+This says that the two alternative types are <CODE>double</CODE> and <CODE>symrec
+*</CODE>.  They are given names <CODE>val</CODE> and <CODE>tptr</CODE>; these names are used
+in the <CODE>%token</CODE> and <CODE>%type</CODE> declarations to pick one of the types
+for a terminal or nonterminal symbol (see section <A HREF="bison_6.html#SEC53">Nonterminal Symbols</A>).
+
+</P>
+<P>
+Note that, unlike making a <CODE>union</CODE> declaration in C, you do not write
+a semicolon after the closing brace.
+
+</P>
+
+
+<H3><A NAME="SEC53" HREF="index.html#SEC53">Nonterminal Symbols</A></H3>
+<P>
+<A NAME="IDX102"></A>
+<A NAME="IDX103"></A>
+<A NAME="IDX104"></A>
+
+</P>
+<P>
+When you use <CODE>%union</CODE> to specify multiple value types, you must
+declare the value type of each nonterminal symbol for which values are
+used.  This is done with a <CODE>%type</CODE> declaration, like this:
+
+</P>
+
+<PRE>
+%type &#60;<VAR>type</VAR>&#62; <VAR>nonterminal</VAR>...
+</PRE>
+
+<P>
+Here <VAR>nonterminal</VAR> is the name of a nonterminal symbol, and <VAR>type</VAR>
+is the name given in the <CODE>%union</CODE> to the alternative that you want
+(see section <A HREF="bison_6.html#SEC52">The Collection of Value Types</A>).  You can give any number of nonterminal symbols in
+the same <CODE>%type</CODE> declaration, if they have the same value type.  Use
+spaces to separate the symbol names.
+
+</P>
+<P>
+You can also declare the value type of a terminal symbol.  To do this,
+use the same <CODE>&#60;<VAR>type</VAR>&#62;</CODE> construction in a declaration for the
+terminal symbol.  All kinds of token declarations allow
+<CODE>&#60;<VAR>type</VAR>&#62;</CODE>.
+
+</P>
+
+
+<H3><A NAME="SEC54" HREF="index.html#SEC54">Suppressing Conflict Warnings</A></H3>
+<P>
+<A NAME="IDX105"></A>
+<A NAME="IDX106"></A>
+<A NAME="IDX107"></A>
+<A NAME="IDX108"></A>
+<A NAME="IDX109"></A>
+
+</P>
+<P>
+Bison normally warns if there are any conflicts in the grammar
+(see section <A HREF="bison_8.html#SEC70">Shift/Reduce Conflicts</A>), but most real grammars have harmless shift/reduce
+conflicts which are resolved in a predictable way and would be difficult to
+eliminate.  It is desirable to suppress the warning about these conflicts
+unless the number of conflicts changes.  You can do this with the
+<CODE>%expect</CODE> declaration.
+
+</P>
+<P>
+The declaration looks like this:
+
+</P>
+
+<PRE>
+%expect <VAR>n</VAR>
+</PRE>
+
+<P>
+Here <VAR>n</VAR> is a decimal integer.  The declaration says there should be no
+warning if there are <VAR>n</VAR> shift/reduce conflicts and no reduce/reduce
+conflicts.  The usual warning is given if there are either more or fewer
+conflicts, or if there are any reduce/reduce conflicts.
+
+</P>
+<P>
+In general, using <CODE>%expect</CODE> involves these steps:
+
+</P>
+
+<UL>
+<LI>
+
+Compile your grammar without <CODE>%expect</CODE>.  Use the <SAMP>`-v'</SAMP> option
+to get a verbose list of where the conflicts occur.  Bison will also
+print the number of conflicts.
+
+<LI>
+
+Check each of the conflicts to make sure that Bison's default
+resolution is what you really want.  If not, rewrite the grammar and
+go back to the beginning.
+
+<LI>
+
+Add an <CODE>%expect</CODE> declaration, copying the number <VAR>n</VAR> from the
+number which Bison printed.
+</UL>
+
+<P>
+Now Bison will stop annoying you about the conflicts you have checked, but
+it will warn you again if changes in the grammar result in additional
+conflicts.
+
+</P>
+
+
+<H3><A NAME="SEC55" HREF="index.html#SEC55">The Start-Symbol</A></H3>
+<P>
+<A NAME="IDX110"></A>
+<A NAME="IDX111"></A>
+<A NAME="IDX112"></A>
+<A NAME="IDX113"></A>
+
+</P>
+<P>
+Bison assumes by default that the start symbol for the grammar is the first
+nonterminal specified in the grammar specification section.  The programmer
+may override this restriction with the <CODE>%start</CODE> declaration as follows:
+
+</P>
+
+<PRE>
+%start <VAR>symbol</VAR>
+</PRE>
+
+
+
+<H3><A NAME="SEC56" HREF="index.html#SEC56">A Pure (Reentrant) Parser</A></H3>
+<P>
+<A NAME="IDX114"></A>
+<A NAME="IDX115"></A>
+<A NAME="IDX116"></A>
+
+</P>
+<P>
+A <STRONG>reentrant</STRONG> program is one which does not alter in the course of
+execution; in other words, it consists entirely of <STRONG>pure</STRONG> (read-only)
+code.  Reentrancy is important whenever asynchronous execution is possible;
+for example, a nonreentrant program may not be safe to call from a signal
+handler.  In systems with multiple threads of control, a nonreentrant
+program must be called only within interlocks.
+
+</P>
+<P>
+The Bison parser is not normally a reentrant program, because it uses
+statically allocated variables for communication with <CODE>yylex</CODE>.  These
+variables include <CODE>yylval</CODE> and <CODE>yylloc</CODE>.
+
+</P>
+<P>
+The Bison declaration <CODE>%pure_parser</CODE> says that you want the parser
+to be reentrant.  It looks like this:
+
+</P>
+
+<PRE>
+%pure_parser
+</PRE>
+
+<P>
+The effect is that the two communication variables become local
+variables in <CODE>yyparse</CODE>, and a different calling convention is used
+for the lexical analyzer function <CODE>yylex</CODE>.  See section <A HREF="bison_7.html#SEC65">Calling Conventions for Pure Parsers</A>, for the details of this.  The
+variable <CODE>yynerrs</CODE> also becomes local in <CODE>yyparse</CODE>
+(see section <A HREF="bison_7.html#SEC66">The Error Reporting Function <CODE>yyerror</CODE></A>).
+The convention for calling <CODE>yyparse</CODE> itself is unchanged.
+
+</P>
+
+
+<H3><A NAME="SEC57" HREF="index.html#SEC57">Bison Declaration Summary</A></H3>
+<P>
+<A NAME="IDX117"></A>
+<A NAME="IDX118"></A>
+<A NAME="IDX119"></A>
+
+</P>
+<P>
+Here is a summary of all Bison declarations:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>%union</CODE>
+<DD>
+Declare the collection of data types that semantic values may have
+(see section <A HREF="bison_6.html#SEC52">The Collection of Value Types</A>).
+
+<DT><CODE>%token</CODE>
+<DD>
+Declare a terminal symbol (token type name) with no precedence
+or associativity specified (see section <A HREF="bison_6.html#SEC50">Token Type Names</A>).
+
+<DT><CODE>%right</CODE>
+<DD>
+Declare a terminal symbol (token type name) that is right-associative
+(see section <A HREF="bison_6.html#SEC51">Operator Precedence</A>).
+
+<DT><CODE>%left</CODE>
+<DD>
+Declare a terminal symbol (token type name) that is left-associative
+(see section <A HREF="bison_6.html#SEC51">Operator Precedence</A>).
+
+<DT><CODE>%nonassoc</CODE>
+<DD>
+Declare a terminal symbol (token type name) that is nonassociative
+(using it in a way that would be associative is a syntax error)
+(see section <A HREF="bison_6.html#SEC51">Operator Precedence</A>).
+
+<DT><CODE>%type</CODE>
+<DD>
+Declare the type of semantic values for a nonterminal symbol
+(see section <A HREF="bison_6.html#SEC53">Nonterminal Symbols</A>).
+
+<DT><CODE>%start</CODE>
+<DD>
+Specify the grammar's start symbol (see section <A HREF="bison_6.html#SEC55">The Start-Symbol</A>).
+
+<DT><CODE>%expect</CODE>
+<DD>
+Declare the expected number of shift-reduce conflicts
+(see section <A HREF="bison_6.html#SEC54">Suppressing Conflict Warnings</A>).
+
+<DT><CODE>%pure_parser</CODE>
+<DD>
+Request a pure (reentrant) parser program (see section <A HREF="bison_6.html#SEC56">A Pure (Reentrant) Parser</A>).
+
+<DT><CODE>%no_lines</CODE>
+<DD>
+Don't generate any <CODE>#line</CODE> preprocessor commands in the parser
+file.  Ordinarily Bison writes these commands in the parser file so that
+the C compiler and debuggers will associate errors and object code with
+your source file (the grammar file).  This directive causes them to
+associate errors with the parser file, treating it an independent source
+file in its own right.
+
+<DT><CODE>%raw</CODE>
+<DD>
+The output file <TT>`<VAR>name</VAR>.h'</TT> normally defines the tokens with
+Yacc-compatible token numbers.  If this option is specified, the
+internal Bison numbers are used instead.  (Yacc-compatible numbers start
+at 257 except for single character tokens; Bison assigns token numbers
+sequentially for all tokens starting at 3.)
+
+<DT><CODE>%token_table</CODE>
+<DD>
+Generate an array of token names in the parser file.  The name of the
+array is <CODE>yytname</CODE>; <CODE>yytname[<VAR>i</VAR>]</CODE> is the name of the
+token whose internal Bison token code number is <VAR>i</VAR>.  The first three
+elements of <CODE>yytname</CODE> are always <CODE>"$"</CODE>, <CODE>"error"</CODE>, and
+<CODE>"$illegal"</CODE>; after these come the symbols defined in the grammar
+file.
+
+For single-character literal tokens and literal string tokens, the name
+in the table includes the single-quote or double-quote characters: for
+example, <CODE>"'+'"</CODE> is a single-character literal and <CODE>"\"&#60;=\""</CODE>
+is a literal string token.  All the characters of the literal string
+token appear verbatim in the string found in the table; even
+double-quote characters are not escaped.  For example, if the token
+consists of three characters <SAMP>`*"*'</SAMP>, its string in <CODE>yytname</CODE>
+contains <SAMP>`"*"*"'</SAMP>.  (In C, that would be written as
+<CODE>"\"*\"*\""</CODE>).
+
+When you specify <CODE>%token_table</CODE>, Bison also generates macro
+definitions for macros <CODE>YYNTOKENS</CODE>, <CODE>YYNNTS</CODE>, and
+<CODE>YYNRULES</CODE>, and <CODE>YYNSTATES</CODE>:
+
+<DL COMPACT>
+
+<DT><CODE>YYNTOKENS</CODE>
+<DD>
+The highest token number, plus one.
+<DT><CODE>YYNNTS</CODE>
+<DD>
+The number of non-terminal symbols.
+<DT><CODE>YYNRULES</CODE>
+<DD>
+The number of grammar rules,
+<DT><CODE>YYNSTATES</CODE>
+<DD>
+The number of parser states (see section <A HREF="bison_8.html#SEC77">Parser States</A>).
+</DL>
+</DL>
+
+
+
+<H2><A NAME="SEC58" HREF="index.html#SEC58">Multiple Parsers in the Same Program</A></H2>
+
+<P>
+Most programs that use Bison parse only one language and therefore contain
+only one Bison parser.  But what if you want to parse more than one
+language with the same program?  Then you need to avoid a name conflict
+between different definitions of <CODE>yyparse</CODE>, <CODE>yylval</CODE>, and so on.
+
+</P>
+<P>
+The easy way to do this is to use the option <SAMP>`-p <VAR>prefix</VAR>'</SAMP>
+(see section <A HREF="bison_12.html#SEC87">Invoking Bison</A>).  This renames the interface functions and
+variables of the Bison parser to start with <VAR>prefix</VAR> instead of
+<SAMP>`yy'</SAMP>.  You can use this to give each parser distinct names that do
+not conflict.
+
+</P>
+<P>
+The precise list of symbols renamed is <CODE>yyparse</CODE>, <CODE>yylex</CODE>,
+<CODE>yyerror</CODE>, <CODE>yynerrs</CODE>, <CODE>yylval</CODE>, <CODE>yychar</CODE> and
+<CODE>yydebug</CODE>.  For example, if you use <SAMP>`-p c'</SAMP>, the names become
+<CODE>cparse</CODE>, <CODE>clex</CODE>, and so on.
+
+</P>
+<P>
+<STRONG>All the other variables and macros associated with Bison are not
+renamed.</STRONG> These others are not global; there is no conflict if the same
+name is used in different parsers.  For example, <CODE>YYSTYPE</CODE> is not
+renamed, but defining this in different ways in different parsers causes
+no trouble (see section <A HREF="bison_6.html#SEC44">Data Types of Semantic Values</A>).
+
+</P>
+<P>
+The <SAMP>`-p'</SAMP> option works by adding macro definitions to the beginning
+of the parser source file, defining <CODE>yyparse</CODE> as
+<CODE><VAR>prefix</VAR>parse</CODE>, and so on.  This effectively substitutes one
+name for the other in the entire parser file.
+
+</P>
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_5.html">previous</A>, <A HREF="bison_7.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

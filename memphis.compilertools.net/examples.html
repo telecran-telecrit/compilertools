@@ -1,0 +1,106 @@
+<html>
+
+<head>
+<title>The MEMPHIS Tree Builder & Tree Walker Tool: Examples</title>
+
+<META name="keywords"
+content="C/C++, abstract syntax, trees, tree builder, tree walker,
+pattern matching, compiler construction, language translation">
+
+<META name="description"
+content="Example programs in Memphis C/C++, a language for compiler writers">
+
+</head>
+
+<body bgcolor="#f9c674">
+
+<TABLE cellspacing=20>
+
+<TR>
+
+<TD>
+<img src="croco.gif">
+</TD>
+
+<TD valign=top align=left>
+<a href="index.html">The Memphis Tree Builder & Tree Walker Tool</a>
+<H1>
+Examples
+</H1>
+</TD>
+
+</TR>
+
+<TR>
+
+<!-- MENU -->
+<TD valign=top align=center>
+<font face="helvetica">
+<A HREF="index.html">Memphis</A>
+<br>
+Examples
+<br>
+<A HREF="manuals.html">Manuals</A>
+<br>
+<A HREF="distribution.html">Distribution</A>
+</font>
+<p>
+</TD>
+
+<!-- MAINPART -->
+<TD>
+<ul>
+<li>
+<a href="http://memphis.compilertools.net/match.html">Domain Declarations and Match Statements</a>
+<p>
+discusses how to write <i>domain declarations</i> like
+<font size="-1">
+<pre>
+   domain Tree {
+      node(int val, Tree left, Tree right)
+      empty()
+   }
+</pre>
+</font>
+that describe data types in a grammatical style,
+and <i>match statements</i> such as
+<font size="-1">
+<pre>
+   match t {
+      rule node(v, l, r) :
+	 return v + Sum(l) + Sum(r);
+      rule empty() :
+	 return 0;
+   }
+</pre>
+</font>
+that process the data by inductively following their structure.
+<p>
+<li>
+<a href="interpreter.html">Writing an Interpreter with Lex, Yacc, and Memphis</a>
+<p>
+shows how to specify an interpreter for a little language
+in which one can write programs like this:
+<font size="-1">
+<pre>
+   // Greatest Common Divisor
+   x := 8;
+   y := 12;
+   WHILE x != y DO
+      IF x > y THEN x := x-y
+      ELSE y := y-x
+      FI
+   OD;
+   PRINT x
+</pre>
+</font>
+</ul>
+</TD>
+<!-- END MAINPART -->
+
+</TR>
+
+</TABLE>
+
+</body>
+</html>

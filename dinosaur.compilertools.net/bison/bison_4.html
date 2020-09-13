@@ -1,0 +1,490 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - The Concepts of Bison</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_3.html">previous</A>, <A HREF="bison_5.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC7" HREF="index.html#SEC7">The Concepts of Bison</A></H1>
+
+<P>
+This chapter introduces many of the basic concepts without which the
+details of Bison will not make sense.  If you do not already know how to
+use Bison or Yacc, we suggest you start by reading this chapter carefully.
+
+</P>
+
+
+
+<H2><A NAME="SEC8" HREF="index.html#SEC8">Languages and Context-Free Grammars</A></H2>
+
+<P>
+<A NAME="IDX2"></A>
+<A NAME="IDX3"></A>
+In order for Bison to parse a language, it must be described by a
+<STRONG>context-free grammar</STRONG>.  This means that you specify one or more
+<STRONG>syntactic groupings</STRONG> and give rules for constructing them from their
+parts.  For example, in the C language, one kind of grouping is called an
+`expression'.  One rule for making an expression might be, "An expression
+can be made of a minus sign and another expression".  Another would be,
+"An expression can be an integer".  As you can see, rules are often
+recursive, but there must be at least one rule which leads out of the
+recursion.
+
+</P>
+<P>
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+The most common formal system for presenting such rules for humans to read
+is <STRONG>Backus-Naur Form</STRONG> or "BNF", which was developed in order to
+specify the language Algol 60.  Any grammar expressed in BNF is a
+context-free grammar.  The input to Bison is essentially machine-readable
+BNF.
+
+</P>
+<P>
+Not all context-free languages can be handled by Bison, only those
+that are LALR(1).  In brief, this means that it must be possible to
+tell how to parse any portion of an input string with just a single
+token of look-ahead.  Strictly speaking, that is a description of an
+LR(1) grammar, and LALR(1) involves additional restrictions that are
+hard to explain simply; but it is rare in actual practice to find an
+LR(1) grammar that fails to be LALR(1).  See section <A HREF="bison_8.html#SEC79">Mysterious Reduce/Reduce Conflicts</A>, for more information on this.
+
+</P>
+<P>
+<A NAME="IDX6"></A>
+<A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+<A NAME="IDX9"></A>
+In the formal grammatical rules for a language, each kind of syntactic unit
+or grouping is named by a <STRONG>symbol</STRONG>.  Those which are built by grouping
+smaller constructs according to grammatical rules are called
+<STRONG>nonterminal symbols</STRONG>; those which can't be subdivided are called
+<STRONG>terminal symbols</STRONG> or <STRONG>token types</STRONG>.  We call a piece of input
+corresponding to a single terminal symbol a <STRONG>token</STRONG>, and a piece
+corresponding to a single nonterminal symbol a <STRONG>grouping</STRONG>.
+</P>
+<P>
+We can use the C language as an example of what symbols, terminal and
+nonterminal, mean.  The tokens of C are identifiers, constants (numeric and
+string), and the various keywords, arithmetic operators and punctuation
+marks.  So the terminal symbols of a grammar for C include `identifier',
+`number', `string', plus one symbol for each keyword, operator or
+punctuation mark: `if', `return', `const', `static', `int', `char',
+`plus-sign', `open-brace', `close-brace', `comma' and many more.  (These
+tokens can be subdivided into characters, but that is a matter of
+lexicography, not grammar.)
+
+</P>
+<P>
+Here is a simple C function subdivided into tokens:
+
+</P>
+
+<PRE>
+int             /* keyword `int' */
+square (x)      /* identifier, open-paren, */
+                /* identifier, close-paren */
+     int x;     /* keyword `int', identifier, semicolon */
+{               /* open-brace */
+  return x * x; /* keyword `return', identifier, */
+                /* asterisk, identifier, semicolon */
+}               /* close-brace */
+</PRE>
+
+<P>
+The syntactic groupings of C include the expression, the statement, the
+declaration, and the function definition.  These are represented in the
+grammar of C by nonterminal symbols `expression', `statement',
+`declaration' and `function definition'.  The full grammar uses dozens of
+additional language constructs, each with its own nonterminal symbol, in
+order to express the meanings of these four.  The example above is a
+function definition; it contains one declaration, and one statement.  In
+the statement, each <SAMP>`x'</SAMP> is an expression and so is <SAMP>`x * x'</SAMP>.
+
+</P>
+<P>
+Each nonterminal symbol must have grammatical rules showing how it is made
+out of simpler constructs.  For example, one kind of C statement is the
+<CODE>return</CODE> statement; this would be described with a grammar rule which
+reads informally as follows:
+
+</P>
+
+<BLOCKQUOTE>
+<P>
+A `statement' can be made of a `return' keyword, an `expression' and a
+`semicolon'.
+</BLOCKQUOTE>
+
+<P>
+There would be many other rules for `statement', one for each kind of
+statement in C.
+
+</P>
+<P>
+<A NAME="IDX10"></A>
+One nonterminal symbol must be distinguished as the special one which
+defines a complete utterance in the language.  It is called the <STRONG>start
+symbol</STRONG>.  In a compiler, this means a complete input program.  In the C
+language, the nonterminal symbol `sequence of definitions and declarations'
+plays this role.
+
+</P>
+<P>
+For example, <SAMP>`1 + 2'</SAMP> is a valid C expression--a valid part of a C
+program--but it is not valid as an <EM>entire</EM> C program.  In the
+context-free grammar of C, this follows from the fact that `expression' is
+not the start symbol.
+
+</P>
+<P>
+The Bison parser reads a sequence of tokens as its input, and groups the
+tokens using the grammar rules.  If the input is valid, the end result is
+that the entire token sequence reduces to a single grouping whose symbol is
+the grammar's start symbol.  If we use a grammar for C, the entire input
+must be a `sequence of definitions and declarations'.  If not, the parser
+reports a syntax error.
+
+</P>
+
+
+<H2><A NAME="SEC9" HREF="index.html#SEC9">From Formal Rules to Bison Input</A></H2>
+<P>
+<A NAME="IDX11"></A>
+<A NAME="IDX12"></A>
+<A NAME="IDX13"></A>
+
+</P>
+<P>
+A formal grammar is a mathematical construct.  To define the language
+for Bison, you must write a file expressing the grammar in Bison syntax:
+a <STRONG>Bison grammar</STRONG> file.  See section <A HREF="bison_6.html#SEC34">Bison Grammar Files</A>.
+
+</P>
+<P>
+A nonterminal symbol in the formal grammar is represented in Bison input
+as an identifier, like an identifier in C.  By convention, it should be
+in lower case, such as <CODE>expr</CODE>, <CODE>stmt</CODE> or <CODE>declaration</CODE>.
+
+</P>
+<P>
+The Bison representation for a terminal symbol is also called a <STRONG>token
+type</STRONG>.  Token types as well can be represented as C-like identifiers.  By
+convention, these identifiers should be upper case to distinguish them from
+nonterminals: for example, <CODE>INTEGER</CODE>, <CODE>IDENTIFIER</CODE>, <CODE>IF</CODE> or
+<CODE>RETURN</CODE>.  A terminal symbol that stands for a particular keyword in
+the language should be named after that keyword converted to upper case.
+The terminal symbol <CODE>error</CODE> is reserved for error recovery.
+See section <A HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>.
+
+</P>
+<P>
+A terminal symbol can also be represented as a character literal, just like
+a C character constant.  You should do this whenever a token is just a
+single character (parenthesis, plus-sign, etc.): use that same character in
+a literal as the terminal symbol for that token.
+
+</P>
+<P>
+A third way to represent a terminal symbol is with a C string constant
+containing several characters.  See section <A HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>, for more information.
+
+</P>
+<P>
+The grammar rules also have an expression in Bison syntax.  For example,
+here is the Bison rule for a C <CODE>return</CODE> statement.  The semicolon in
+quotes is a literal character token, representing part of the C syntax for
+the statement; the naked semicolon, and the colon, are Bison punctuation
+used in every rule.
+
+</P>
+
+<PRE>
+stmt:   RETURN expr ';'
+        ;
+</PRE>
+
+<P>
+See section <A HREF="bison_6.html#SEC41">Syntax of Grammar Rules</A>.
+
+</P>
+
+
+<H2><A NAME="SEC10" HREF="index.html#SEC10">Semantic Values</A></H2>
+<P>
+<A NAME="IDX14"></A>
+<A NAME="IDX15"></A>
+
+</P>
+<P>
+A formal grammar selects tokens only by their classifications: for example,
+if a rule mentions the terminal symbol `integer constant', it means that
+<EM>any</EM> integer constant is grammatically valid in that position.  The
+precise value of the constant is irrelevant to how to parse the input: if
+<SAMP>`x+4'</SAMP> is grammatical then <SAMP>`x+1'</SAMP> or <SAMP>`x+3989'</SAMP> is equally
+grammatical.
+</P>
+<P>
+But the precise value is very important for what the input means once it is
+parsed.  A compiler is useless if it fails to distinguish between 4, 1 and
+3989 as constants in the program!  Therefore, each token in a Bison grammar
+has both a token type and a <STRONG>semantic value</STRONG>.  See section <A HREF="bison_6.html#SEC43">Defining Language Semantics</A>,
+for details.
+
+</P>
+<P>
+The token type is a terminal symbol defined in the grammar, such as
+<CODE>INTEGER</CODE>, <CODE>IDENTIFIER</CODE> or <CODE>','</CODE>.  It tells everything
+you need to know to decide where the token may validly appear and how to
+group it with other tokens.  The grammar rules know nothing about tokens
+except their types.
+</P>
+<P>
+The semantic value has all the rest of the information about the
+meaning of the token, such as the value of an integer, or the name of an
+identifier.  (A token such as <CODE>','</CODE> which is just punctuation doesn't
+need to have any semantic value.)
+
+</P>
+<P>
+For example, an input token might be classified as token type
+<CODE>INTEGER</CODE> and have the semantic value 4.  Another input token might
+have the same token type <CODE>INTEGER</CODE> but value 3989.  When a grammar
+rule says that <CODE>INTEGER</CODE> is allowed, either of these tokens is
+acceptable because each is an <CODE>INTEGER</CODE>.  When the parser accepts the
+token, it keeps track of the token's semantic value.
+
+</P>
+<P>
+Each grouping can also have a semantic value as well as its nonterminal
+symbol.  For example, in a calculator, an expression typically has a
+semantic value that is a number.  In a compiler for a programming
+language, an expression typically has a semantic value that is a tree
+structure describing the meaning of the expression.
+
+</P>
+
+
+<H2><A NAME="SEC11" HREF="index.html#SEC11">Semantic Actions</A></H2>
+<P>
+<A NAME="IDX16"></A>
+<A NAME="IDX17"></A>
+
+</P>
+<P>
+In order to be useful, a program must do more than parse input; it must
+also produce some output based on the input.  In a Bison grammar, a grammar
+rule can have an <STRONG>action</STRONG> made up of C statements.  Each time the
+parser recognizes a match for that rule, the action is executed.
+See section <A HREF="bison_6.html#SEC46">Actions</A>.
+        
+Most of the time, the purpose of an action is to compute the semantic value
+of the whole construct from the semantic values of its parts.  For example,
+suppose we have a rule which says an expression can be the sum of two
+expressions.  When the parser recognizes such a sum, each of the
+subexpressions has a semantic value which describes how it was built up.
+The action for this rule should create a similar sort of value for the
+newly recognized larger expression.
+
+</P>
+<P>
+For example, here is a rule that says an expression can be the sum of
+two subexpressions:
+
+</P>
+
+<PRE>
+expr: expr '+' expr   { $$ = $1 + $3; }
+        ;
+</PRE>
+
+<P>
+The action says how to produce the semantic value of the sum expression
+from the values of the two subexpressions.
+
+</P>
+
+
+<H2><A NAME="SEC12" HREF="index.html#SEC12">Bison Output: the Parser File</A></H2>
+<P>
+<A NAME="IDX18"></A>
+<A NAME="IDX19"></A>
+<A NAME="IDX20"></A>
+<A NAME="IDX21"></A>
+
+</P>
+<P>
+When you run Bison, you give it a Bison grammar file as input.  The output
+is a C source file that parses the language described by the grammar.
+This file is called a <STRONG>Bison parser</STRONG>.  Keep in mind that the Bison
+utility and the Bison parser are two distinct programs: the Bison utility
+is a program whose output is the Bison parser that becomes part of your
+program.
+
+</P>
+<P>
+The job of the Bison parser is to group tokens into groupings according to
+the grammar rules--for example, to build identifiers and operators into
+expressions.  As it does this, it runs the actions for the grammar rules it
+uses.
+
+</P>
+<P>
+The tokens come from a function called the <STRONG>lexical analyzer</STRONG> that you
+must supply in some fashion (such as by writing it in C).  The Bison parser
+calls the lexical analyzer each time it wants a new token.  It doesn't know
+what is "inside" the tokens (though their semantic values may reflect
+this).  Typically the lexical analyzer makes the tokens by parsing
+characters of text, but Bison does not depend on this.  See section <A HREF="bison_7.html#SEC61">The Lexical Analyzer Function <CODE>yylex</CODE></A>.
+
+</P>
+<P>
+The Bison parser file is C code which defines a function named
+<CODE>yyparse</CODE> which implements that grammar.  This function does not make
+a complete C program: you must supply some additional functions.  One is
+the lexical analyzer.  Another is an error-reporting function which the
+parser calls to report an error.  In addition, a complete C program must
+start with a function called <CODE>main</CODE>; you have to provide this, and
+arrange for it to call <CODE>yyparse</CODE> or the parser will never run.
+See section <A HREF="bison_7.html#SEC59">Parser C-Language Interface</A>.
+
+</P>
+<P>
+Aside from the token type names and the symbols in the actions you
+write, all variable and function names used in the Bison parser file
+begin with <SAMP>`yy'</SAMP> or <SAMP>`YY'</SAMP>.  This includes interface functions
+such as the lexical analyzer function <CODE>yylex</CODE>, the error reporting
+function <CODE>yyerror</CODE> and the parser function <CODE>yyparse</CODE> itself.
+This also includes numerous identifiers used for internal purposes.
+Therefore, you should avoid using C identifiers starting with <SAMP>`yy'</SAMP>
+or <SAMP>`YY'</SAMP> in the Bison grammar file except for the ones defined in
+this manual.
+
+</P>
+
+
+<H2><A NAME="SEC13" HREF="index.html#SEC13">Stages in Using Bison</A></H2>
+<P>
+<A NAME="IDX22"></A>
+<A NAME="IDX23"></A>
+
+</P>
+<P>
+The actual language-design process using Bison, from grammar specification
+to a working compiler or interpreter, has these parts:
+
+</P>
+
+<OL>
+<LI>
+
+Formally specify the grammar in a form recognized by Bison
+(see section <A HREF="bison_6.html#SEC34">Bison Grammar Files</A>).  For each grammatical rule in the language,
+describe the action that is to be taken when an instance of that rule
+is recognized.  The action is described by a sequence of C statements.
+
+<LI>
+
+Write a lexical analyzer to process input and pass tokens to the
+parser.  The lexical analyzer may be written by hand in C
+(see section <A HREF="bison_7.html#SEC61">The Lexical Analyzer Function <CODE>yylex</CODE></A>).  It could also be produced using Lex, but the use
+of Lex is not discussed in this manual.
+
+<LI>
+
+Write a controlling function that calls the Bison-produced parser.
+
+<LI>
+
+Write error-reporting routines.
+</OL>
+
+<P>
+To turn this source code as written into a runnable program, you
+must follow these steps:
+
+</P>
+
+<OL>
+<LI>
+
+Run Bison on the grammar to produce the parser.
+
+<LI>
+
+Compile the code output by Bison, as well as any other source files.
+
+<LI>
+
+Link the object files to produce the finished product.
+</OL>
+
+
+
+<H2><A NAME="SEC14" HREF="index.html#SEC14">The Overall Layout of a Bison Grammar</A></H2>
+<P>
+<A NAME="IDX24"></A>
+<A NAME="IDX25"></A>
+<A NAME="IDX26"></A>
+<A NAME="IDX27"></A>
+
+</P>
+<P>
+The input file for the Bison utility is a <STRONG>Bison grammar file</STRONG>.  The
+general form of a Bison grammar file is as follows:
+
+</P>
+
+<PRE>
+%{
+<VAR>C declarations</VAR>
+%}
+
+<VAR>Bison declarations</VAR>
+
+%%
+<VAR>Grammar rules</VAR>
+%%
+<VAR>Additional C code</VAR>
+</PRE>
+
+<P>
+The <SAMP>`%%'</SAMP>, <SAMP>`%{'</SAMP> and <SAMP>`%}'</SAMP> are punctuation that appears
+in every Bison grammar file to separate the sections.
+
+</P>
+<P>
+The C declarations may define types and variables used in the actions.
+You can also use preprocessor commands to define macros used there, and use
+<CODE>#include</CODE> to include header files that do any of these things.
+
+</P>
+<P>
+The Bison declarations declare the names of the terminal and nonterminal
+symbols, and may also describe operator precedence and the data types of
+semantic values of various symbols.
+
+</P>
+<P>
+The grammar rules define how to construct each nonterminal symbol from its
+parts.
+
+</P>
+<P>
+The additional C code can contain any C code you want to use.  Often the
+definition of the lexical analyzer <CODE>yylex</CODE> goes here, plus subroutines
+called by the actions in the grammar rules.  In a simple program, all the
+rest of the program can go here.
+
+</P>
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_3.html">previous</A>, <A HREF="bison_5.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

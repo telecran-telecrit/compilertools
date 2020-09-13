@@ -1,0 +1,593 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - Parser C-Language Interface</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_6.html">previous</A>, <A HREF="bison_8.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC59" HREF="index.html#SEC59">Parser C-Language Interface</A></H1>
+<P>
+<A NAME="IDX120"></A>
+<A NAME="IDX121"></A>
+
+</P>
+<P>
+The Bison parser is actually a C function named <CODE>yyparse</CODE>.  Here we
+describe the interface conventions of <CODE>yyparse</CODE> and the other
+functions that it needs to use.
+
+</P>
+<P>
+Keep in mind that the parser uses many C identifiers starting with
+<SAMP>`yy'</SAMP> and <SAMP>`YY'</SAMP> for internal purposes.  If you use such an
+identifier (aside from those in this manual) in an action or in additional
+C code in the grammar file, you are likely to run into trouble.
+
+</P>
+
+
+
+<H2><A NAME="SEC60" HREF="index.html#SEC60">The Parser Function <CODE>yyparse</CODE></A></H2>
+<P>
+<A NAME="IDX122"></A>
+
+</P>
+<P>
+You call the function <CODE>yyparse</CODE> to cause parsing to occur.  This
+function reads tokens, executes actions, and ultimately returns when it
+encounters end-of-input or an unrecoverable syntax error.  You can also
+write an action which directs <CODE>yyparse</CODE> to return immediately without
+reading further.
+
+</P>
+<P>
+The value returned by <CODE>yyparse</CODE> is 0 if parsing was successful (return
+is due to end-of-input).
+
+</P>
+<P>
+The value is 1 if parsing failed (return is due to a syntax error).
+
+</P>
+<P>
+In an action, you can cause immediate return from <CODE>yyparse</CODE> by using
+these macros:
+
+</P>
+<DL COMPACT>
+
+<DT><CODE>YYACCEPT</CODE>
+<DD>
+<A NAME="IDX123"></A>
+Return immediately with value 0 (to report success).
+
+<DT><CODE>YYABORT</CODE>
+<DD>
+<A NAME="IDX124"></A>
+Return immediately with value 1 (to report failure).
+</DL>
+
+
+
+<H2><A NAME="SEC61" HREF="index.html#SEC61">The Lexical Analyzer Function <CODE>yylex</CODE></A></H2>
+<P>
+<A NAME="IDX125"></A>
+<A NAME="IDX126"></A>
+
+</P>
+<P>
+The <STRONG>lexical analyzer</STRONG> function, <CODE>yylex</CODE>, recognizes tokens from
+the input stream and returns them to the parser.  Bison does not create
+this function automatically; you must write it so that <CODE>yyparse</CODE> can
+call it.  The function is sometimes referred to as a lexical scanner.
+
+</P>
+<P>
+In simple programs, <CODE>yylex</CODE> is often defined at the end of the Bison
+grammar file.  If <CODE>yylex</CODE> is defined in a separate source file, you
+need to arrange for the token-type macro definitions to be available there.
+To do this, use the <SAMP>`-d'</SAMP> option when you run Bison, so that it will
+write these macro definitions into a separate header file
+<TT>`<VAR>name</VAR>.tab.h'</TT> which you can include in the other source files
+that need it.  See section <A HREF="bison_12.html#SEC87">Invoking Bison</A>.
+</P>
+
+
+
+<H3><A NAME="SEC62" HREF="index.html#SEC62">Calling Convention for <CODE>yylex</CODE></A></H3>
+
+<P>
+The value that <CODE>yylex</CODE> returns must be the numeric code for the type
+of token it has just found, or 0 for end-of-input.
+
+</P>
+<P>
+When a token is referred to in the grammar rules by a name, that name
+in the parser file becomes a C macro whose definition is the proper
+numeric code for that token type.  So <CODE>yylex</CODE> can use the name
+to indicate that type.  See section <A HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>.
+
+</P>
+<P>
+When a token is referred to in the grammar rules by a character literal,
+the numeric code for that character is also the code for the token type.
+So <CODE>yylex</CODE> can simply return that character code.  The null character
+must not be used this way, because its code is zero and that is what
+signifies end-of-input.
+
+</P>
+<P>
+Here is an example showing these things:
+
+</P>
+
+<PRE>
+yylex ()
+{
+  ...
+  if (c == EOF)     /* Detect end of file. */
+    return 0;
+  ...
+  if (c == '+' || c == '-')
+    return c;      /* Assume token type for `+' is '+'. */
+  ...
+  return INT;      /* Return the type of the token. */
+  ...
+}
+</PRE>
+
+<P>
+This interface has been designed so that the output from the <CODE>lex</CODE>
+utility can be used without change as the definition of <CODE>yylex</CODE>.
+
+</P>
+<P>
+If the grammar uses literal string tokens, there are two ways that
+<CODE>yylex</CODE> can determine the token type codes for them:
+
+</P>
+
+<UL>
+<LI>
+
+If the grammar defines symbolic token names as aliases for the
+literal string tokens, <CODE>yylex</CODE> can use these symbolic names like
+all others.  In this case, the use of the literal string tokens in
+the grammar file has no effect on <CODE>yylex</CODE>.
+
+<LI>
+
+<CODE>yylex</CODE> can find the multi-character token in the <CODE>yytname</CODE>
+table.  The index of the token in the table is the token type's code.
+The name of a multi-character token is recorded in <CODE>yytname</CODE> with a
+double-quote, the token's characters, and another double-quote.  The
+token's characters are not escaped in any way; they appear verbatim in
+the contents of the string in the table.
+
+Here's code for looking up a token in <CODE>yytname</CODE>, assuming that the
+characters of the token are stored in <CODE>token_buffer</CODE>.
+
+
+<PRE>
+for (i = 0; i &#60; YYNTOKENS; i++)
+  {
+    if (yytname[i] != 0
+        &#38;&#38; yytname[i][0] == '"'
+        &#38;&#38; strncmp (yytname[i] + 1, token_buffer, strlen (token_buffer))
+        &#38;&#38; yytname[i][strlen (token_buffer) + 1] == '"'
+        &#38;&#38; yytname[i][strlen (token_buffer) + 2] == 0)
+      break;
+  }
+</PRE>
+
+The <CODE>yytname</CODE> table is generated only if you use the
+<CODE>%token_table</CODE> declaration.  See section <A HREF="bison_6.html#SEC57">Bison Declaration Summary</A>.
+</UL>
+
+
+
+<H3><A NAME="SEC63" HREF="index.html#SEC63">Semantic Values of Tokens</A></H3>
+
+<P>
+<A NAME="IDX127"></A>
+In an ordinary (nonreentrant) parser, the semantic value of the token must
+be stored into the global variable <CODE>yylval</CODE>.  When you are using
+just one data type for semantic values, <CODE>yylval</CODE> has that type.
+Thus, if the type is <CODE>int</CODE> (the default), you might write this in
+<CODE>yylex</CODE>:
+
+</P>
+
+<PRE>
+  ...
+  yylval = value;  /* Put value onto Bison stack. */
+  return INT;      /* Return the type of the token. */
+  ...
+</PRE>
+
+<P>
+When you are using multiple data types, <CODE>yylval</CODE>'s type is a union
+made from the <CODE>%union</CODE> declaration (see section <A HREF="bison_6.html#SEC52">The Collection of Value Types</A>).  So when
+you store a token's value, you must use the proper member of the union.
+If the <CODE>%union</CODE> declaration looks like this:
+
+</P>
+
+<PRE>
+%union {
+  int intval;
+  double val;
+  symrec *tptr;
+}
+</PRE>
+
+<P>
+then the code in <CODE>yylex</CODE> might look like this:
+
+</P>
+
+<PRE>
+  ...
+  yylval.intval = value; /* Put value onto Bison stack. */
+  return INT;          /* Return the type of the token. */
+  ...
+</PRE>
+
+
+
+<H3><A NAME="SEC64" HREF="index.html#SEC64">Textual Positions of Tokens</A></H3>
+
+<P>
+<A NAME="IDX128"></A>
+If you are using the <SAMP>`@<VAR>n</VAR>'</SAMP>-feature (see section <A HREF="bison_7.html#SEC67">Special Features for Use in Actions</A>) in
+actions to keep track of the textual locations of tokens and groupings,
+then you must provide this information in <CODE>yylex</CODE>.  The function
+<CODE>yyparse</CODE> expects to find the textual location of a token just parsed
+in the global variable <CODE>yylloc</CODE>.  So <CODE>yylex</CODE> must store the
+proper data in that variable.  The value of <CODE>yylloc</CODE> is a structure
+and you need only initialize the members that are going to be used by the
+actions.  The four members are called <CODE>first_line</CODE>,
+<CODE>first_column</CODE>, <CODE>last_line</CODE> and <CODE>last_column</CODE>.  Note that
+the use of this feature makes the parser noticeably slower.
+
+</P>
+<P>
+<A NAME="IDX129"></A>
+The data type of <CODE>yylloc</CODE> has the name <CODE>YYLTYPE</CODE>.
+
+</P>
+
+
+<H3><A NAME="SEC65" HREF="index.html#SEC65">Calling Conventions for Pure Parsers</A></H3>
+
+<P>
+When you use the Bison declaration <CODE>%pure_parser</CODE> to request a
+pure, reentrant parser, the global communication variables <CODE>yylval</CODE>
+and <CODE>yylloc</CODE> cannot be used.  (See section <A HREF="bison_6.html#SEC56">A Pure (Reentrant) Parser</A>.)  In such parsers the two global variables are replaced by
+pointers passed as arguments to <CODE>yylex</CODE>.  You must declare them as
+shown here, and pass the information back by storing it through those
+pointers.
+
+</P>
+
+<PRE>
+yylex (lvalp, llocp)
+     YYSTYPE *lvalp;
+     YYLTYPE *llocp;
+{
+  ...
+  *lvalp = value;  /* Put value onto Bison stack.  */
+  return INT;      /* Return the type of the token.  */
+  ...
+}
+</PRE>
+
+<P>
+If the grammar file does not use the <SAMP>`@'</SAMP> constructs to refer to
+textual positions, then the type <CODE>YYLTYPE</CODE> will not be defined.  In
+this case, omit the second argument; <CODE>yylex</CODE> will be called with
+only one argument.
+
+</P>
+<P>
+<A NAME="IDX130"></A>
+If you use a reentrant parser, you can optionally pass additional
+parameter information to it in a reentrant way.  To do so, define the
+macro <CODE>YYPARSE_PARAM</CODE> as a variable name.  This modifies the
+<CODE>yyparse</CODE> function to accept one argument, of type <CODE>void *</CODE>,
+with that name.
+
+</P>
+<P>
+When you call <CODE>yyparse</CODE>, pass the address of an object, casting the
+address to <CODE>void *</CODE>.  The grammar actions can refer to the contents
+of the object by casting the pointer value back to its proper type and
+then dereferencing it.  Here's an example.  Write this in the parser:
+
+</P>
+
+<PRE>
+%{
+struct parser_control
+{
+  int nastiness;
+  int randomness;
+};
+
+#define YYPARSE_PARAM parm
+%}
+</PRE>
+
+<P>
+Then call the parser like this:
+
+</P>
+
+<PRE>
+struct parser_control
+{
+  int nastiness;
+  int randomness;
+};
+
+...
+
+{
+  struct parser_control foo;
+  ...  /* Store proper data in <CODE>foo</CODE>.  */
+  value = yyparse ((void *) &#38;foo);
+  ...
+}
+</PRE>
+
+<P>
+In the grammar actions, use expressions like this to refer to the data:
+
+</P>
+
+<PRE>
+((struct parser_control *) parm)-&#62;randomness
+</PRE>
+
+<P>
+<A NAME="IDX131"></A>
+If you wish to pass the additional parameter data to <CODE>yylex</CODE>,
+define the macro <CODE>YYLEX_PARAM</CODE> just like <CODE>YYPARSE_PARAM</CODE>, as
+shown here:
+
+</P>
+
+<PRE>
+%{
+struct parser_control
+{
+  int nastiness;
+  int randomness;
+};
+
+#define YYPARSE_PARAM parm
+#define YYLEX_PARAM parm
+%}
+</PRE>
+
+<P>
+You should then define <CODE>yylex</CODE> to accept one additional
+argument--the value of <CODE>parm</CODE>.  (This makes either two or three
+arguments in total, depending on whether an argument of type
+<CODE>YYLTYPE</CODE> is passed.)  You can declare the argument as a pointer to
+the proper object type, or you can declare it as <CODE>void *</CODE> and
+access the contents as shown above.
+
+</P>
+<P>
+You can use <SAMP>`%pure_parser'</SAMP> to request a reentrant parser without
+also using <CODE>YYPARSE_PARAM</CODE>.  Then you should call <CODE>yyparse</CODE>
+with no arguments, as usual.
+
+</P>
+
+
+<H2><A NAME="SEC66" HREF="index.html#SEC66">The Error Reporting Function <CODE>yyerror</CODE></A></H2>
+<P>
+<A NAME="IDX132"></A>
+<A NAME="IDX133"></A>
+<A NAME="IDX134"></A>
+<A NAME="IDX135"></A>
+
+</P>
+<P>
+The Bison parser detects a <STRONG>parse error</STRONG> or <STRONG>syntax error</STRONG>
+whenever it reads a token which cannot satisfy any syntax rule.  A
+action in the grammar can also explicitly proclaim an error, using the
+macro <CODE>YYERROR</CODE> (see section <A HREF="bison_7.html#SEC67">Special Features for Use in Actions</A>).
+
+</P>
+<P>
+The Bison parser expects to report the error by calling an error
+reporting function named <CODE>yyerror</CODE>, which you must supply.  It is
+called by <CODE>yyparse</CODE> whenever a syntax error is found, and it
+receives one argument.  For a parse error, the string is normally
+<CODE>"parse error"</CODE>.
+
+</P>
+<P>
+<A NAME="IDX136"></A>
+If you define the macro <CODE>YYERROR_VERBOSE</CODE> in the Bison declarations
+section (see section <A HREF="bison_6.html#SEC37">The Bison Declarations Section</A>), then Bison provides a more verbose
+and specific error message string instead of just plain <CODE>"parse
+error"</CODE>.  It doesn't matter what definition you use for
+<CODE>YYERROR_VERBOSE</CODE>, just whether you define it.
+
+</P>
+<P>
+The parser can detect one other kind of error: stack overflow.  This
+happens when the input contains constructions that are very deeply
+nested.  It isn't likely you will encounter this, since the Bison
+parser extends its stack automatically up to a very large limit.  But
+if overflow happens, <CODE>yyparse</CODE> calls <CODE>yyerror</CODE> in the usual
+fashion, except that the argument string is <CODE>"parser stack
+overflow"</CODE>.
+
+</P>
+<P>
+The following definition suffices in simple programs:
+
+</P>
+
+<PRE>
+yyerror (s)
+     char *s;
+{
+  fprintf (stderr, "%s\n", s);
+}
+</PRE>
+
+<P>
+After <CODE>yyerror</CODE> returns to <CODE>yyparse</CODE>, the latter will attempt
+error recovery if you have written suitable error recovery grammar rules
+(see section <A HREF="bison_9.html#SEC81">Error Recovery</A>).  If recovery is impossible, <CODE>yyparse</CODE> will
+immediately return 1.
+
+</P>
+<P>
+<A NAME="IDX137"></A>
+The variable <CODE>yynerrs</CODE> contains the number of syntax errors
+encountered so far.  Normally this variable is global; but if you
+request a pure parser (see section <A HREF="bison_6.html#SEC56">A Pure (Reentrant) Parser</A>) then it is a local variable
+which only the actions can access.
+
+</P>
+
+
+<H2><A NAME="SEC67" HREF="index.html#SEC67">Special Features for Use in Actions</A></H2>
+<P>
+<A NAME="IDX138"></A>
+<A NAME="IDX139"></A>
+
+</P>
+<P>
+Here is a table of Bison constructs, variables and macros that
+are useful in actions.
+
+</P>
+<DL COMPACT>
+
+<DT><SAMP>`$$'</SAMP>
+<DD>
+Acts like a variable that contains the semantic value for the
+grouping made by the current rule.  See section <A HREF="bison_6.html#SEC46">Actions</A>.
+
+<DT><SAMP>`$<VAR>n</VAR>'</SAMP>
+<DD>
+Acts like a variable that contains the semantic value for the
+<VAR>n</VAR>th component of the current rule.  See section <A HREF="bison_6.html#SEC46">Actions</A>.
+
+<DT><SAMP>`$&#60;<VAR>typealt</VAR>&#62;$'</SAMP>
+<DD>
+Like <CODE>$$</CODE> but specifies alternative <VAR>typealt</VAR> in the union
+specified by the <CODE>%union</CODE> declaration.  See section <A HREF="bison_6.html#SEC47">Data Types of Values in Actions</A>.
+
+<DT><SAMP>`$&#60;<VAR>typealt</VAR>&#62;<VAR>n</VAR>'</SAMP>
+<DD>
+Like <CODE>$<VAR>n</VAR></CODE> but specifies alternative <VAR>typealt</VAR> in the
+union specified by the <CODE>%union</CODE> declaration.  
+See section <A HREF="bison_6.html#SEC47">Data Types of Values in Actions</A>.
+<DT><SAMP>`YYABORT;'</SAMP>
+<DD>
+Return immediately from <CODE>yyparse</CODE>, indicating failure.
+See section <A HREF="bison_7.html#SEC60">The Parser Function <CODE>yyparse</CODE></A>.
+
+<DT><SAMP>`YYACCEPT;'</SAMP>
+<DD>
+Return immediately from <CODE>yyparse</CODE>, indicating success.
+See section <A HREF="bison_7.html#SEC60">The Parser Function <CODE>yyparse</CODE></A>.
+
+<DT><SAMP>`YYBACKUP (<VAR>token</VAR>, <VAR>value</VAR>);'</SAMP>
+<DD>
+<A NAME="IDX140"></A>
+Unshift a token.  This macro is allowed only for rules that reduce
+a single value, and only when there is no look-ahead token.
+It installs a look-ahead token with token type <VAR>token</VAR> and
+semantic value <VAR>value</VAR>; then it discards the value that was
+going to be reduced by this rule.
+
+If the macro is used when it is not valid, such as when there is
+a look-ahead token already, then it reports a syntax error with
+a message <SAMP>`cannot back up'</SAMP> and performs ordinary error
+recovery.
+
+In either case, the rest of the action is not executed.
+
+<DT><SAMP>`YYEMPTY'</SAMP>
+<DD>
+<A NAME="IDX141"></A>
+Value stored in <CODE>yychar</CODE> when there is no look-ahead token.
+
+<DT><SAMP>`YYERROR;'</SAMP>
+<DD>
+<A NAME="IDX142"></A>
+Cause an immediate syntax error.  This statement initiates error
+recovery just as if the parser itself had detected an error; however, it
+does not call <CODE>yyerror</CODE>, and does not print any message.  If you
+want to print an error message, call <CODE>yyerror</CODE> explicitly before
+the <SAMP>`YYERROR;'</SAMP> statement.  See section <A HREF="bison_9.html#SEC81">Error Recovery</A>.
+
+<DT><SAMP>`YYRECOVERING'</SAMP>
+<DD>
+This macro stands for an expression that has the value 1 when the parser
+is recovering from a syntax error, and 0 the rest of the time.
+See section <A HREF="bison_9.html#SEC81">Error Recovery</A>.
+
+<DT><SAMP>`yychar'</SAMP>
+<DD>
+Variable containing the current look-ahead token.  (In a pure parser,
+this is actually a local variable within <CODE>yyparse</CODE>.)  When there is
+no look-ahead token, the value <CODE>YYEMPTY</CODE> is stored in the variable.
+See section <A HREF="bison_8.html#SEC69">Look-Ahead Tokens</A>.
+
+<DT><SAMP>`yyclearin;'</SAMP>
+<DD>
+Discard the current look-ahead token.  This is useful primarily in
+error rules.  See section <A HREF="bison_9.html#SEC81">Error Recovery</A>.
+
+<DT><SAMP>`yyerrok;'</SAMP>
+<DD>
+Resume generating error messages immediately for subsequent syntax
+errors.  This is useful primarily in error rules.  
+See section <A HREF="bison_9.html#SEC81">Error Recovery</A>.
+
+<DT><SAMP>`@<VAR>n</VAR>'</SAMP>
+<DD>
+<A NAME="IDX143"></A>
+Acts like a structure variable containing information on the line
+numbers and column numbers of the <VAR>n</VAR>th component of the current
+rule.  The structure has four members, like this:
+
+
+<PRE>
+struct {
+  int first_line, last_line;
+  int first_column, last_column;
+};
+</PRE>
+
+Thus, to get the starting line number of the third component, use
+<SAMP>`@3.first_line'</SAMP>.
+
+In order for the members of this structure to contain valid information,
+you must make <CODE>yylex</CODE> supply this information about each token.
+If you need only certain members, then <CODE>yylex</CODE> need only fill in
+those members.
+
+The use of this feature makes the parser noticeably slower.
+</DL>
+
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_6.html">previous</A>, <A HREF="bison_8.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

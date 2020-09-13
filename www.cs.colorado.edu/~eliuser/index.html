@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="description" CONTENT="Eli is a domain-specific programming environment designed to generate compilers for programming languages from specifications. Eli contains a vastlibrary with precoined solutions and reusable components.">
+   <META NAME="keywords" CONTENT="compiler, compiler-compiler, programming languages, domain specific program generators, source to source, translators, analyzers, interpreters">
+   <TITLE>An Integrated Toolset for Compiler Construction</TITLE>
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF">
+
+<TABLE ALIGN="center">
+<TR>
+<TD><IMG SRC="../../eli-project.sourceforge.net/gifs/eli.gif" ALT="Eli: Translator Construction Made Easy"></TD>
+</TR><TR><TD>
+<TABLE WIDTH="100%">
+<TR><TD>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/bullet.gif" BORDER="0">
+<A HREF="http://eli-project.sourceforge.net//elionline/index.html">
+Manuals</A>
+</TD>
+<TD>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/bullet.gif" BORDER="0">
+<A HREF="http://eli-project.sourceforge.net//EliExamples.html">
+Examples</A>
+</TD>
+<TD>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/bullet.gif" BORDER="0">
+<A HREF="http://sourceforge.net/projects/eli-project">
+Download</A>
+</TD></TR>
+</TABLE>
+</TD>
+</TABLE>
+
+<P>
+Methods and techniques of compiler construction provide an enabling
+technology for
+<A href="http://books.google.com/books?id=A1Xq4dZLNy4C&printsec=frontcover&dq=%22Generating+Software+from+Specifications%22+waite&source=bl&ots=h0jQl-ZMBw&sig=GVoP0zvgmMvNQ3zkCDaz19XpLfI&hl=en&ei=iJf5TLj4C8T68Abmh6j6CA&sa=X&oi=book_result&ct=result&resnum=1&sqi=2&ved=0CBYQ6AEwAA#v=onepage&q&f=false">
+generating software from specifications</A>.
+They are applicable to a
+range of problems that is much broader than the development of compilers
+for programming languages: Processors for input languages, design
+languages, specification languages, and intermediate languages in
+applications programs all demand solutions to translation problems.</P>
+<P>We have combined a variety of standard tools that implement powerful
+compiler construction strategies into a domain-specific programming
+environment called <DFN>Eli</DFN>.  Using this environment, one can
+automatically generate complete language implementations from
+application-oriented specifications.  The implementations might be
+interpretive, using the constructs of the source language to invoke
+operations of an existing system, or might involve translation into an
+arbitrary target language.</P>
+<P>Eli provides modern compiler construction facilities to users with a
+wide range of sophistication. It offers complete solutions for
+commonly-encountered language implementation subtasks and contains
+libraries of reusable specifications, making possible the production of
+high-quality implementations from simple problem descriptions.</P>
+<P>The system has been in the field since 1989, and has been used in a
+number of projects worldwide.  It generates programs whose performance
+is comparable to that of a good hand-coded implementation.  Development
+time for a processor using Eli is generally about one third of that for
+comparable hand code, and maintenance is significantly easier because
+specifications rather than implementations are being maintained.</P>
+<H1>Application Areas</H1>
+<P>Eli has been and is being used successfully in a number of areas to
+produce translators, program generators, analysers and interpreters. 
+Here is a small selection of applications we have heard about:</P>
+<H2>Programming language compilers for</H2>
+<UL>
+<LI>ANSI C to SPARC machine code</LI>
+<LI>Pascal to Pcode</LI>
+<LI>Pascal to C</LI>
+<LI>Many user-defined languages</LI></UL>
+<H2>Special processors that translate</H2>
+<UL><LI>Musical notation to PostScript scores</LI>
+<LI>Statistical data to TeX tables or histograms</LI></UL>
+<H2>Program generators that produce</H2>
+<UL><LI>C simulation programs from descriptions of mechanical
+systems</LI>
+<LI>Query language calls from a database description</LI>
+<LI>Finite-element models from descriptions of solids</LI></UL>
+<H2>Interpreters that</H2>
+<UL><LI>Do animation from descriptions of graphics</LI>
+<LI>Interactively evaluate decision tables</LI></UL>
+<H2>Analyzers to</H2>
+<UL><LI>Enforce programming style</LI>
+<LI>Interactively validate commands for satellite control</LI>
+<LI>Compute and present statistics</LI></UL>
+<H1>Advantages of Eli</H1>
+<P>Eli is a freely-available system that has
+many advantages over conventional tool sets for compiler
+construction.</P>
+<H2>Problem-oriented instead of tool-oriented:</H2>
+<P>The user describes the problem that must be solved.  Eli
+automatically  employs the tools and components needed for that
+particular problem.  Because of this, it is possible to improve tools
+and components without invalidating specifications.</P>
+<H2>Broad spectrum of tasks and solutions:</H2>
+<P>Eli offers solutions for most of the tasks that must be carried out
+to implement a language.  They range from structural analysis (solved by
+tools analogous to LEX and YACC) through analysis of names, types and
+values, to  storage of translation data structures and production of the
+target text.  There is even a declarative specification for the
+command-line parameterization of the generated programs.</P>
+<H2>Little prior knowledge required:</H2>
+<P>A basic understanding of languages and language structures suffices
+to begin using Eli.  Tutorials with sample problems and solutions,
+together with extensive on-line documentation and an interactive help
+system lead the user further if they so desire.</P>
+<H2>Integrated system, with flexible overriding:</H2>
+<P>All components of Eli are coordinated with one another in such a way
+that the interfaces of the generated modules fit together.  As a result,
+Eli generates a complete set of C modules, including a Makefile, to
+solve the specified problem.  Mechanisms are provided to allow users to
+override standard modules and interfaces if necessary to solve specific
+problems.</P>
+<H2>State-of-the art components:</H2>
+<P>Eli's tools and modules are implemented according to current
+understanding of the best approaches to solving translation problems. 
+The generated programs are reliable and efficient.  Eli is widely used
+and tested.</P>
+<H2>Selective regeneration:</H2>
+<P>In the course of developing a language implementation, the user
+makes many changes and corrections in the specification.  Eli guarantees
+that the product is always generated from the current
+specification and that only the generation steps that are actually
+required are carried out.</P>
+
+<HR>
+
+<H2>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/culogo.gif" ALIGN="middle" BORDER="0">
+<A HREF="http://www.cs.colorado.edu/">
+University of Colorado at Boulder</A>, USA
+</H2>
+
+<H2>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/pblogo.gif" ALIGN="middle" BORDER="0">
+<A HREF="http://wwwcs.upb.de/cs/">
+University of Paderborn</A>, Germany
+</H2>
+
+<H2>
+<IMG SRC="../../eli-project.sourceforge.net/gifs/mqlogo.gif" ALIGN="middle" BORDER="0">
+<A HREF="http://www.comp.mq.edu.au/">
+Macquarie University</A>, Australia
+</H2>
+
+<H2>
+<a href="http://sourceforge.net/projects/eli-project">
+<img src="../../sourceforge.net/sflogo.php?group_id=70447&amp;type=1"
+width="88" height="31" border="0" alt="SourceForge.net Logo"></a>
+
+</BODY>
+</HTML>

@@ -1,0 +1,252 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="description" content="Cogencee compiler generator which assists in the automatic production of a compiler in the Delphi computer language">
+<meta http-equiv="keywords" content="cogencee, compiler, generator, delphi, parser, obfuscator, pascal">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Cogencee</title>
+<meta name="Microsoft Theme" content="pv_soft 110, default">
+<meta name="Microsoft Border" content="tbl, default">
+</head>
+
+<body bgcolor="#BEBEBE" text="#000000" link="#0000FF" vlink="#CC0000" alink="#00CC33"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+
+
+      <p align="center"><a href="http://www.cocolsoft.com.au/index.html"><img src="../_derived/home_cmp_pv_soft110_gbtn.gif" width="111" height="21" border="0" alt="Home" align="middle"></a></p>
+
+      <p align="center"><font size="6"><strong><img src="_derived/cogen.htm_cmp_pv_soft110_bnr.gif" width="598" height="74" border="0" alt="Cogencee"></strong></font></p>
+
+      <p align="center"><small><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </small></p>
+
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td valign="top" width="1%"><!--mstheme--><font face="times new roman, Times New Roman, Times">
+            <div align="left">
+              <!--mstheme--></font><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td><!--mstheme--><font face="times new roman, Times New Roman, Times"><img src="../images/swtop.gif" alt="swtop.gif (1189 bytes)" width="155" height="25"><!--mstheme--></font></td>
+                </tr>
+                <tr>
+                  <td background="../images/sdvnbg.gif"><!--mstheme--><font face="times new roman, Times New Roman, Times"><img src="_derived/cogen.htm_cmp_pv_soft110_vbtn_p.gif" width="155" height="18" border="0" alt="Cogencee"><br><script language="JavaScript"><!--
+MSFPhover = 
+  (((navigator.appName == "Netscape") && 
+  (parseInt(navigator.appVersion) >= 3 )) || 
+  ((navigator.appName == "Microsoft Internet Explorer") && 
+  (parseInt(navigator.appVersion) >= 4 ))); 
+function MSFPpreload(img) 
+{
+  var a=new Image(); a.src=img; return a; 
+}
+// --></script><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav1n=MSFPpreload("../cocolcloak/_derived/cocolcloak.htm_cmp_pv_soft110_vbtn.gif"); MSFPnav1h=MSFPpreload("../cocolcloak/_derived/cocolcloak.htm_cmp_pv_soft110_vbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cocolcloak/cocolcloak.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1h.src" onMouseOut="if(MSFPhover) document['MSFPnav1'].src=MSFPnav1n.src"><img src="../cocolcloak/_derived/cocolcloak.htm_cmp_pv_soft110_vbtn.gif" width="155" height="18" border="0" alt="CocolCloak" name="MSFPnav1"></a><br><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav2n=MSFPpreload("../tcoldelphi/_derived/tcoldelphi.htm_cmp_pv_soft110_vbtn.gif"); MSFPnav2h=MSFPpreload("../tcoldelphi/_derived/tcoldelphi.htm_cmp_pv_soft110_vbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/tcoldelphi/tcoldelphi.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2h.src" onMouseOut="if(MSFPhover) document['MSFPnav2'].src=MSFPnav2n.src"><img src="../tcoldelphi/_derived/tcoldelphi.htm_cmp_pv_soft110_vbtn.gif" width="155" height="18" border="0" alt="TColDelphi" name="MSFPnav2"></a><br><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav3n=MSFPpreload("../dgram/_derived/dgramh.htm_cmp_pv_soft110_vbtn.gif"); MSFPnav3h=MSFPpreload("../dgram/_derived/dgramh.htm_cmp_pv_soft110_vbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/dgram/dgramh.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3h.src" onMouseOut="if(MSFPhover) document['MSFPnav3'].src=MSFPnav3n.src"><img src="../dgram/_derived/dgramh.htm_cmp_pv_soft110_vbtn.gif" width="155" height="18" border="0" alt="Cocolsoft Delphi Grammar" name="MSFPnav3"></a><!--mstheme--></font></td>
+                </tr>
+                <tr>
+                  <td><!--mstheme--><font face="times new roman, Times New Roman, Times"><img src="../images/swbottom.gif" alt="swbottom.gif (528 bytes)" width="155" height="4"><!--mstheme--></font></td>
+                </tr>
+              </table><!--mstheme--><font face="times new roman, Times New Roman, Times">
+            </div>
+            <p align="center">&nbsp;</p>
+            <p align="center">&nbsp;</p>
+            <p align="center">&nbsp;</p>
+            <p align="center">&nbsp;</p>
+
+      <p>&nbsp;</p>
+<!--mstheme--></font></td><td valign="top" width="24"></td><!--msnavigation--><td valign="top"><!--mstheme--><font face="times new roman, Times New Roman, Times">
+<p><img border="0" src="../images/cogen163.gif" alt="Product Name - Cogencee" width="393" height="89"></p>
+<p><!--webbot bot="Navigation" S-Type="children" S-Orientation="horizontal"
+S-Rendering="graphics" B-Include-Home B-Include-Up U-Page S-Target startspan --><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav4n=MSFPpreload("_derived/faq.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav4h=MSFPpreload("_derived/faq.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/faq.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav4'].src=MSFPnav4h.src" onMouseOut="if(MSFPhover) document['MSFPnav4'].src=MSFPnav4n.src"><img src="_derived/faq.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="FAQ" align="middle" name="MSFPnav4"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav5n=MSFPpreload("_derived/links.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav5h=MSFPpreload("_derived/links.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/links.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav5'].src=MSFPnav5h.src" onMouseOut="if(MSFPhover) document['MSFPnav5'].src=MSFPnav5n.src"><img src="_derived/links.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="Links" align="middle" name="MSFPnav5"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav6n=MSFPpreload("_derived/pricing.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav6h=MSFPpreload("_derived/pricing.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/pricing.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav6'].src=MSFPnav6h.src" onMouseOut="if(MSFPhover) document['MSFPnav6'].src=MSFPnav6n.src"><img src="_derived/pricing.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="Pricing" align="middle" name="MSFPnav6"></a><!--webbot bot="Navigation" endspan i-checksum="19945" -->
+</p>
+<p>A compiler generator is a computer program which assists in the automatic
+production of a compiler.</p>
+<p>What can Cogencee do for you?&nbsp;</p>
+<p> With Cogencee you can produce scanners,
+parsers, compilers, interpreters, language checkers, natural language
+processors, expert system shells, scripting languages and calculators.</p>
+<p>Although Cogencee is generically named a compiler generator you are not
+limited to producing compilers. The above list indicates some of the
+applications!</p>
+<p>Cogencee has been written in Delphi and generates Delphi code. Just like
+Delphi gains its strength because it is written in Delphi, the compiler language
+(Cocol) behind Cogencee was used to generate itself.</p>
+<p>Use the compiler language (Cocol) and your Delphi imbedded code to generate
+your applications.</p>
+<p>Cogencee is available for 32 bit platforms. There are two versions - Standard and Professional.
+(Cogencee version 1
+is available for Delphi 1 (16 bit) for Windows 3.1 if required.)</p>
+<p>The Professional version is the source code version, with additionally an
+Obfuscator program, class TColMStack&nbsp;&nbsp; and hashing tools. TColMStack
+is Cocolsoft's multi-stack class which combines
+the functionality of a stack and a doubly linked list. This class has been&nbsp;used in the scanner generator for the 'Cocolsoft Delphi Grammar'.
+TColMStack comes with a
+test bed program.</p>
+<p>Cogencee version 2 now includes TColDelphi. This is the Cocolsoft Delphi
+Grammar Component. You get the source to the component ('ColDelphi.pas'), a help
+file and 6 demonstration programs with source. By running Cogencee you are able
+to alter the grammar behind the component or change its functionality.&nbsp;</p>
+<p>Cogencee ships with a manual. (A4 size at over 80 pages.) This has a User
+Guide and two technical papers that go into great detail about the behind the
+scenes workings. The User Guide has three chapters devoted to building a grammar
+for simple expressions.</p>
+<p>There is an extensive set of examples with full source code. These usually
+give the grammar, the generated Delphi code, the main unit, and executable.</p>
+<p>The generated code can be used in programs that are</p>
+<!--mstheme--></font><!--msthemelist--><table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">visual form based (see Downloads page for an example)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">component (see Downloads page for an example)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">console or command line (see Downloads page for an example)<!--mstheme--></font><!--msthemelist--></td></tr>
+<!--msthemelist--></table><!--mstheme--><font face="times new roman, Times New Roman, Times">
+<p>Grammars for the following are given</p>
+<!--mstheme--></font><!--msthemelist--><table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">Delphi Grammar. <a href="http://www.cocolsoft.com.au/dgram/dgramh.htm">Cocolsoft
+    Delphi Grammar homepage</a>
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">AdaCS (subset of the Ada language)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">CHD (calculator program explained in the User Guide)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">Cocol (the Compiler Compiler Language used by Cogencee)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">MicroAda (a further subset of Ada than AdaCS)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">Modula-2 (like Pascal another language designed by Niklaus Wirth)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">MP (mini Pascal. Demonstration of a compiler and interpreter)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">Yacc (designed to scan Yacc input grammars)
+  <!--msthemelist--><tr><td valign="baseline" width="42"><img src="../_themes/pv_soft/bull1.gif" width="13" height="13" hspace="14"></td><td valign="top" width="100%"><!--mstheme--><font face="times new roman, Times New Roman, Times">and more!<!--mstheme--></font><!--msthemelist--></td></tr>
+<!--msthemelist--></table><!--mstheme--><font face="times new roman, Times New Roman, Times">
+<p>Testing grammar framework (32 bit)</p>
+<p>Cogencee main program version 2.0 (32 bit)</p>
+<p>What you get in each version:</p>
+<p>&nbsp;<!--mstheme--></font><table border="1" bordercolordark="#808080" bordercolorlight="#FFFFFF">
+  <tbody>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p><b>Standard</b></p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p><b>Professional</b></p>
+      <!--mstheme--></font></td>
+    </tr>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>&nbsp;</p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>As for Standard plus :</p>
+      <!--mstheme--></font></td>
+    </tr>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>Delphi (32 bit) for Windows 95 and up</p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>Delphi (source to low level tools)</p>
+      <!--mstheme--></font></td>
+    </tr>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>TColDelphi(source code)</p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>Obfuscator (object code)</p>
+      <!--mstheme--></font></td>
+    </tr>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>Redistributables (source code)</p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>Hashing unit (with source)</p>
+      <!--mstheme--></font></td>
+    </tr>
+    <tr>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>&nbsp;</p>
+      <!--mstheme--></font></td>
+      <td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+        <p>TColMStack(with source)</p>
+      <!--mstheme--></font></td>
+    </tr>
+  </tbody>
+</table><!--mstheme--><font face="times new roman, Times New Roman, Times">
+<p>The product has been checked with MemProof and has been memory leak proofed.</p>
+<p>Product support is via email and fax machine.</p>
+<!--msthemeseparator--><p align="center"><img src="../_themes/pv_soft/divider.gif" width="400" height="17"></p>
+<p>View a screenshot of Cogencee 32 bit? <font color="#0000af"><a href="http://www.cocolsoft.com.au/cogen/cogend4.htm">Yes</a></font></p>
+<!--msthemeseparator--><p align="center"><img src="../_themes/pv_soft/divider.gif" width="400" height="17"></p>
+<p>Cogencee is based on core technology licenced from Dr. H. Dobler of Austria.
+This technology has been successfully used for many years in various projects.
+The language Cocol is a refinement of the YACC compiler generator. Cocol was
+first developed at the University of Linz in the early 1980's. It was
+progressively modified, adding features and making it even easier to read and
+understand. Cocol shipped with Cogencee is the result of this evolutionary
+progression.</p>
+<p>We at Cocolsoft Computer Solutions first used Cocol way back in 1991. We were
+impressed by its elegance, robustness, power and maintainability. To us a well
+crafted grammar should be a work of beauty. Our impression hasn't altered and we
+hope that you too will enjoy crafting various tools with Cogencee.</p>
+<h4><!--mstheme--><font face="Courier New, Courier New, Courier" color="#800000">Policy<!--mstheme--></font></h4>
+<p>&nbsp;&nbsp;&nbsp; With the release of Version 2.0, licencees of Cogencee
+will be entitled to free upgrades up to but not including the next major
+release.</p>
+<p>&nbsp;&nbsp;&nbsp; Win 32&nbsp; -&nbsp; Version 1.2 is no longer supported.
+You will need to upgrade to Version 2.0. This is due to major changes to the
+product and the 'Cocolsoft Delphi Grammar'.</p>
+<p>&nbsp;&nbsp;&nbsp; Windows 3.1&nbsp; -&nbsp; Version 1.2 is no longer
+supported.</p>
+<h4><!--mstheme--><font face="Courier New, Courier New, Courier" color="#800000">Release History<!--mstheme--></font></h4></font>
+<p>Effective 30 Jun 2012 this product has been withdrawn from sale.</p>
+<font face="times new roman, Times New Roman, Times">
+<h5><!--mstheme--><font face="Courier New, Courier New, Courier" color="#004080">Version 2.10<!--mstheme--></font></h5>
+<p>&nbsp;&nbsp;&nbsp; Release dated 8 Mar 2003. This is a new Cogencee exe
+  tailored to run under Windows XP Professional. (Will run under Windows 95 but
+  hasn't been tested for other platforms.)</p>
+<h5><!--mstheme--><font face="Courier New, Courier New, Courier" color="#004080">Version 2.01<!--mstheme--></font></h5>
+<p>&nbsp;&nbsp;&nbsp; Release 29 Jan 2001. Some cosmetic changes to
+  Redistributables (ErrHand, TextIO, Utils); some cosmetic changes to frames
+  (PGT_Sem, PGT_Syn); some cosmetic changes to the 'Cocolsoft Delphi Grammar'
+  (frame PGT_Sem, frame PGT_Syn); bug fix to Include file processing in 'Cocolsoft
+  Delphi Grammar' (frame SG_Lex); updated Help file to bundled TColDelphi.</p>
+<h5><!--mstheme--><font face="Courier New, Courier New, Courier" color="#004080">Version 2.0<!--mstheme--></font></h5>
+<p>&nbsp;&nbsp;&nbsp; Release dated 16 Jul 2000. Support of component
+  generation. Bundling of component TColDelphi. Bundling of TColMStack with
+  Professional version. Delphi 1 is no longer supported.</p>
+<h5><!--mstheme--><font face="Courier New, Courier New, Courier" color="#004080">Version 1.2<!--mstheme--></font></h5>
+<p>&nbsp;&nbsp;&nbsp; Released 13 Aug 1999.</p>
+<h5><!--mstheme--><font face="Courier New, Courier New, Courier" color="#004080">Version 1.0<!--mstheme--></font></h5>
+<p>&nbsp;&nbsp;&nbsp; Released Oct 1998.</p>
+<p>(This page updated 4 Aug 2003; 30 Jun 2012)</p>
+<p><!--webbot bot="Navigation" S-Type="children" S-Orientation="horizontal"
+S-Rendering="graphics" B-Include-Home B-Include-Up U-Page S-Target startspan --><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav7n=MSFPpreload("_derived/faq.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav7h=MSFPpreload("_derived/faq.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/faq.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav7'].src=MSFPnav7h.src" onMouseOut="if(MSFPhover) document['MSFPnav7'].src=MSFPnav7n.src"><img src="_derived/faq.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="FAQ" align="middle" name="MSFPnav7"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav8n=MSFPpreload("_derived/links.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav8h=MSFPpreload("_derived/links.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/links.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav8'].src=MSFPnav8h.src" onMouseOut="if(MSFPhover) document['MSFPnav8'].src=MSFPnav8n.src"><img src="_derived/links.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="Links" align="middle" name="MSFPnav8"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav9n=MSFPpreload("_derived/pricing.htm_cmp_pv_soft110_hbtn.gif"); MSFPnav9h=MSFPpreload("_derived/pricing.htm_cmp_pv_soft110_hbtn_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cogen/pricing.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav9'].src=MSFPnav9h.src" onMouseOut="if(MSFPhover) document['MSFPnav9'].src=MSFPnav9n.src"><img src="_derived/pricing.htm_cmp_pv_soft110_hbtn.gif" width="134" height="52" border="0" alt="Pricing" align="middle" name="MSFPnav9"></a><!--webbot bot="Navigation" endspan i-checksum="21781" -->
+</p>
+<!--mstheme-->
+</font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="times new roman, Times New Roman, Times">
+
+      <p align="center"><a href="http://www.cocolsoft.com.au">http://www.cocolsoft.com.au</a></p>
+
+      <p align="center">Email <img border="0" src="../images/emailpiccocol.gif" align="top" width="149" height="20"><br>
+Copyright © 1998-2009 Cocolsoft Computer Solutions. All Rights Reserved.
+</p>
+
+      <p align="center"><script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav10n=MSFPpreload("../_derived/home_cmp_pv_soft110_home.gif"); MSFPnav10h=MSFPpreload("../_derived/home_cmp_pv_soft110_home_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/index.html" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav10'].src=MSFPnav10h.src" onMouseOut="if(MSFPhover) document['MSFPnav10'].src=MSFPnav10n.src"><img src="../_derived/home_cmp_pv_soft110_home.gif" width="103" height="28" border="0" alt="Home" align="middle" name="MSFPnav10"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav11n=MSFPpreload("../_derived/up_cmp_pv_soft110_up.gif"); MSFPnav11h=MSFPpreload("../_derived/up_cmp_pv_soft110_up_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/products.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav11'].src=MSFPnav11h.src" onMouseOut="if(MSFPhover) document['MSFPnav11'].src=MSFPnav11n.src"><img src="../_derived/up_cmp_pv_soft110_up.gif" width="103" height="28" border="0" alt="Up" align="middle" name="MSFPnav11"></a> <script language="JavaScript"><!--
+if(MSFPhover) { MSFPnav12n=MSFPpreload("../_derived/next_cmp_pv_soft110_next.gif"); MSFPnav12h=MSFPpreload("../_derived/next_cmp_pv_soft110_next_a.gif"); }
+// --></script><a href="http://www.cocolsoft.com.au/cocolcloak/cocolcloak.htm" language="JavaScript" onMouseOver="if(MSFPhover) document['MSFPnav12'].src=MSFPnav12h.src" onMouseOut="if(MSFPhover) document['MSFPnav12'].src=MSFPnav12n.src"><img src="../_derived/next_cmp_pv_soft110_next.gif" width="103" height="28" border="0" alt="Next" align="middle" name="MSFPnav12"></a></p>
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+
+</html>

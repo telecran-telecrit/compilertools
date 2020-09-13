@@ -1,0 +1,888 @@
+<!-- @(#) retarg.html 1.31 17/01/09 19:26:35 @(#) -->
+<HTML>
+<HEAD>
+<TITLE>
+Archelon's User Retargetable Development Tools
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="FFFFFF" TEXT="000000">
+
+<IMG ALIGN=RIGHT SRC="turtle.gif" ALT="Archelon Ischyros">
+
+<IMG SRC="archelon.gif" ALT="Archelon Inc.">
+
+<H1><EM>Software Tools for your new processor</EM></H1>
+<H2>User Retargetable Development Tools II</H2>
+
+<P>
+<I>Last Revised 2017/01/09</I>
+</P>
+
+<H3>Introduction</H3>
+<P>
+Archelon Inc. has, since 1982, developed tools for microcoding and 
+consulted to major companies in the area of micro-architecture design. 
+In particular, we have pioneered the implementation of standard high 
+level languages on microprogrammed hardware, signal processor chips 
+and other unique architectures.
+</P>
+<P>
+Our mission is to streamline the process of writing software for new 
+chips for companies concerned about software quality, speed of 
+development or their competitive position in adopting new hardware 
+technology quickly and affordably.
+</P>
+<P>
+Our new user retargetable software development system makes it 
+possible to have a high level language compiler and a full set of 
+software development tools running for any programmable architecture 
+in a matter of weeks. The compiler supports the full ANSI standard for 
+C plus a number of extensions which are particularly useful for 
+microprogrammed architectures and for architectures which contain 
+application-specific hardware.
+</P>
+<P>
+The current Retargetable Tools suite
+has been in active use since 1990 and is being continuously enhanced
+to support new ideas in computer architecture design.
+</P>
+
+<H3>Overview</H3>
+<P>
+The complete set of components included in the system include the 
+following:
+</P>
+
+<TABLE>
+	<TR>
+		<TD><A HREF="retarg.html#mcpp">MCPP</A></TD>
+		<TD>- ANSI C macro preprocessor;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mcc">MCC</A></TD>
+		<TD>- Optimizing ANSI C compiler;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mcpeep">MCPEEP</A></TD>
+		<TD>- peephole optimizer;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mcpack">MCPACK</A></TD>
+		<TD>- optimizing assembler and compactor;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mcasr">MCASR</A></TD>
+		<TD>- retargetable microcode assembler;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mclink">MCLINK</A></TD>
+		<TD>- linker;</TD>
+	</TR>
+	<TR>
+		<TD><A HREF="retarg.html#mclib">MCLIB</A></TD>
+		<TD>- object librarian</TD>
+	</TR>
+</TABLE>
+    
+<P>
+These tools allow you to write code for your machine at three 
+different levels:
+</P>
+
+<UL>
+	<LI>
+		At the high level language level, you can write standard C code.
+	</LI> 
+	<LI>
+		At the "compactor level", you can design your own instruction set 
+		and assembly language encoding.
+	</LI>
+	<LI>
+		At the microcode assembler level, you can deal with complex 
+		instruction formats by dealing with each machine instruction in terms 
+		of its component fields.
+	</LI> 
+</UL>
+
+<P>
+This new version of the retargetable development tools 
+dramatically increases the capabilities of the compiler to generate 
+code customized for your hardware.
+</P>
+
+<H3>How Retargeting Works - General Overview</H3>
+<P>
+There are two text files that you write to instruct the compiler and 
+the "compactor" about your hardware. The first is the
+<A HREF="http://www.archelon.com/code_samples.html#cif">Compiler Information File</A> (CIF), which
+is used by the compiler (as its name suggests).  The second is the 
+Machine Definition File (MDF) which the compactor uses to translate the 
+compiler output into microcode specifically for your machine.
+These files are read by our software every time the program 
+which requires them runs, so there is no need to reccompile 
+which you change one of these control files.
+</P>
+<P>
+These files have a number of features to make it easier for 
+you to adapt the compiler and assembler to your system and you can 
+conveniently build up your system, incrementally, doing one operation 
+at a time. The implementation of a complete instruction set typically 
+involves writing 1,000 to 3,000 lines for each of the two files, and 
+you can do it all without having to understand compilers -- all you 
+need to understand is your hardware. We're just a phone call away if 
+you ever require a word of guidance.
+</P>
+<P>
+When you study the <A HREF="http://www.archelon.com/code_samples.html">code samples</A>
+we have provided,
+notice how the CIF allows you to describe the operation codes and 
+instruction formats.
+Review the <A HREF="http://www.archelon.com/code_samples.html#codetables">Code Table</A> section
+to see how you can instruct the compiler to generate different results 
+based on different operands.  This, and other features, give you a lot 
+of flexibility in getting the code output that you want.
+</P>
+<P>
+The following Technical Overview goes into some detail. If 
+you prefer a quicker scan of our system, turn to the sections on the 
+individual components such as the <A HREF="retarg.html#mcc">C Compiler</A>
+and the <A HREF="retarg.html#mcpack">Compactor</A>.
+We hope that you will see how your software development can be built 
+reliably with high-level tools - for greater productivity and maybe 
+even a little more peace of mind.
+</P>           
+
+<H3><A NAME="cif">Technical Overview</A></H3>
+<P>
+The compiler generates instructions using code tables which 
+you provide in a text file, called the Compiler Information File 
+(CIF). This file describes the instructions of your machine and tells 
+the compiler how to generate code for it. The information in the file 
+includes descriptions of:
+</P>
+
+<UL>
+	<LI>
+		the <A HREF="http://www.archelon.com/code_samples.html#registers">registers</A> of the machine
+	</LI>
+	<LI>
+		<A HREF="http://www.archelon.com/code_samples.html#operands">operand types</A>
+		(constants, registers, and address modes)
+	</LI>
+	<LI>
+		<A HREF="http://www.archelon.com/code_samples.html#formats">instruction formats</A>
+		(which you describe using operand types)
+	</LI>
+	<LI>
+		<A HREF="http://www.archelon.com/code_samples.html#opcodes">instruction opcodes</A>
+		(which you describe using instruction formats)
+	</LI>
+	<LI>
+		<A HREF="http://www.archelon.com/code_samples.html#codetables">code tables</A>
+	</LI>
+	<LI>
+		the mapping of intermediate language operations to code tables
+	</LI>
+</UL>
+
+<P>
+The code generation scheme supports the widest possible 
+variety of hardware architectures, even those which are very 
+irregular. It can handle single-address, two-address or three-address 
+instructions.
+</P>
+<P>
+The code generation method starts with a node of an 
+expression tree. Using the operator (such as "add") and the 
+type (such as "int"), it selects a code table. In each code 
+table, there may be a series of predicate expressions. Associated with 
+each predicate is an instruction sequence. The predicate expressions 
+allow you to test to see the node and its operands meet certain 
+conditions. For instance, you can test to see if an operand is a 
+constant that lies within some range which is legal for an immediate 
+operand of an instruction. The compiler evaluates each predicate in 
+turn until either it reaches one which matches or it finds a default 
+case. This process determines which instruction sequence to 
+use.
+</P>
+<P>
+An instruction sequence is a set of instructions, each of 
+which may have one or more labels associated with it. An instruction 
+consists of an opcode and arguments. The CIF definition language 
+provides syntax which allows you to define an opcode as the 
+concatenation of arguments passed in from a higher level with literal 
+strings. This allows you to handle situations where you need to 
+generate a slightly different opcode if an operand is an immediate 
+value.
+</P>
+<P>
+The result of evaluating an opcode in an instruction 
+sequence must be an operation code defined in the CIF file. By looking 
+at the instruction format defined for that operation code and the 
+allowable operand types associated with that format, the compiler can 
+evaluate the arguments to each instruction into operands which are 
+legal for that instruction. For instance, if the argument is the left 
+hand side tree of the intermediate language operation and the only 
+allowable operand type is a general purpose register, then the 
+compiler will generate code to evaluate the left hand side tree into a 
+general purpose register. It will then use that register as an operand 
+of the generated instruction.
+</P>
+<P>
+An <A HREF="http://www.archelon.com/code_samples.html#operands">operand</A> can be a constant range, a register set, an 
+address mode, or any combination thereof. There is a fairly general 
+scheme for describing address modes, based on the model:
+</P>
+<CENTER>register + constant + ( register * scale_factor )</CENTER>
+<P>
+where all but either the register_base or the offset are  optional.     
+</P>
+<P>
+Since operands can be held in register pairs, if 
+needed, we provide syntax which allows you to refer to one or the 
+other of the registers in the pair. This is handy for cases such as 
+where you need to implement a 32 bit add of two register pairs by 
+doing a 16 bit add on the least significant part of the register pairs 
+followed by an add with carry of the most significant parts.
+</P>
+<P>
+When you describe <A HREF="http://www.archelon.com/code_samples.html#registers">registers</A>
+in the CIF file, you can 
+specify what data types the compiler can put in the registers. You can 
+also restrict how the compiler can use the register in an instruction. 
+The possibilities are that you can use the register as the left 
+operand of an instruction, as the right operand of an instruction, as 
+the result of an instruction, as the target of a load from memory, as 
+the source of a store to memory, or some combination of these 
+properties.
+</P>
+<P>
+To support efficient implementation of structure 
+assignments, the compiler allows you to access structure size 
+information in predicate tests and instruction sequences.
+</P>
+<P>
+To fully implement a CIF file for your machine, you 
+will have to write one or two thousand lines of code. However, you do 
+not have to implement everything all at once before you can start 
+generating code.
+</P>
+<P>
+The instructions produced by the compiler are 
+called VOPs (Vertical OPerations).
+</P>
+<P>
+<A NAME="mdf">The next part</A>
+of retargeting is in converting the 
+instructions output by the compiler into final assembly
+code. In some machines, this may be compacted horizontal 
+microcode. This is done by the program <A HREF="retarg.html#mcpack">MCPACK</A>.
+It uses a control file, 
+called the Machine Definition File (MDF), which defines the fields of 
+the instruction word, the resources which are available to be used, 
+and procedures which translate each compiler-emitted VOPs into 
+sequences of Micro-Operations (MOPs). The language used in the MDF 
+allows you wide latitude to get better code for special cases during 
+this translation.
+</P>
+<P>
+If your machine is not a micro-programmed design, you can 
+think of the MDF file as a program which tells the MCPACK program how 
+to translate assembler syntax of your design into actual instruction 
+encodings, which can then be assembled into object code by the MCASR 
+assembler.
+</P>
+<P>
+For microcoded machines, and other machines which allow 
+parallelism in the instruction word, MCPACK does instruction 
+scheduling and
+compaction. Using the resource information programmed into each MOP, 
+MCPACK compacts straight line sequences of MOPs into horizontal 
+Microcode Instructions (MIs) which are output into an ASCII file, 
+ready for assembly by the <A HREF="retarg.html#mcasr">MCASR</A> relocatable assembler.
+</P>
+<P>
+The size of the MDF depends largely on your architecture. 
+For an implementation of a complete instruction set, we would expect 
+to see an MDF file of between 1,000 and 3,000 lines in length. Of 
+course, you would not have to sit down and write out 3,000 lines of 
+code before using the system. The writing will usually be done 
+incrementally, starting with definitions of fields, field values, and 
+locations, then defining the opcode translations in groups. For 
+instance, you might do load/store operations first, then integer 
+add/subtract/and/or/exclusive-or, then branches, then integer shifts, 
+then integer multiply/divide/remainder, and so on.
+</P>
+
+<H3><A NAME="mcpp">The Macro Preprocessor - MCPP</A></H3>
+
+<P>
+MCPP implements all the features defined for 
+the C preprocessor in the ANSI Standard for the programming language C 
+(ANSI C) so that it can be used to preprocess input to the C compiler.
+</P>
+<P> 
+Some extra directives have been added to support writing macros for 
+<A HREF="retarg.html#mcpack">MCPACK</A> or <A HREF="retarg.html#mcasr">MCASR</A>.
+</P>
+<P>
+Although the preprocessor allows macros defined using 
+#define to be carried over more than one line, the expansion of such a 
+macro does not contain any newline characters. MCPP allows macros 
+which expand as several lines using the directives
+</P>
+<PRE WIDTH=70>
+   #macro <i>name</i> (<I>arg1</I>, <I>arg2</I>, ... <I>argn</I> )
+   ...
+   #mend
+</PRE>
+<P>         
+To support repetition, MCPP allows nested repeat blocks of 
+the form
+</P>
+<PRE WIDTH=60>
+   #rept <i>expr</i>
+   ...
+   #endr
+</PRE>
+<P>         
+Finally, MCPP provides a way to define symbolic constants 
+which can be redefined within MCPP. You do this using
+</P>
+<PRE WIDTH=60>
+   #set <i>name expr</i>
+</PRE>
+<P>         
+This directive is useful for controlling the expansion of 
+repeats and for changing values used inside repeats.
+</P>
+
+<H3><A NAME="mcc">Optimizing C Compiler - MCC</A></H3>
+
+<P>
+MCC supports the full language, as defined by ANSI C
+(ANSI/ISO 9899-1990), plus 
+some extensions which are discussed below.
+</P>
+<P>
+The input to the compiler is, of course, your C program. The 
+output is a file of "Vertical Operations" (or VOPs), which can 
+be fed into the <A HREF="retarg.html#mcpeep">Peephole Optimizer</A> or directly to the 
+<A HREF="retarg.html#mcpack">Compactor</A>.
+</P>
+<p>
+In the simplest case, the VOPs are just assembly language instructions.
+However, if you machine has parallelism in its instruction word,
+then the VOPs can be partial instructions, which can be compacted and
+assembled into complete instructions by the Compactor. 
+</p>
+<P>
+The basic Compiler optimizations include constant folding, global 
+common subexpression elimination in extended conditional regions and 
+allocation of registers by graph coloring.
+</P>
+<p>
+If you turn on the compiler's advanced machine independent optimizer,
+the compiler will also do all of the optimizations which can be derived from
+doing global flow analysis on a function, including
+<ul>
+<li>
+global common sub-expression elimination,
+<li>
+constant propagation,
+<li>
+dead code elimination,
+<li>
+reduction in strength,
+and
+<li>
+loop induction variable elimination, and
+<li>
+aliasing analysis
+</ul>
+</p>
+<P>
+The extensions to the ANSI C standard which the compiler 
+supports are:
+</P>
+<UL>
+	<LI><B>multi-media types</B><BR>
+		You can define new, machine-dependent types which you can use
+		to provide support for vector parallel or
+		single-instruction-multiple-data (SIMD) parallel
+		data types, such as are commonly found in multimedia 
+		computer architectures.
+	</LI>
+	<LI><B>fixed point data types</B><BR>
+		The compiler allows you to declare signed fixed point data types,
+		using the non-standard "_frac" keyword.
+		This keyword can be applied to any integral type.
+		It also supports
+		fixed point constants - in the form of a floating point
+		number in the range from -1.0 to 1.0, suffixed by ``r'' or ``R''.
+	</LI>
+	<LI><B>"long long" type</B><BR>
+		The compiler has support for a "long long" type, which is
+		in the next draft of the ANSI standard. This is
+		mainly useful for dealing with accumulator registers in
+		Digital Signal Processing (DSP) architectures.
+	</LI>
+	<LI><B>global register variables</B><BR>
+		Global registers never need to be saved or 
+		restored.
+	</LI>
+	<LI><B>fast switch</B><BR>
+		This is similar to a regular switch statement except 
+		that no bounds checking is done on the switch value. This can 
+		save 4 or 5 microinstructions if speed is critical.
+	</LI>
+	<LI><B>inline functions</B><BR>
+		You can use the __inline__ keyword on a 
+		functiondeclaration to specify that the function be expanded 
+		inline at the point of each call, saving the overhead of calling and 
+		returning.
+	</LI>
+	<LI><B>hardware loop counter control</B><BR>
+		If the hardware system's sequencer has a loop 
+		counter, the compiler allows direct control of it through the 
+		loop statement. The compiler will also permit nested loop
+		statements if the hardware supports them.
+	</LI>
+	<LI><B> builtin functions</B><BR>
+		The compiler provides a way for you to provide 
+		completely custom code table entries which you can access 
+		directly by calling a function whose name is the same as that 
+		of the code table entry. Such a function can have zero, one or 
+		two arguments. This lets you special instructions or sequences 
+		of instructions which can not reasonably be written in C, 
+		while retaining the look and convenience of high level code.
+	</LI>
+	<LI><B>in line assembler code</B><BR>
+		If builtin functions are not enough, you can embed 
+		assembler code inside C functions. Embedded assembler code can 
+		include symbolic references to variables or structure members 
+		declared in your C source code. The compiler replaces each 
+		symbolic reference by an address, an offset or a register number, 
+		depending on what is being referenced.
+	</LI>
+	<LI><B>user specified register binding</B><BR>
+		Special syntax for register variable declarations 
+		allows you to bind a specific registerto a variable rather 
+		than letting the compiler choose an arbitrary register.
+	</LI>
+	<LI><B>argument registers</B><BR>
+		To speed up function calls, you designate registers 
+		which the compiler will use forpassing arguments to 
+		functions.
+	</LI>
+	<LI><B>multiple address spaces</B><BR>
+		The compiler supports three different memory 
+		configurations. You can have both codeand data in one address 
+		space, you can have code in one address space and data in 
+		another, or you can have code in one address space, part of your data 
+		in a primary data address space, and part of your data in  
+		one, two. or three additional
+		data address spaces. To use additional data address spaces, 
+		you must declare variables in and pointers to those memories 
+		using the non-standard keywords _DMEM2, _DMEM3, or _DMEM4.
+	</LI>
+	<LI><B>symbolic debug tables</B><BR>
+		The compiler can optionally generate symbolic debug 
+		tables in so-called <I>Common Object File Format</I> (COFF).
+		This comes in two flavours: Standard Coff or Archelon Coff.
+		Archelon COFF has extensions which support the definition
+		and referencing of data in multiple overlapping address spaces,
+		and which supports additional type codes for fixed point types.
+	</LI>
+</UL>
+
+<H3><A NAME="mcpeep">The Peephole Optimizer - MCPEEP</A></H3>
+
+<P>
+The sequence of VOPs generated by the 
+compiler may optionally be processed by a peephole optimizer, MCPEEP, 
+before being passed to MCPACK. MCPEEP replaces sequences of VOPs with 
+more efficient sequences. The user specifies the sequences which can 
+be replaced and what they are to be replaced by in a file called the 
+replacement rules file (RLS).
+</P>
+
+
+<H3><A NAME="mcpack">The Optimizer/Scheduler/Compactor - MCPACK</A></H3>
+
+<P>
+The input to MCPACK is a file containing 
+Vertical Operations (VOPs). The output is a file containing 
+micro-instructions ready to be assembled by <A HREF="retarg.html#mcasr">MCASR</A>.
+Under the control 
+of a file, called the Machine Definition File (MDF), MCPACK reads 
+VOPs, expands them into sequences of Micro-Operations (MOPs) and 
+compacts the MOPs into a (usually) smaller number of 
+Micro-Instructions (MIs).
+</P>
+<P>
+You can use MCPACK to implement the instructions generated 
+by the compilers or to implement an arbitrary byte- or word-oriented 
+assembly language.
+</P>
+<P>
+The MDF contains statements in a language designed 
+specifically for compaction. A typical MDF file includes the 
+following:
+</P>
+<UL>
+	<LI>field name definitions and field value mnemonics</LI>
+	<LI>field location specifications</LI>
+	<LI>microword width specification</LI>
+	<LI>consumable resource definitions</LI>
+	<LI>VOP definitions</LI>
+	<LI>Function definitions</LI>
+	<LI>MOP definitions</LI>
+</UL>
+<P>
+The VOP, Function, and MOP definitions are written as 
+procedures in a string-oriented language which has some similarities 
+with the C language. Each is translated into an intermediate form and 
+interpreted by MCPACK when it is invoked. The language includes 
+facilities for defining and preserving timing relationships between 
+MOPs. A timing delay can be either required or optional. You can use 
+timing delays to implement pipelined operations.
+</P>
+<P>
+MCPACK can optionally take the MDF information and use it to 
+generate a definitions file in the format required by 
+MCASR.
+</P>
+<P>
+The compiler generates a specific set of VOPs. To support 
+the compiler, you must define the set of VOPs which it will generate 
+when compiling code.
+</P>
+<P>
+If you do not wish to support the retargetable compilers, 
+you can define any set of VOPs which seem appropriate to your needs. 
+In effect, you can design your own assembler-level language. You can 
+then write low level code as VOPs and leave the job of generating and 
+compacting the corresponding MOP sequences to MCPACK.
+</P>
+<P>
+Normally, MCPACK will do all of the work of lexical analysis of
+the input in order to identify VOPs and their operands.
+However, MCPACK also lets you support pretty much any style of
+input syntax by allowing you to provide a function in the MDF
+file which handles some or all of the parsing of the input.
+To that end, MCPACK also provides some builtin functions
+which will allow you to tokenize and/or to scan the input lines.
+</P>
+<P>
+MCPACK makes it easy to define and handle opcodes with comma-separated
+operands. However, if you want to support a more elaborate syntax
+(such as one which looks more like a higher level language),
+MCPACK has support for doing recursive descent parsing. It lets
+break up each input line into a string of tokens which be parsed
+using rules which you implement by writing code.
+</P>
+<P>
+If you need to record information about symbols (such as labels
+or data declarations), MCPACK provides a symbol table manager
+which allows to define symbols and to associate with each symbol
+one or more attributes, each of which can have a unique value.
+</P>
+<P>
+You can also use MCPACK to do instruction scheduling
+(reordering of instructions to reduce or elminate pipeline delays)
+and/or compaction (to take advantage of any parallelism in
+the instruction set).
+</P>
+
+<H3><A NAME="mcasr">The Assembler - MCASR</A></H3>
+
+<P>
+MCASR is a fast, "bit-stuffing" macro assembler 
+which can be customized to suit any micro-architecture and any 
+microinstruction length. Customization is done by creating a text file 
+in a standard format which describes microinstruction length and the 
+mnemonics to be used. MCASR produces a relocatable object file ready 
+to be linked by the MCLINK linker.
+</P>
+<P>
+If you are also using MCPACK, then you do not have to write 
+a definitions file for MCASR, since MCPACK can generate it for 
+you.
+</P>
+<P>
+In the mnemonic definitions file, you associate a name with 
+a specific pattern of bits to be placed in the micro-instruction. Each 
+mnemonic sets up one or more field values. A field value is a triple 
+consisting of a constant value (which determines the contents of the 
+field), a mask (which determines the width of the field) and a shift 
+count (which determines the position of the field in the 
+micro-instruction). You may optionally provide field values at 
+assembly time. Any field may contain a relocatable expression. There 
+is also provision for handling fields with vertical instruction coding 
+and for handling fields which occur more than once in the 
+microword.
+</P>
+<P>
+Default field values can be specified either in the 
+definitions file or in a .default statement in the assembler 
+source.
+</P>
+<P>
+In writing a micro-assembler program, each line of input 
+containing one or more mnemonics corresponds to one micro-instruction 
+word. The assembler detects any attempt to reuse or overlap fields in 
+a micro-instruction. It takes its input in free format and in any 
+order with one instruction per line (there is provision for 
+continuation).
+</P>
+<P>
+The output of MCASR is a relocatable object module in a 
+format acceptable to <A HREF="retarg.html#mclink">MCLINK</A>.
+MCASR also supports the following 
+directives or "pseudo-ops":
+</P>
+<TABLE>
+	<TR>
+		<TD>.extern</TD>
+		<TD>- external name reference;
+	</TR>
+	<TR>
+		<TD>.global</TD>
+		<TD>- external name definition;
+	</TR>
+	<TR>
+		<TD>.align</TD>
+		<TD>- force the program counter to a particular alignment;
+	</TR>
+	<TR>
+		<TD>.segment</TD>
+		<TD>- start or resume a segment
+	</TR>
+</TABLE>        
+<P>
+The purpose of having the .segment directive is primarily to 
+allow intermixing of values for different kinds of memories (such as 
+code and data) in the same file. Each named segment has a unique base 
+address, location counter increment, memory type, and word size. For 
+instance, one segment might be a 64 bit microcode memory, while 
+another might be a 16 bit byte-addressed data memory and another might 
+be some sort of lookup table.
+</P>
+<P>
+You can define up to 8 memory types. Normal applications may 
+need to use only one (for code) or two (for code and data). The 
+additional types are available for more complex applications involving 
+extra, special-purpose memories. For instance, If you have a DSP
+which has two data memories,
+you can use a third memory type to support the second data memory.
+</P>
+
+<H3><A NAME="mclib">The Object Librarian - MCLIB</A></H3>
+
+<P>
+MCLIB can combine relocatable object modules into a 
+relocatable object library, add modules to an existing library, delete 
+modules from an existing library or reorder modules in a library. You 
+can also use it to get information about the contents of a library, 
+including:
+</P>
+<UL>
+	<LI>what modules are in a library</LI>
+	<LI>what symbols and segments are defined in a module</LI>
+	<LI>where a symbol is defined</LI>
+</UL>
+<P>
+Because a library is simply one or more relocatable object 
+modules concatenated together, you can use MCLIB to inspect any object 
+module produced by MCASR.
+</P>
+
+
+<H3><A NAME="mclink">The Linker - MCLINK</A></H3>
+
+<P>
+MCLINK combines the relocatable load 
+modules produced by MCASR into one or more absolute load modules, 
+depending on the output format.
+</P>
+<P>
+Any relocatable object file can be either loaded directly or 
+treated as a library. If it is treated as a library, then each object 
+module in the file is loaded only if some symbol which it defines is 
+referred to by a previously loaded object file.
+</P>
+<P>
+MCLINK can relocate addresses up to 32 bits 
+wide. MCASR and MCLINK support the obvious basic relocation types. 
+MCLINK can optionally generate a symbol file which contains the start 
+address, end address, and memory type of each segment and the start 
+address of each external symbol.
+</P>
+<P>
+MCLINK supports several different output file formats:
+<i>standard</i>, <i>image</i>, <i>absolute</i>
+Common Object File Format (<i>COFF</i>),
+and Extensible Linker Format (<i>ELF</i>).
+The absolute file format can include assembler level debug information
+(label tables and line number tables).
+The COFF format can include either assembler level or compiler level
+symbolic debug information.
+The ELF format, which is used by most modern Unix implementations,
+has the additional advantage over COFF in that its output files
+are platform independent; for instance, and ELF file can be created
+on an Intel machine and read on a SPARC machine, or vice versa.
+Debbuging information in ELF format
+files uses COFF format symbol tables
+and line number tables.
+For image format, MCLINK creates one 
+file for each memory type which it finds. Each file is a binary image 
+of data to be loaded into memory. For standard format, MCLINK 
+generates one output file which contains a sequence of absolute 
+records, each of which includes a header which identifies the memory 
+type and load address of the record. We provide source code for 
+programs to read both formats, so that you can modify whichever is 
+appropriate to create your own custom downloading program or to 
+reformat the output files for your own particular needs.
+For COFF, ELF, and absolute formats, MCLINK creates a single output file
+which contains code, data, and optional debugging information.
+</P>
+<P>
+For each output format, we also provide source code for
+a program which can read that output format.
+You can use the source code as a basis for building a program
+which will load an absolute load module,
+produced by our linker, into your target hardware or software simulator.
+The program which reads the COFF output format will
+also display the contents of the debug symbol tables, if present.
+</P>
+<BR>
+<HR>
+<BR>
+
+<H3><A NAME="pricing">Pricing</A></H3>
+
+<P>
+You can order the tool set either with or without the compiler.
+The version without the compiler omits the compiler, the peephole
+optimizer, sample compiler control files,
+C runtime source files,
+and some programs which you can use to exercise the compiler
+by compiling and running code for a demonstration architecture.
+</P>
+<P>
+</P>
+The DOS versions of the tools run as DOS command line programs.
+They work properly in DOS Windows under Microsoft Windows 3.1
+and Microsoft Windows 95 (but not Windows NT).
+The WIN32 versions run as ``WIN32 Console Mode Apps''
+under Microsoft Windows 95 or Microsoft Windows NT.
+<P>
+Here is the price list for the full version of the tools,
+which includes the C compiler:
+</P>
+<TABLE>
+	<TR>
+		<TH>Order Code</TH>
+		<TH>Host Platform</TH>
+		<TH>Price</TH>
+	</TR>
+	<TR>
+		<TD>URDT/WIN32S</TD>
+		<TD>Microsoft Windows (all)</TD>
+		<TD>US$9,995 (site license)</TD>
+	</TR>
+	<TR>
+		<TD>URDT/WIN32L</TD>
+		<TD>Microsoft Windows (all)</TD>
+		<TD>US$2,995 (node-locked licence)</TD>
+	</TR>
+	<TR>
+		<TD>URDT/SVR4</TD>
+		<TD>SCO Unixware for x86</TD>
+		<TD>US$9,995 (site license)</TD>
+	</TR>
+	<TR>
+		<TD>URDT/LINUX</TD>
+		<TD>Linux (2.2.x)</TD>
+		<TD>US$9,995 (site license)</TD>
+	</TR>
+</TABLE>
+<P>
+Here is the price list for the assembler-only version of the tools,
+which does not include the compiler:
+</P>
+<TABLE>
+	<TR>
+		<TH>Order Code</TH>
+		<TH>Host Platform</TH>
+		<TH>Price</TH>
+	</TR>
+	<TR>
+		<TD>URDA/WIN32S</TD>
+		<TD>Microsoft Windows (all)</TD>
+		<TD>US$4,995 (site license)</TD>
+	</TR>
+	<TR>
+		<TD>URDA/WIN32L</TD>
+		<TD>Microsoft Windows (all)</TD>
+		<TD>US$1,595 (node-locked licence)</TD>
+	</TR>
+	<TR>
+		<TD>URDA/SVR4</TD>
+		<TD>SCO Unixware for x86</TD>
+		<TD>US$4,995 (site license)</TD>
+	</TR>
+	<TR>
+		<TD>URDA/LINUX</TD>
+		<TD>Linux (2.2.x)</TD>
+		<TD>US$4,995 (site license)</TD>
+	</TR>
+</TABLE>
+<P>
+If you decide to start with the assembly-only version,
+You can upgrade later to the full version for US$4495 (site licence)
+or US$1,595 (node-locked licence).
+</P>
+<P>
+All prices are in U.S. dollars.
+We include all Reference Manuals,
+and one year's support.
+These prices are subject to change without notice.
+You normally receive the software over the internet using email
+or ftp or http. If you need a CD-ROM in your hand, please be advised
+that prices do not include shipping charges.
+</P>
+
+<H3><A NAME="availability">Availability</A></H3>
+
+<P>
+Binary versions of the software are available 
+for Microsoft Windows 98/NT/2000/XP/Vista,
+for SCO UnixWare on Intel x86, 
+and for Linux on Intel x86.
+Site, source, and distribution licenses are also available.
+</P>
+<P>
+For more information, please contact:
+<ADDRESS>
+Preston Gurd<BR>
+Archelon Inc.<BR>
+460 Forestlawn Road<BR>
+Waterloo, Ontario, Canada<BR>
+N2K 2J6
+</ADDRESS>
+<P>
+You can <A HREF="mailto:info@archelon.com">reach us by email</A>.
+</P>
+<BR>
+<A HREF = "mailto:info@archelon.com">Email Archelon for more information.</A><BR>
+<BR>
+<HR>
+<A HREF="http://www.archelon.com/code_samples.html">Retargetable compiler code samples.</A><BR>   
+<A HREF="http://www.archelon.com/index.html">Back to Archelon's Home Page.</A><BR>
+
+<P>
+</BODY>
+</HTML>

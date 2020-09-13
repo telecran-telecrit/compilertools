@@ -1,0 +1,1118 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - Examples</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_4.html">previous</A>, <A HREF="bison_6.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC15" HREF="index.html#SEC15">Examples</A></H1>
+<P>
+<A NAME="IDX28"></A>
+<A NAME="IDX29"></A>
+
+</P>
+<P>
+Now we show and explain three sample programs written using Bison: a
+reverse polish notation calculator, an algebraic (infix) notation
+calculator, and a multi-function calculator.  All three have been tested
+under BSD Unix 4.3; each produces a usable, though limited, interactive
+desk-top calculator.
+
+</P>
+<P>
+These examples are simple, but Bison grammars for real programming
+languages are written the same way.
+
+</P>
+
+
+
+<H2><A NAME="SEC16" HREF="index.html#SEC16">Reverse Polish Notation Calculator</A></H2>
+<P>
+<A NAME="IDX30"></A>
+<A NAME="IDX31"></A>
+<A NAME="IDX32"></A>
+<A NAME="IDX33"></A>
+
+</P>
+<P>
+The first example is that of a simple double-precision <STRONG>reverse polish
+notation</STRONG> calculator (a calculator using postfix operators).  This example
+provides a good starting point, since operator precedence is not an issue.
+The second example will illustrate how operator precedence is handled.
+
+</P>
+<P>
+The source code for this calculator is named <TT>`rpcalc.y'</TT>.  The
+<SAMP>`.y'</SAMP> extension is a convention used for Bison input files.
+
+</P>
+
+
+
+<H3><A NAME="SEC17" HREF="index.html#SEC17">Declarations for <CODE>rpcalc</CODE></A></H3>
+
+<P>
+Here are the C and Bison declarations for the reverse polish notation
+calculator.  As in C, comments are placed between <SAMP>`/*...*/'</SAMP>.
+
+</P>
+
+<PRE>
+/* Reverse polish notation calculator. */
+
+%{
+#define YYSTYPE double
+#include &#60;math.h&#62;
+%}
+
+%token NUM
+
+%% /* Grammar rules and actions follow */
+</PRE>
+
+<P>
+The C declarations section (see section <A HREF="bison_6.html#SEC36">The C Declarations Section</A>) contains two
+preprocessor directives.
+
+</P>
+<P>
+The <CODE>#define</CODE> directive defines the macro <CODE>YYSTYPE</CODE>, thus
+specifying the C data type for semantic values of both tokens and groupings
+(see section <A HREF="bison_6.html#SEC44">Data Types of Semantic Values</A>).  The Bison parser will use whatever type
+<CODE>YYSTYPE</CODE> is defined as; if you don't define it, <CODE>int</CODE> is the
+default.  Because we specify <CODE>double</CODE>, each token and each expression
+has an associated value, which is a floating point number.
+
+</P>
+<P>
+The <CODE>#include</CODE> directive is used to declare the exponentiation
+function <CODE>pow</CODE>.
+
+</P>
+<P>
+The second section, Bison declarations, provides information to Bison about
+the token types (see section <A HREF="bison_6.html#SEC37">The Bison Declarations Section</A>).  Each terminal symbol that is
+not a single-character literal must be declared here.  (Single-character
+literals normally don't need to be declared.)  In this example, all the
+arithmetic operators are designated by single-character literals, so the
+only terminal symbol that needs to be declared is <CODE>NUM</CODE>, the token
+type for numeric constants.
+
+</P>
+
+
+<H3><A NAME="SEC18" HREF="index.html#SEC18">Grammar Rules for <CODE>rpcalc</CODE></A></H3>
+
+<P>
+Here are the grammar rules for the reverse polish notation calculator.
+
+</P>
+
+<PRE>
+input:    /* empty */
+        | input line
+;
+
+line:     '\n'
+        | exp '\n'  { printf ("\t%.10g\n", $1); }
+;
+
+exp:      NUM             { $$ = $1;         }
+        | exp exp '+'     { $$ = $1 + $2;    }
+        | exp exp '-'     { $$ = $1 - $2;    }
+        | exp exp '*'     { $$ = $1 * $2;    }
+        | exp exp '/'     { $$ = $1 / $2;    }
+      /* Exponentiation */
+        | exp exp '^'     { $$ = pow ($1, $2); }
+      /* Unary minus    */
+        | exp 'n'         { $$ = -$1;        }
+;
+%%
+</PRE>
+
+<P>
+The groupings of the rpcalc "language" defined here are the expression
+(given the name <CODE>exp</CODE>), the line of input (<CODE>line</CODE>), and the
+complete input transcript (<CODE>input</CODE>).  Each of these nonterminal
+symbols has several alternate rules, joined by the <SAMP>`|'</SAMP> punctuator
+which is read as "or".  The following sections explain what these rules
+mean.
+
+</P>
+<P>
+The semantics of the language is determined by the actions taken when a
+grouping is recognized.  The actions are the C code that appears inside
+braces.  See section <A HREF="bison_6.html#SEC46">Actions</A>.
+
+</P>
+<P>
+You must specify these actions in C, but Bison provides the means for
+passing semantic values between the rules.  In each action, the
+pseudo-variable <CODE>$$</CODE> stands for the semantic value for the grouping
+that the rule is going to construct.  Assigning a value to <CODE>$$</CODE> is the
+main job of most actions.  The semantic values of the components of the
+rule are referred to as <CODE>$1</CODE>, <CODE>$2</CODE>, and so on.
+
+</P>
+
+
+
+<H4><A NAME="SEC19" HREF="index.html#SEC19">Explanation of <CODE>input</CODE></A></H4>
+
+<P>
+Consider the definition of <CODE>input</CODE>:
+
+</P>
+
+<PRE>
+input:    /* empty */
+        | input line
+;
+</PRE>
+
+<P>
+This definition reads as follows: "A complete input is either an empty
+string, or a complete input followed by an input line".  Notice that
+"complete input" is defined in terms of itself.  This definition is said
+to be <STRONG>left recursive</STRONG> since <CODE>input</CODE> appears always as the
+leftmost symbol in the sequence.  See section <A HREF="bison_6.html#SEC42">Recursive Rules</A>.
+
+</P>
+<P>
+The first alternative is empty because there are no symbols between the
+colon and the first <SAMP>`|'</SAMP>; this means that <CODE>input</CODE> can match an
+empty string of input (no tokens).  We write the rules this way because it
+is legitimate to type <KBD>Ctrl-d</KBD> right after you start the calculator.
+It's conventional to put an empty alternative first and write the comment
+<SAMP>`/* empty */'</SAMP> in it.
+
+</P>
+<P>
+The second alternate rule (<CODE>input line</CODE>) handles all nontrivial input.
+It means, "After reading any number of lines, read one more line if
+possible."  The left recursion makes this rule into a loop.  Since the
+first alternative matches empty input, the loop can be executed zero or
+more times.
+
+</P>
+<P>
+The parser function <CODE>yyparse</CODE> continues to process input until a
+grammatical error is seen or the lexical analyzer says there are no more
+input tokens; we will arrange for the latter to happen at end of file.
+
+</P>
+
+
+<H4><A NAME="SEC20" HREF="index.html#SEC20">Explanation of <CODE>line</CODE></A></H4>
+
+<P>
+Now consider the definition of <CODE>line</CODE>:
+
+</P>
+
+<PRE>
+line:     '\n'
+        | exp '\n'  { printf ("\t%.10g\n", $1); }
+;
+</PRE>
+
+<P>
+The first alternative is a token which is a newline character; this means
+that rpcalc accepts a blank line (and ignores it, since there is no
+action).  The second alternative is an expression followed by a newline.
+This is the alternative that makes rpcalc useful.  The semantic value of
+the <CODE>exp</CODE> grouping is the value of <CODE>$1</CODE> because the <CODE>exp</CODE> in
+question is the first symbol in the alternative.  The action prints this
+value, which is the result of the computation the user asked for.
+
+</P>
+<P>
+This action is unusual because it does not assign a value to <CODE>$$</CODE>.  As
+a consequence, the semantic value associated with the <CODE>line</CODE> is
+uninitialized (its value will be unpredictable).  This would be a bug if
+that value were ever used, but we don't use it: once rpcalc has printed the
+value of the user's input line, that value is no longer needed.
+
+</P>
+
+
+<H4><A NAME="SEC21" HREF="index.html#SEC21">Explanation of <CODE>expr</CODE></A></H4>
+
+<P>
+The <CODE>exp</CODE> grouping has several rules, one for each kind of expression.
+The first rule handles the simplest expressions: those that are just numbers.
+The second handles an addition-expression, which looks like two expressions
+followed by a plus-sign.  The third handles subtraction, and so on.
+
+</P>
+
+<PRE>
+exp:      NUM
+        | exp exp '+'     { $$ = $1 + $2;    }
+        | exp exp '-'     { $$ = $1 - $2;    }
+        ...
+        ;
+</PRE>
+
+<P>
+We have used <SAMP>`|'</SAMP> to join all the rules for <CODE>exp</CODE>, but we could
+equally well have written them separately:
+
+</P>
+
+<PRE>
+exp:      NUM ;
+exp:      exp exp '+'     { $$ = $1 + $2;    } ;
+exp:      exp exp '-'     { $$ = $1 - $2;    } ;
+        ...
+</PRE>
+
+<P>
+Most of the rules have actions that compute the value of the expression in
+terms of the value of its parts.  For example, in the rule for addition,
+<CODE>$1</CODE> refers to the first component <CODE>exp</CODE> and <CODE>$2</CODE> refers to
+the second one.  The third component, <CODE>'+'</CODE>, has no meaningful
+associated semantic value, but if it had one you could refer to it as
+<CODE>$3</CODE>.  When <CODE>yyparse</CODE> recognizes a sum expression using this
+rule, the sum of the two subexpressions' values is produced as the value of
+the entire expression.  See section <A HREF="bison_6.html#SEC46">Actions</A>.
+
+</P>
+<P>
+You don't have to give an action for every rule.  When a rule has no
+action, Bison by default copies the value of <CODE>$1</CODE> into <CODE>$$</CODE>.
+This is what happens in the first rule (the one that uses <CODE>NUM</CODE>).
+
+</P>
+<P>
+The formatting shown here is the recommended convention, but Bison does
+not require it.  You can add or change whitespace as much as you wish.
+For example, this:
+
+</P>
+
+<PRE>
+exp   : NUM | exp exp '+' {$$ = $1 + $2; } | ...
+</PRE>
+
+<P>
+means the same thing as this:
+
+</P>
+
+<PRE>
+exp:      NUM
+        | exp exp '+'    { $$ = $1 + $2; }
+        | ...
+</PRE>
+
+<P>
+The latter, however, is much more readable.
+
+</P>
+
+
+<H3><A NAME="SEC22" HREF="index.html#SEC22">The <CODE>rpcalc</CODE> Lexical Analyzer</A></H3>
+<P>
+<A NAME="IDX34"></A>
+<A NAME="IDX35"></A>
+
+</P>
+<P>
+The lexical analyzer's job is low-level parsing: converting characters or
+sequences of characters into tokens.  The Bison parser gets its tokens by
+calling the lexical analyzer.  See section <A HREF="bison_7.html#SEC61">The Lexical Analyzer Function <CODE>yylex</CODE></A>.
+
+</P>
+<P>
+Only a simple lexical analyzer is needed for the RPN calculator.  This
+lexical analyzer skips blanks and tabs, then reads in numbers as
+<CODE>double</CODE> and returns them as <CODE>NUM</CODE> tokens.  Any other character
+that isn't part of a number is a separate token.  Note that the token-code
+for such a single-character token is the character itself.
+
+</P>
+<P>
+The return value of the lexical analyzer function is a numeric code which
+represents a token type.  The same text used in Bison rules to stand for
+this token type is also a C expression for the numeric code for the type.
+This works in two ways.  If the token type is a character literal, then its
+numeric code is the ASCII code for that character; you can use the same
+character literal in the lexical analyzer to express the number.  If the
+token type is an identifier, that identifier is defined by Bison as a C
+macro whose definition is the appropriate number.  In this example,
+therefore, <CODE>NUM</CODE> becomes a macro for <CODE>yylex</CODE> to use.
+
+</P>
+<P>
+The semantic value of the token (if it has one) is stored into the global
+variable <CODE>yylval</CODE>, which is where the Bison parser will look for it.
+(The C data type of <CODE>yylval</CODE> is <CODE>YYSTYPE</CODE>, which was defined
+at the beginning of the grammar; see section <A HREF="bison_5.html#SEC17">Declarations for <CODE>rpcalc</CODE></A>.)
+
+</P>
+<P>
+A token type code of zero is returned if the end-of-file is encountered.
+(Bison recognizes any nonpositive value as indicating the end of the
+input.)
+
+</P>
+<P>
+Here is the code for the lexical analyzer:
+
+</P>
+
+<PRE>
+/* Lexical analyzer returns a double floating point 
+   number on the stack and the token NUM, or the ASCII
+   character read if not a number.  Skips all blanks
+   and tabs, returns 0 for EOF. */
+
+#include &#60;ctype.h&#62;
+
+yylex ()
+{
+  int c;
+
+  /* skip white space  */
+  while ((c = getchar ()) == ' ' || c == '\t')  
+    ;
+  /* process numbers   */
+  if (c == '.' || isdigit (c))                
+    {
+      ungetc (c, stdin);
+      scanf ("%lf", &#38;yylval);
+      return NUM;
+    }
+  /* return end-of-file  */
+  if (c == EOF)                            
+    return 0;
+  /* return single chars */
+  return c;                                
+}
+</PRE>
+
+
+
+<H3><A NAME="SEC23" HREF="index.html#SEC23">The Controlling Function</A></H3>
+<P>
+<A NAME="IDX36"></A>
+<A NAME="IDX37"></A>
+
+</P>
+<P>
+In keeping with the spirit of this example, the controlling function is
+kept to the bare minimum.  The only requirement is that it call
+<CODE>yyparse</CODE> to start the process of parsing.
+
+</P>
+
+<PRE>
+main ()
+{
+  yyparse ();
+}
+</PRE>
+
+
+
+<H3><A NAME="SEC24" HREF="index.html#SEC24">The Error Reporting Routine</A></H3>
+<P>
+<A NAME="IDX38"></A>
+
+</P>
+<P>
+When <CODE>yyparse</CODE> detects a syntax error, it calls the error reporting
+function <CODE>yyerror</CODE> to print an error message (usually but not always
+<CODE>"parse error"</CODE>).  It is up to the programmer to supply <CODE>yyerror</CODE>
+(see section <A HREF="bison_7.html#SEC59">Parser C-Language Interface</A>), so here is the definition we will use:
+
+</P>
+
+<PRE>
+#include &#60;stdio.h&#62;
+
+yyerror (s)  /* Called by yyparse on error */
+     char *s;
+{
+  printf ("%s\n", s);
+}
+</PRE>
+
+<P>
+After <CODE>yyerror</CODE> returns, the Bison parser may recover from the error
+and continue parsing if the grammar contains a suitable error rule
+(see section <A HREF="bison_9.html#SEC81">Error Recovery</A>).  Otherwise, <CODE>yyparse</CODE> returns nonzero.  We
+have not written any error rules in this example, so any invalid input will
+cause the calculator program to exit.  This is not clean behavior for a
+real calculator, but it is adequate in the first example.
+
+</P>
+
+
+<H3><A NAME="SEC25" HREF="index.html#SEC25">Running Bison to Make the Parser</A></H3>
+<P>
+<A NAME="IDX39"></A>
+
+</P>
+<P>
+Before running Bison to produce a parser, we need to decide how to arrange
+all the source code in one or more source files.  For such a simple example,
+the easiest thing is to put everything in one file.  The definitions of
+<CODE>yylex</CODE>, <CODE>yyerror</CODE> and <CODE>main</CODE> go at the end, in the
+"additional C code" section of the file (see section <A HREF="bison_4.html#SEC14">The Overall Layout of a Bison Grammar</A>).
+
+</P>
+<P>
+For a large project, you would probably have several source files, and use
+<CODE>make</CODE> to arrange to recompile them.
+
+</P>
+<P>
+With all the source in a single file, you use the following command to
+convert it into a parser file:
+
+</P>
+
+<PRE>
+bison <VAR>file_name</VAR>.y
+</PRE>
+
+<P>
+In this example the file was called <TT>`rpcalc.y'</TT> (for "Reverse Polish
+CALCulator").  Bison produces a file named <TT>`<VAR>file_name</VAR>.tab.c'</TT>,
+removing the <SAMP>`.y'</SAMP> from the original file name. The file output by
+Bison contains the source code for <CODE>yyparse</CODE>.  The additional
+functions in the input file (<CODE>yylex</CODE>, <CODE>yyerror</CODE> and <CODE>main</CODE>)
+are copied verbatim to the output.
+
+</P>
+
+
+<H3><A NAME="SEC26" HREF="index.html#SEC26">Compiling the Parser File</A></H3>
+<P>
+<A NAME="IDX40"></A>
+
+</P>
+<P>
+Here is how to compile and run the parser file:
+
+</P>
+
+<PRE>
+# List files in current directory.
+% ls
+rpcalc.tab.c  rpcalc.y
+
+# Compile the Bison parser.
+# <SAMP>`-lm'</SAMP> tells compiler to search math library for <CODE>pow</CODE>.
+% cc rpcalc.tab.c -lm -o rpcalc
+
+# List files again.
+% ls
+rpcalc  rpcalc.tab.c  rpcalc.y
+</PRE>
+
+<P>
+The file <TT>`rpcalc'</TT> now contains the executable code.  Here is an
+example session using <CODE>rpcalc</CODE>.
+
+</P>
+
+<PRE>
+% rpcalc
+4 9 +
+13
+3 7 + 3 4 5 *+-
+-13
+3 7 + 3 4 5 * + - n              Note the unary minus, <SAMP>`n'</SAMP>
+13
+5 6 / 4 n +
+-3.166666667
+3 4 ^                            Exponentiation
+81
+^D                               End-of-file indicator
+%
+</PRE>
+
+
+
+<H2><A NAME="SEC27" HREF="index.html#SEC27">Infix Notation Calculator: <CODE>calc</CODE></A></H2>
+<P>
+<A NAME="IDX41"></A>
+<A NAME="IDX42"></A>
+<A NAME="IDX43"></A>
+
+</P>
+<P>
+We now modify rpcalc to handle infix operators instead of postfix.  Infix
+notation involves the concept of operator precedence and the need for
+parentheses nested to arbitrary depth.  Here is the Bison code for
+<TT>`calc.y'</TT>, an infix desk-top calculator.
+
+</P>
+
+<PRE>
+/* Infix notation calculator--calc */
+
+%{
+#define YYSTYPE double
+#include &#60;math.h&#62;
+%}
+
+/* BISON Declarations */
+%token NUM
+%left '-' '+'
+%left '*' '/'
+%left NEG     /* negation--unary minus */
+%right '^'    /* exponentiation        */
+
+/* Grammar follows */
+%%
+input:    /* empty string */
+        | input line
+;
+
+line:     '\n'
+        | exp '\n'  { printf ("\t%.10g\n", $1); }
+;
+
+exp:      NUM                { $$ = $1;         }
+        | exp '+' exp        { $$ = $1 + $3;    }
+        | exp '-' exp        { $$ = $1 - $3;    }
+        | exp '*' exp        { $$ = $1 * $3;    }
+        | exp '/' exp        { $$ = $1 / $3;    }
+        | '-' exp  %prec NEG { $$ = -$2;        }
+        | exp '^' exp        { $$ = pow ($1, $3); }
+        | '(' exp ')'        { $$ = $2;         }
+;
+%%
+</PRE>
+
+<P>
+The functions <CODE>yylex</CODE>, <CODE>yyerror</CODE> and <CODE>main</CODE> can be the same
+as before.
+
+</P>
+<P>
+There are two important new features shown in this code.
+
+</P>
+<P>
+In the second section (Bison declarations), <CODE>%left</CODE> declares token
+types and says they are left-associative operators.  The declarations
+<CODE>%left</CODE> and <CODE>%right</CODE> (right associativity) take the place of
+<CODE>%token</CODE> which is used to declare a token type name without
+associativity.  (These tokens are single-character literals, which
+ordinarily don't need to be declared.  We declare them here to specify
+the associativity.)
+
+</P>
+<P>
+Operator precedence is determined by the line ordering of the
+declarations; the higher the line number of the declaration (lower on
+the page or screen), the higher the precedence.  Hence, exponentiation
+has the highest precedence, unary minus (<CODE>NEG</CODE>) is next, followed
+by <SAMP>`*'</SAMP> and <SAMP>`/'</SAMP>, and so on.  See section <A HREF="bison_8.html#SEC71">Operator Precedence</A>.
+
+</P>
+<P>
+The other important new feature is the <CODE>%prec</CODE> in the grammar section
+for the unary minus operator.  The <CODE>%prec</CODE> simply instructs Bison that
+the rule <SAMP>`| '-' exp'</SAMP> has the same precedence as <CODE>NEG</CODE>---in this
+case the next-to-highest.  See section <A HREF="bison_8.html#SEC76">Context-Dependent Precedence</A>.
+
+</P>
+<P>
+Here is a sample run of <TT>`calc.y'</TT>:
+
+</P>
+
+<PRE>
+% calc
+4 + 4.5 - (34/(8*3+-3))
+6.880952381
+-56 + 2
+-54
+3 ^ 2
+9
+</PRE>
+
+
+
+<H2><A NAME="SEC28" HREF="index.html#SEC28">Simple Error Recovery</A></H2>
+<P>
+<A NAME="IDX44"></A>
+
+</P>
+<P>
+Up to this point, this manual has not addressed the issue of <STRONG>error
+recovery</STRONG>---how to continue parsing after the parser detects a syntax
+error.  All we have handled is error reporting with <CODE>yyerror</CODE>.  Recall
+that by default <CODE>yyparse</CODE> returns after calling <CODE>yyerror</CODE>.  This
+means that an erroneous input line causes the calculator program to exit.
+Now we show how to rectify this deficiency.
+
+</P>
+<P>
+The Bison language itself includes the reserved word <CODE>error</CODE>, which
+may be included in the grammar rules.  In the example below it has
+been added to one of the alternatives for <CODE>line</CODE>:
+
+</P>
+
+<PRE>
+line:     '\n'
+        | exp '\n'   { printf ("\t%.10g\n", $1); }
+        | error '\n' { yyerrok;                  }
+;
+</PRE>
+
+<P>
+This addition to the grammar allows for simple error recovery in the event
+of a parse error.  If an expression that cannot be evaluated is read, the
+error will be recognized by the third rule for <CODE>line</CODE>, and parsing
+will continue.  (The <CODE>yyerror</CODE> function is still called upon to print
+its message as well.)  The action executes the statement <CODE>yyerrok</CODE>, a
+macro defined automatically by Bison; its meaning is that error recovery is
+complete (see section <A HREF="bison_9.html#SEC81">Error Recovery</A>).  Note the difference between
+<CODE>yyerrok</CODE> and <CODE>yyerror</CODE>; neither one is a misprint.
+</P>
+<P>
+This form of error recovery deals with syntax errors.  There are other
+kinds of errors; for example, division by zero, which raises an exception
+signal that is normally fatal.  A real calculator program must handle this
+signal and use <CODE>longjmp</CODE> to return to <CODE>main</CODE> and resume parsing
+input lines; it would also have to discard the rest of the current line of
+input.  We won't discuss this issue further because it is not specific to
+Bison programs.
+
+</P>
+
+
+<H2><A NAME="SEC29" HREF="index.html#SEC29">Multi-Function Calculator: <CODE>mfcalc</CODE></A></H2>
+<P>
+<A NAME="IDX45"></A>
+<A NAME="IDX46"></A>
+<A NAME="IDX47"></A>
+
+</P>
+<P>
+Now that the basics of Bison have been discussed, it is time to move on to
+a more advanced problem.  The above calculators provided only five
+functions, <SAMP>`+'</SAMP>, <SAMP>`-'</SAMP>, <SAMP>`*'</SAMP>, <SAMP>`/'</SAMP> and <SAMP>`^'</SAMP>.  It would
+be nice to have a calculator that provides other mathematical functions such
+as <CODE>sin</CODE>, <CODE>cos</CODE>, etc.
+
+</P>
+<P>
+It is easy to add new operators to the infix calculator as long as they are
+only single-character literals.  The lexical analyzer <CODE>yylex</CODE> passes
+back all non-number characters as tokens, so new grammar rules suffice for
+adding a new operator.  But we want something more flexible: built-in
+functions whose syntax has this form:
+
+</P>
+
+<PRE>
+<VAR>function_name</VAR> (<VAR>argument</VAR>)
+</PRE>
+
+<P>
+At the same time, we will add memory to the calculator, by allowing you
+to create named variables, store values in them, and use them later.
+Here is a sample session with the multi-function calculator:
+
+</P>
+
+<PRE>
+% mfcalc
+pi = 3.141592653589
+3.1415926536
+sin(pi)
+0.0000000000
+alpha = beta1 = 2.3
+2.3000000000
+alpha
+2.3000000000
+ln(alpha)
+0.8329091229
+exp(ln(beta1))
+2.3000000000
+%
+</PRE>
+
+<P>
+Note that multiple assignment and nested function calls are permitted.
+
+</P>
+
+
+
+<H3><A NAME="SEC30" HREF="index.html#SEC30">Declarations for <CODE>mfcalc</CODE></A></H3>
+
+<P>
+Here are the C and Bison declarations for the multi-function calculator.
+
+</P>
+
+<PRE>
+%{
+#include &#60;math.h&#62;  /* For math functions, cos(), sin(), etc. */
+#include "calc.h"  /* Contains definition of `symrec'        */
+%}
+%union {
+double     val;  /* For returning numbers.                   */
+symrec  *tptr;   /* For returning symbol-table pointers      */
+}
+
+%token &#60;val&#62;  NUM        /* Simple double precision number   */
+%token &#60;tptr&#62; VAR FNCT   /* Variable and Function            */
+%type  &#60;val&#62;  exp
+
+%right '='
+%left '-' '+'
+%left '*' '/'
+%left NEG     /* Negation--unary minus */
+%right '^'    /* Exponentiation        */
+
+/* Grammar follows */
+
+%%
+</PRE>
+
+<P>
+The above grammar introduces only two new features of the Bison language.
+These features allow semantic values to have various data types
+(see section <A HREF="bison_6.html#SEC45">More Than One Value Type</A>).
+
+</P>
+<P>
+The <CODE>%union</CODE> declaration specifies the entire list of possible types;
+this is instead of defining <CODE>YYSTYPE</CODE>.  The allowable types are now
+double-floats (for <CODE>exp</CODE> and <CODE>NUM</CODE>) and pointers to entries in
+the symbol table.  See section <A HREF="bison_6.html#SEC52">The Collection of Value Types</A>.
+
+</P>
+<P>
+Since values can now have various types, it is necessary to associate a
+type with each grammar symbol whose semantic value is used.  These symbols
+are <CODE>NUM</CODE>, <CODE>VAR</CODE>, <CODE>FNCT</CODE>, and <CODE>exp</CODE>.  Their
+declarations are augmented with information about their data type (placed
+between angle brackets).
+
+</P>
+<P>
+The Bison construct <CODE>%type</CODE> is used for declaring nonterminal symbols,
+just as <CODE>%token</CODE> is used for declaring token types.  We have not used
+<CODE>%type</CODE> before because nonterminal symbols are normally declared
+implicitly by the rules that define them.  But <CODE>exp</CODE> must be declared
+explicitly so we can specify its value type.  See section <A HREF="bison_6.html#SEC53">Nonterminal Symbols</A>.
+
+</P>
+
+
+<H3><A NAME="SEC31" HREF="index.html#SEC31">Grammar Rules for <CODE>mfcalc</CODE></A></H3>
+
+<P>
+Here are the grammar rules for the multi-function calculator.
+Most of them are copied directly from <CODE>calc</CODE>; three rules,
+those which mention <CODE>VAR</CODE> or <CODE>FNCT</CODE>, are new.
+
+</P>
+
+<PRE>
+input:   /* empty */
+        | input line
+;
+
+line:
+          '\n'
+        | exp '\n'   { printf ("\t%.10g\n", $1); }
+        | error '\n' { yyerrok;                  }
+;
+
+exp:      NUM                { $$ = $1;                         }
+        | VAR                { $$ = $1-&#62;value.var;              }
+        | VAR '=' exp        { $$ = $3; $1-&#62;value.var = $3;     }
+        | FNCT '(' exp ')'   { $$ = (*($1-&#62;value.fnctptr))($3); }
+        | exp '+' exp        { $$ = $1 + $3;                    }
+        | exp '-' exp        { $$ = $1 - $3;                    }
+        | exp '*' exp        { $$ = $1 * $3;                    }
+        | exp '/' exp        { $$ = $1 / $3;                    }
+        | '-' exp  %prec NEG { $$ = -$2;                        }
+        | exp '^' exp        { $$ = pow ($1, $3);               }
+        | '(' exp ')'        { $$ = $2;                         }
+;
+/* End of grammar */
+%%
+</PRE>
+
+
+
+<H3><A NAME="SEC32" HREF="index.html#SEC32">The <CODE>mfcalc</CODE> Symbol Table</A></H3>
+<P>
+<A NAME="IDX48"></A>
+
+</P>
+<P>
+The multi-function calculator requires a symbol table to keep track of the
+names and meanings of variables and functions.  This doesn't affect the
+grammar rules (except for the actions) or the Bison declarations, but it
+requires some additional C functions for support.
+
+</P>
+<P>
+The symbol table itself consists of a linked list of records.  Its
+definition, which is kept in the header <TT>`calc.h'</TT>, is as follows.  It
+provides for either functions or variables to be placed in the table.
+
+</P>
+
+<PRE>
+/* Data type for links in the chain of symbols.      */
+struct symrec
+{
+  char *name;  /* name of symbol                     */
+  int type;    /* type of symbol: either VAR or FNCT */
+  union {
+    double var;           /* value of a VAR          */
+    double (*fnctptr)();  /* value of a FNCT         */
+  } value;
+  struct symrec *next;    /* link field              */
+};
+
+typedef struct symrec symrec;
+
+/* The symbol table: a chain of `struct symrec'.     */
+extern symrec *sym_table;
+
+symrec *putsym ();
+symrec *getsym ();
+</PRE>
+
+<P>
+The new version of <CODE>main</CODE> includes a call to <CODE>init_table</CODE>, a
+function that initializes the symbol table.  Here it is, and
+<CODE>init_table</CODE> as well:
+
+</P>
+
+<PRE>
+#include &#60;stdio.h&#62;
+
+main ()
+{
+  init_table ();
+  yyparse ();
+}
+
+yyerror (s)  /* Called by yyparse on error */
+     char *s;
+{
+  printf ("%s\n", s);
+}
+
+struct init
+{
+  char *fname;
+  double (*fnct)();
+};
+
+struct init arith_fncts[]
+  = {
+      "sin", sin,
+      "cos", cos,
+      "atan", atan,
+      "ln", log,
+      "exp", exp,
+      "sqrt", sqrt,
+      0, 0
+    };
+
+/* The symbol table: a chain of `struct symrec'.  */
+symrec *sym_table = (symrec *)0;
+
+init_table ()  /* puts arithmetic functions in table. */
+{
+  int i;
+  symrec *ptr;
+  for (i = 0; arith_fncts[i].fname != 0; i++)
+    {
+      ptr = putsym (arith_fncts[i].fname, FNCT);
+      ptr-&#62;value.fnctptr = arith_fncts[i].fnct;
+    }
+}
+</PRE>
+
+<P>
+By simply editing the initialization list and adding the necessary include
+files, you can add additional functions to the calculator.
+
+</P>
+<P>
+Two important functions allow look-up and installation of symbols in the
+symbol table.  The function <CODE>putsym</CODE> is passed a name and the type
+(<CODE>VAR</CODE> or <CODE>FNCT</CODE>) of the object to be installed.  The object is
+linked to the front of the list, and a pointer to the object is returned.
+The function <CODE>getsym</CODE> is passed the name of the symbol to look up.  If
+found, a pointer to that symbol is returned; otherwise zero is returned.
+
+</P>
+
+<PRE>
+symrec *
+putsym (sym_name,sym_type)
+     char *sym_name;
+     int sym_type;
+{
+  symrec *ptr;
+  ptr = (symrec *) malloc (sizeof (symrec));
+  ptr-&#62;name = (char *) malloc (strlen (sym_name) + 1);
+  strcpy (ptr-&#62;name,sym_name);
+  ptr-&#62;type = sym_type;
+  ptr-&#62;value.var = 0; /* set value to 0 even if fctn.  */
+  ptr-&#62;next = (struct symrec *)sym_table;
+  sym_table = ptr;
+  return ptr;
+}
+
+symrec *
+getsym (sym_name)
+     char *sym_name;
+{
+  symrec *ptr;
+  for (ptr = sym_table; ptr != (symrec *) 0;
+       ptr = (symrec *)ptr-&#62;next)
+    if (strcmp (ptr-&#62;name,sym_name) == 0)
+      return ptr;
+  return 0;
+}
+</PRE>
+
+<P>
+The function <CODE>yylex</CODE> must now recognize variables, numeric values, and
+the single-character arithmetic operators.  Strings of alphanumeric
+characters with a leading nondigit are recognized as either variables or
+functions depending on what the symbol table says about them.
+
+</P>
+<P>
+The string is passed to <CODE>getsym</CODE> for look up in the symbol table.  If
+the name appears in the table, a pointer to its location and its type
+(<CODE>VAR</CODE> or <CODE>FNCT</CODE>) is returned to <CODE>yyparse</CODE>.  If it is not
+already in the table, then it is installed as a <CODE>VAR</CODE> using
+<CODE>putsym</CODE>.  Again, a pointer and its type (which must be <CODE>VAR</CODE>) is
+returned to <CODE>yyparse</CODE>.
+</P>
+<P>
+No change is needed in the handling of numeric values and arithmetic
+operators in <CODE>yylex</CODE>.
+
+</P>
+
+<PRE>
+#include &#60;ctype.h&#62;
+yylex ()
+{
+  int c;
+
+  /* Ignore whitespace, get first nonwhite character.  */
+  while ((c = getchar ()) == ' ' || c == '\t');
+
+  if (c == EOF)
+    return 0;
+
+  /* Char starts a number =&#62; parse the number.         */
+  if (c == '.' || isdigit (c))
+    {
+      ungetc (c, stdin);
+      scanf ("%lf", &#38;yylval.val);
+      return NUM;
+    }
+
+  /* Char starts an identifier =&#62; read the name.       */
+  if (isalpha (c))
+    {
+      symrec *s;
+      static char *symbuf = 0;
+      static int length = 0;
+      int i;
+
+      /* Initially make the buffer long enough
+         for a 40-character symbol name.  */
+      if (length == 0)
+        length = 40, symbuf = (char *)malloc (length + 1);
+
+      i = 0;
+      do
+        {
+          /* If buffer is full, make it bigger.        */
+          if (i == length)
+            {
+              length *= 2;
+              symbuf = (char *)realloc (symbuf, length + 1);
+            }
+          /* Add this character to the buffer.         */
+          symbuf[i++] = c;
+          /* Get another character.                    */
+          c = getchar ();
+        }
+      while (c != EOF &#38;&#38; isalnum (c));
+
+      ungetc (c, stdin);
+      symbuf[i] = '\0';
+
+      s = getsym (symbuf);
+      if (s == 0)
+        s = putsym (symbuf, VAR);
+      yylval.tptr = s;
+      return s-&#62;type;
+    }
+
+  /* Any other character is a token by itself.        */
+  return c;
+}
+</PRE>
+
+<P>
+This program is both powerful and flexible. You may easily add new
+functions, and it is a simple job to modify this code to install predefined
+variables such as <CODE>pi</CODE> or <CODE>e</CODE> as well.
+
+</P>
+
+
+<H2><A NAME="SEC33" HREF="index.html#SEC33">Exercises</A></H2>
+<P>
+<A NAME="IDX49"></A>
+
+</P>
+
+<OL>
+<LI>
+
+Add some new functions from <TT>`math.h'</TT> to the initialization list.
+
+<LI>
+
+Add another array that contains constants and their values.  Then
+modify <CODE>init_table</CODE> to add these constants to the symbol table.
+It will be easiest to give the constants type <CODE>VAR</CODE>.
+
+<LI>
+
+Make the program report an error if the user refers to an
+uninitialized variable in any way except to store a value in it.
+</OL>
+
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_4.html">previous</A>, <A HREF="bison_6.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,894 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" >
+
+<html>
+<head>
+  <title>The Compiler Generator Coco/R</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link rel=STYLESHEET type="text/css"  href="../../../sswstyle/core-style.css">
+</head>
+
+<body>
+
+<!-- ============================== header with logos ============================== -->
+<!--
+<div id="header">
+	<div class="row align-items-center">
+		<div class="col-sm-2">
+			<img class="float-left" src="https://ssw.jku.at/sswstyle/JKU_Logo.png">
+		</div>
+		<div class="col-sm-auto">
+			<div><a href="http://informatik.jku.at/">Computer Science</a></div>
+			<div class="text-uppercase">System Software</div>
+		</div>
+		<div class="col-sm-2">
+			<img class="float-right" src="https://ssw.jku.at/Images/SSWLogo/sswlogo45.png">
+		</div>
+	</div>
+	<hr/>
+</div>
+-->
+<!-- <div id="header" class="d-flex align-items-center flex-column flex-md-row" style="width: 100%"> -->
+<div id="header" class="d-flex justify-content-between align-items-center flex-column flex-md-row">
+	<div class="d-flex align-items-center pr-md-2">
+			<img id="jkulogo" class="float-left pr-2" src="../../../../ssw.jku.at/sswstyle/JKU_Logo.png" alt="Logo of the University">
+			<div class="float-left text-nowrap">
+				<div class="float-none"><a href="http://informatik.jku.at/">Computer Science</a></div>
+				<div class="text-uppercase">System Software</div>
+			</div>
+	</div>
+	<!--
+	<div class="text-nowrap text-center align-items-center">
+		<a class="badge badge-pill badge-secondary" href="http://ssw.jku.at/manlang18" style="font-size: 26pt; color: white;">
+			<span>&nbsp;ManLang'18&nbsp;</span><br>
+		</a>
+	</div>
+	-->
+	<div class="pl-md-2 mt-2 mt-md-0">
+			<img style="height:60px" id="sswlogo" class="float-right" src="../../../../ssw.jku.at/sswstyle/sswlogo.png" alt="Logo of the Institute">
+	</div>
+</div>
+<hr/>
+<!-- ============================== navigation menu ============================== -->
+<table cellspacing="0" cellpadding="0" style="margin-top:30px;">
+	<tr>
+		<td id="navigation">
+			<a href="http://ssw.jku.at" style="font-weight:normal;">Home</a><br>
+			<br>
+			<b>General</b><br>
+			<a href="http://ssw.jku.at/General/Staff/" style="font-weight:normal;">Staff</a><br>
+			<a href="http://ssw.jku.at/General/Location/" style="font-weight:normal;">Contact</a><br>
+			<a href="http://ssw.jku.at/General/Partners/" style="font-weight:normal;">Partners</a><br>
+			<a href="http://ssw.jku.at/General/Alumni/" style="font-weight:normal;">Alumni</a><br>
+			<br>
+			<b>Research</b><br>
+			<a href="http://ssw.jku.at/Research/Areas/" style="font-weight:normal;">Areas</a><br>
+			<a href="http://ssw.jku.at/Research/Projects/" style="font-weight:normal;">Projects</a><br>
+			<a href="http://ssw.jku.at/Research/Papers/" style="font-weight:normal;">Papers</a><br>
+			<a href="http://ssw.jku.at/Research/Books/" style="font-weight:normal;">Books</a><br>
+			<a href="http://ssw.jku.at/Research/Reports/" style="font-weight:normal;">Reports</a><br>
+			<a href="http://ssw.jku.at/Research/Awards/" style="font-weight:normal;">Awards</a><br>
+			<br>
+			<b>Teaching</b><br>
+			<a href="http://ssw.jku.at/Teaching/Lectures/" style="font-weight:normal;">Lectures</a><br>
+			<a href="http://ssw.jku.at/Teaching/Exams/" style="font-weight:normal;">Exams</a><br>
+			<a href="http://ssw.jku.at/Teaching/Projects/" style="font-weight:normal;">B.Projects</a><br>
+			<a href="http://ssw.jku.at/Teaching/MasterTheses/" style="font-weight:normal;">M.Theses</a><br>
+			<a href="http://ssw.jku.at/Teaching/PhDTheses/" style="font-weight:normal;">PhD Theses</a><br>
+			<a href="http://ssw.jku.at/Teaching/Auslandssemester.html" style="font-weight:normal;">Go Abroad</a><br>
+			<br>
+			<b>Misc</b><br>
+			<a href="http://informatik.jku.at/kolloquium/listAll.jsp" style="font-weight:normal;">Talks</a><br>
+			<!-- <a href="http://ssw.jku.at/weblib/" style="font-weight:normal;">Library</a><br> -->
+			<a href="http://ssw.jku.at/literaturdb/" style="font-weight:normal;">Library</a><br>
+			<a href="http://ssw.jku.at/General/Gallery/" style="font-weight:normal;">Gallery</a><br>
+			<a href="http://ssw.jku.at/Services/Links/" style="font-weight:normal;">Links</a><br>
+			<a href="http://ssw.jku.at/Misc/search.html" style="font-weight:normal;">Search</a><br>
+			<br>
+            <a href="mailto:admin@ssw.jku.at" style="font-weight:normal;">Webmaster</a><br>
+            <br>
+            <br>
+						<!--
+                <a href="http://www.jku.at" target="_blank"><img src="/Images/JKULogogr82.png" style="margin-left: -10px;" order="0" alt="logo of the Johannes Kepler University (JKU)"></a>
+								-->
+		</td>
+
+		<td id="content">
+
+
+<h1>The Compiler Generator Coco/R</h1>
+<a href="http://www.ssw.uni-linz.ac.at/General/Staff/HM/">Hanspeter Mössenböck</a>,
+<a href="mailto:m.loeberbauer@gmail.com">Markus Löberbauer</a>,
+Albrecht Wöß, University of Linz
+
+<p>
+  Last update: December 3, 2018
+</p>
+<hr>
+  <a href="index.html#Docu">Documentation</a> |
+  <a href="index.html#CS">Coco/R for C#</a>,
+  <a href="index.html#Java">Java</a>,
+  <a href="index.html#CPP">C++</a>,
+  <a href="index.html#FS">F#</a>,
+  <a href="index.html#VB">VB.Net</a>,
+  <a href="index.html#Delphi">Delphi</a>,
+  <a href="index.html#Swift">Swift</a>,
+  <a href="index.html#Oberon">Oberon</a>,
+  <a href="index.html#Others">other languages</a> |
+  <a href="index.html#Projects">projects using Coco/R</a> |
+  <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Contributions/">Contributions</a> |
+  <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Cookbook/">Cookbook</a> |
+  <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Tools/">Tools</a> |
+  <a href="index.html#Mailing">Mailing list</a>
+<hr>
+
+<p>
+Coco/R is a compiler generator, which takes an attributed grammar
+of a source language and generates a scanner and a parser for this
+language. The scanner works as a deterministic finite automaton.
+The parser uses recursive descent. LL(1) conflicts can be resolved
+by a multi-symbol lookahead or by semantic checks. Thus the class
+of accepted grammars is LL(<i>k</i>) for an arbitrary <i>k</i>.
+</p>
+
+<p>
+There are versions of Coco/R for different languages (see below).
+The latest versions from the University of Linz are those for C#,
+Java and C++, which can be downloaded from this site.
+An older (non-reentrant) version of Coco/R for C# and Java can be obtained from
+<a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/static.html">here</a>.
+</p>
+
+<p>
+Coco/R is distributed under the terms of the
+<a href="http://www.opensource.org/licenses/gpl-license.php">GNU General Public License</a>
+(slightly extended).
+</p>
+<hr>
+<p>
+	<b style="color:red">New:</b>
+	You can find the releases of Coco/R for Java, C# und C++ on <a href="https://github.com/SSW-CocoR">GitHub</a>
+</p>
+<p>
+	<b style="color:red">New:</b>
+	If you used Coco/R for a project that might also be of interest to others,
+	please send us a link to a Web page describing the project. We will put those
+	references online <a href="index.html#Projects">here</a>.
+</p>
+<hr>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<h3><a name="Docu">Documentation and license</a></h3>
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/license.txt">license.txt</a>
+    </td>
+    <td>
+      GNU General Public License (slightly extended)
+    </td>
+  </tr>
+  <!--
+  <tr>
+    <td width="120" valign="top">
+      <a href="Doc/faq.html">F.a.q.</a>
+    </td>
+    <td>
+      Frequently asked questions.
+    </td>
+  </tr>
+  -->
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/UserManual.pdf">UserManual.pdf</a>
+    </td>
+    <td>
+      Language specification and user guide
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/DataStructures.pdf">DataStructures.pdf</a>
+    </td>
+    <td>
+      Description of the data structures in Coco/R (for those who want to
+      understand the implementation of Coco/R)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/TestSuite.zip">TestSuite.zip</a>
+    </td>
+    <td>
+      A test suite for Coco/R (see readme.pdf)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/ConflictResolvers.pdf">JMLC'03 paper</a>
+    </td>
+    <td>
+      LL(1) Conflict Resolution in a Recursive Descent Compiler Generator
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Tutorial/">Tutorial</a>
+    </td>
+    <td>
+      Powerpoint slides of a Coco/R tutorial given at JMLC'06 (by Hanspeter M&ouml;ssenb&ouml;ck)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://structured-parsing.wikidot.com/coco-r-parser">another Tutorial</a>
+    </td>
+    <td>
+      about using Coco/R (by Henrik Teinelund)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/AST.pdf">AST.pdf</a>, <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Doc/AST.zip">AST.zip</a>
+    </td>
+    <td>
+      Tutorial showing how to build abstract syntax trees with Coco/R
+    </td>
+  </tr>
+</table>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="CS">Coco/R for C#</a></h3>
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/Coco.exe">Coco.exe</a>
+    </td>
+    <td>
+      the executable
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/Scanner.frame">Scanner.frame</a>
+    </td>
+    <td>
+      the frame file from which the scanner is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/Parser.frame">Parser.frame</a>
+    </td>
+    <td>
+      the frame file from which the parser is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CocoSourcesCS.zip">CocoSourcesCS.zip</a>
+    </td>
+    <td>
+      the sources (put them in a subdirectory and run build.bat)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/log.html">log.html</a>
+    </td>
+    <td>
+      change log
+    </td>
+  </tr>
+  <tr>
+    <td><br><b>Samples</b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/Taste.zip">Taste.zip</a>
+    </td>
+    <td>
+      the sources of the sample compiler (Taste) described in the user manual.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CSharp.ATG">CSharp.ATG</a>
+    </td>
+    <td>
+      a sample ATG for C# (a template) that produces a complete scanner and parser for C# source code.
+      Add your own semantic actions to customize your parser. (last update 2005-06-29)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CSParser.cs">CSParser.cs</a>
+    </td>
+    <td>
+      the source code for the main class of a simple sample C# parser
+      that uses the scanner and parser generated from the above CSharp.ATG.
+      It only reports the number of syntax errors found in any parsed C# source.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CSharp2.ATG">CSharp2.ATG</a>
+    </td>
+    <td>
+      a sample ATG for C# 2.0 (C# Language Specification Working Draft 2.7, Jun, 2004)
+      that produces a complete scanner and parser for C# 2.0 source code.
+      Add your own semantic actions to customize your parser. (last update 2007-03-20)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CS2Parser.cs">CS2Parser.cs</a>
+    </td>
+    <td>
+      the source code for the main class of a simple sample C# parser
+      that uses the scanner and parser generated from the above CSharp2.ATG.
+      It only reports the number of syntax errors found in any parsed C# 2.0 source.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CS/CSharp3.atg">CSharp3.atg</a>
+    </td>
+    <td>
+      a sample ATG for C# 3.0 (C# Language Specification Version 3.0, 2007)
+      that produces a complete scanner and parser for C# 3.0 source code.
+      Add your own semantic actions to customize your parser. Attention, to
+      use this grammar the default Scanner.frame and Parser.frame must be updated as described
+      in the top of the grammar. (last update 2010-10-01)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/C/C.atg">C.atg</a>
+    </td>
+    <td>
+    	a sample ATG for ANSI C 89 as specified in
+    	<a href="http://flash-gordon.me.uk/ansi.c.txt">flash-gordon.me.uk/ansi.c.txt</a>.
+    	In order to resolve LL(1) conflicts you need a symbol table. A very simple example
+    	for such a symbol table (just giving you an idea) can be downloaded from
+    	<a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/C/SymTab.cs">here</a>.
+    </td>
+  </tr>
+
+</table>
+  <p>
+  	The C# version of Coco/R is also available from <a href="https://www.nuget.org/packages/CocoR/">https://www.nuget.org/packages/CocoR/</a>
+  </p>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="Java">Coco/R for Java</a></h3>
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/Coco.jar">Coco.jar</a>
+    </td>
+    <td>
+      an archive containing all classes of Coco/R
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/Scanner.frame">Scanner.frame</a>
+    </td>
+    <td>
+      the frame file from which the scanner is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/Parser.frame">Parser.frame</a>
+    </td>
+    <td>
+      the frame file from which the parser is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/CocoSourcesJava.zip">CocoSourcesJava.zip</a>
+    </td>
+    <td>
+      the sources (put them in a subdirectory and run build.bat)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/log.html">log.html</a>
+    </td>
+    <td>
+      change log
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Eclipse">Eclipse Plug-in</a>
+    </td>
+    <td>
+      Integration into the development environment Eclipse
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="https://github.com/tscheinecker/intellij-idea-coco-r-plugin/releases">IntelliJ Plug-in</a>
+    </td>
+    <td>
+      Integration into the development environment IntelliJ IDEA (Thomas Scheinecker)
+    </td>
+  </tr>
+
+
+  <tr>
+    <td><br><b>Samples</b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/Java.ATG">Java.ATG</a>
+    </td>
+    <td>
+      a sample ATG for Java 1.4 (a template) that produces a complete scanner and parser
+      for Java source code.
+      Add your own semantic actions to customize your parser.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/JavaParser.java">JavaParser.java</a>
+    </td>
+    <td>
+      the source code for the main class of a simple sample Java parser
+      that uses the scanner and parser generated from the above Java.ATG.
+      It only reports the number of syntax errors found in any parsed Java source.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/JavaGrammar.html">JavaGrammar.html</a>
+    </td>
+    <td>
+      HTML documentation of the Java grammar used in Java.ATG.
+    </td>
+  </tr>
+
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+
+<h3><a name="CPP">Coco/R for C++</a></h3>
+<p>ported and maintained by <a href="mailto:Loeberbauer%40ssw.jku.at">Markus L&ouml;berbauer</a> and <a href="mailto:balazscs%40inf.u-szeged.hu">Csaba Balazs</a></p>
+
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/Coco.exe">Coco.exe</a>
+    </td>
+    <td>
+      the executable
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/Scanner.frame">Scanner.frame</a>
+    </td>
+    <td>
+      the frame file from which the scanner is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/Parser.frame">Parser.frame</a>
+    </td>
+    <td>
+      the frame file from which the parser is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/CocoSourcesCPP.zip">CocoSourcesCPP.zip</a>
+    </td>
+    <td>
+      the sources (put them in a subdirectory and run build.bat)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/log.html">log.html</a>
+    </td>
+    <td>
+      change log
+    </td>
+  </tr>
+
+  <tr>
+    <td><br><b>Samples</b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/CPP/Taste.zip">Taste.zip</a>
+    </td>
+    <td>
+      the sources of the sample compiler (Taste) described in the user manual.
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+
+<h3><a name="FS">Coco/R for F#</a></h3>
+<p>ported and maintained by <a href="mailto:amcjpereira%40gmail.com">Alexandre Pereira</a></p>
+
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/Readme.txt">Readme.txt</a>
+    </td>
+    <td>
+      A readme file with the F# specific differences from the original Coco/R version.
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/Coco.exe">Coco.exe</a>
+    </td>
+    <td>
+      the executable
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/Scanner.frame">Scanner.frame</a>
+    </td>
+    <td>
+      the frame file from which the scanner is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/Parser.frame">Parser.frame</a>
+    </td>
+    <td>
+      the frame file from which the parser is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/CocoSourcesFSharp.zip">CocoSourcesFSharp.zip</a>
+    </td>
+    <td>
+      the sources (put them in a subdirectory and run build_cocoFsharp.bat)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/log.html">log.html</a>
+    </td>
+    <td>
+      change log
+    </td>
+  </tr>
+
+  <tr>
+    <td><br><b>Samples</b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/FSharp/Example_Arith.zip">Example_Arith.zip</a>
+    </td>
+    <td>
+      the sources of a sample compiler
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+
+<h3><a name="VB">Coco/R for VB.Net</a></h3>
+<p>ported and maintained by <a href="mailto:adrian.devries%40t-online.de">Adrian Devries</a></p>
+
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/Coco.exe">Coco.exe</a>
+    </td>
+    <td>
+      the executable
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/Scanner.frame">Scanner.frame</a>
+    </td>
+    <td>
+      the frame file from which the scanner is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/Parser.frame">Parser.frame</a>
+    </td>
+    <td>
+      the frame file from which the parser is generated
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/CocoSourcesVB.zip">CocoSourcesVB.zip</a>
+    </td>
+    <td>
+      the sources (put them in a subdirectory and run build.cmd)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/log.html">log.html</a>
+    </td>
+    <td>
+      change log
+    </td>
+  </tr>
+
+  <tr>
+    <td><br><b>Samples</b></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/VB/Taste.zip">Taste.zip</a>
+    </td>
+    <td>
+      the sources of the sample compiler (Taste) described in the user manual.
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="Delphi">Coco/R for Delphi</a></h3>
+<p>There are several versions of Coco under Delphi, ported and maintained by different people:</p>
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.martincharvey.tk/?page_id=71">Delphi</a>
+    </td>
+    <td>
+      by <a href="mailto:martin_c_harvey@hotmail.com">Martin C. Harvey</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="https://github.com/VilleKrumlinde/dcocor">Delphi</a>
+    </td>
+    <td>
+      by <a href="mailto:voloshenyuk@cox.net">Serge Voloshenyuk</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://tetzel.com/cocor/coco-r-for-delphi/">Delphi</a>
+    </td>
+    <td>
+      by <a href="mailto:mreith@tetzel.com">Mike Reith</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://sourceforge.net/projects/parserbuilder/">Delphi</a>
+    </td>
+    <td>
+      by <a href="http://parserbuilder.sourceforge.net">Patrick Connors</a>
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="Swift">Coco/R for Swift</a></h3>
+<p>ported and maintained by <a href="https://github.com/mgriebling">Michael Griebling</a></p>
+
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="https://github.com/mgriebling/Coco#cocor">download</a>
+    </td>
+    <td>
+      from GitHub. Also: <a href="https://github.com/mgriebling/Taste/">sample compiler</a> for <i>Taste</i>.
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="Oberon">Coco/R for Oberon</a></h3>
+<table>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Oberon/Coco.Cod">Coco.Cod</a>
+    </td>
+    <td>
+      Oberon archive with the sources of Coco/R; this version is not further developed and
+      differs from the C# and Java versions. It is also non-reentrant.
+    </td>
+  </tr>
+</table>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+<h3><a name="Others">Other versions of Coco/R</a></h3>
+<p>
+These versions were ported from the original version of Coco/R
+and have a slightly different input language and functionality.
+</p>
+<table>
+  <tr>
+    <td width="120" valign="top">
+			<!-- <a href="http://www.scifac.ru.ac.za/coco/#Available">Pascal, Modula-2, Java, C#</a> -->
+      Pascal, Modula-2, Java, C#
+    </td>
+    <td valign="top">
+			<!-- by <a href="http://www.scifac.ru.ac.za/cspt/">Pat Terry</a> -->
+      by Pat Terry (unfortunately no link available at the moment)
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://pypi.python.org/pypi/CocoPy/">Python</a>
+    </td>
+    <td valign="top">
+      by <a href="mailto:ron_longo@verizon.net">Ron Longo</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.scifac.ru.ac.za/coco/#C/C++">C/C++</a>
+    </td>
+    <td>
+      by <a href="mailto:frankie_arzu@yahoo.com">Frankie Arzu</a>
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.ada-ru.org/files/cocor_ada-1.53.1.tar.gz">Ada</a>
+    </td>
+    <td>
+      by Oleksandr Havva
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.zenspider.com/ZSS/Products/CocoR/">Ruby</a>
+    </td>
+    <td>
+      by Zen Spider Software
+    </td>
+  </tr>
+  <tr>
+    <td width="120" valign="top">
+      <a href="http://www.wyrdtech.com/cocor/">Unicon</a>
+    </td>
+    <td>
+      by <a href="mailto:jpowers@wyrdtech.com">Jeremy Powers</a>
+    </td>
+  </tr>
+</table>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+
+<h3><a name="Projects">Projects using Coco/R</a></h3>
+<p>
+Many projects use Coco/R to parse data e.g. logs, configurations, and user input. Here
+we list some great projects doing so. If you used Coco/R for a project that might also
+be of interest to others, please send us a link to a Web page describing the project.
+</p>
+<table>
+  <tr><td>Tool and producer</td><td>One sentence summary</td></tr>
+
+  <tr>
+    <td>
+      <a href="https://github.com/boogie-org/boogie">Boogie - Microsoft Research</a>
+    </td>
+    <td>
+      Boogie, an intermediate verification language.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="http://agrum.gitlab.io/">aGrUM - Gonzales, Wuillemin, et al</a>
+    </td>
+    <td>
+      aGrUM, A GRaphical Universal Modeler.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="http://mqweb.sourceforge.net/">MQWeb - Franky Braem</a>
+    </td>
+    <td>
+      MQWeb is a web-based tool to manage Websphere MQ.
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <a href="http://www.miceonabeam.com/">MiceOnABeam - Antonius Frentis</a>
+    </td>
+    <td>
+      MiceOnABeam is a UML-based visual scripting tool that generates LSL code
+      for the online virtual world of Second Life.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="http://www.petschacher.at">VaP - PEC Petschacher Consulting</a>
+    </td>
+    <td>
+      VaP is a tool for civil engineering and more to calculate
+      statistical metrics, and make analysis thereof.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="http://code.google.com/p/cocoxml/">CocoXml - Charles Wang</a>
+    </td>
+    <td>
+      Implementation of Coco/R in C, and
+      Coco/R generated XML tag syntax parser.
+    </td>
+  </tr>
+</table>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<hr>
+
+<h3>Book</h3>
+<p>
+  There is an excellent book about using Coco/R for compiler construction:<br>
+  Pat Terry:
+  <a href="http://www.scifac.ru.ac.za/compilerbook">Compiling with C# and Java</a>
+  Pearson, 2005
+</p>
+
+<!--
+<hr>
+
+<h3><a name="Mailing">Mailing list</a></h3>
+<p>
+  We provide a <a href="/cgi-bin/mailman/listinfo/coco">release and changes mailing list
+  for Coco/R and related stuff</a>.
+  There you can find changes in Coco/R and interesting stuff around Coco/R like
+  the C# or Java grammar. Start of the mailing list 2005-08-16.
+</p>
+-->
+
+		</td>
+	</tr>
+</table>
+<!-- ######### BOOTSTRAP START  ############# -->
+<script src="../../../../code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="../../../../cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="../../../../maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- ######### BOOTSTRAP END  ############# -->
+
+
+
+</body>
+</html>

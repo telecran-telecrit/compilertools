@@ -1,0 +1,236 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - Invoking Bison</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_11.html">previous</A>, <A HREF="bison_13.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC87" HREF="index.html#SEC87">Invoking Bison</A></H1>
+<P>
+<A NAME="IDX192"></A>
+<A NAME="IDX193"></A>
+<A NAME="IDX194"></A>
+
+</P>
+<P>
+The usual way to invoke Bison is as follows:
+
+</P>
+
+<PRE>
+bison <VAR>infile</VAR>
+</PRE>
+
+<P>
+Here <VAR>infile</VAR> is the grammar file name, which usually ends in
+<SAMP>`.y'</SAMP>.  The parser file's name is made by replacing the <SAMP>`.y'</SAMP>
+with <SAMP>`.tab.c'</SAMP>.  Thus, the <SAMP>`bison foo.y'</SAMP> filename yields
+<TT>`foo.tab.c'</TT>, and the <SAMP>`bison hack/foo.y'</SAMP> filename yields
+<TT>`hack/foo.tab.c'</TT>.
+</P>
+
+
+
+<H2><A NAME="SEC88" HREF="index.html#SEC88">Bison Options</A></H2>
+
+<P>
+Bison supports both traditional single-letter options and mnemonic long
+option names.  Long option names are indicated with <SAMP>`--'</SAMP> instead of
+<SAMP>`-'</SAMP>.  Abbreviations for option names are allowed as long as they
+are unique.  When a long option takes an argument, like
+<SAMP>`--file-prefix'</SAMP>, connect the option name and the argument with
+<SAMP>`='</SAMP>.
+
+</P>
+<P>
+Here is a list of options that can be used with Bison, alphabetized by
+short option.  It is followed by a cross key alphabetized by long
+option.
+
+</P>
+<DL COMPACT>
+
+<DT><SAMP>`-b <VAR>file-prefix</VAR>'</SAMP>
+<DD>
+<DT><SAMP>`--file-prefix=<VAR>prefix</VAR>'</SAMP>
+<DD>
+Specify a prefix to use for all Bison output file names.  The names are
+chosen as if the input file were named <TT>`<VAR>prefix</VAR>.c'</TT>.
+
+<DT><SAMP>`-d'</SAMP>
+<DD>
+<DT><SAMP>`--defines'</SAMP>
+<DD>
+Write an extra output file containing macro definitions for the token
+type names defined in the grammar and the semantic value type
+<CODE>YYSTYPE</CODE>, as well as a few <CODE>extern</CODE> variable declarations.
+
+If the parser output file is named <TT>`<VAR>name</VAR>.c'</TT> then this file
+is named <TT>`<VAR>name</VAR>.h'</TT>.
+This output file is essential if you wish to put the definition of
+<CODE>yylex</CODE> in a separate source file, because <CODE>yylex</CODE> needs to
+be able to refer to token type codes and the variable
+<CODE>yylval</CODE>.  See section <A HREF="bison_7.html#SEC63">Semantic Values of Tokens</A>.
+<DT><SAMP>`-l'</SAMP>
+<DD>
+<DT><SAMP>`--no-lines'</SAMP>
+<DD>
+Don't put any <CODE>#line</CODE> preprocessor commands in the parser file.
+Ordinarily Bison puts them in the parser file so that the C compiler
+and debuggers will associate errors with your source file, the
+grammar file.  This option causes them to associate errors with the
+parser file, treating it as an independent source file in its own right.
+
+<DT><SAMP>`-n'</SAMP>
+<DD>
+<DT><SAMP>`--no-parser'</SAMP>
+<DD>
+Do not include any C code in the parser file; generate tables only.  The
+parser file contains just <CODE>#define</CODE> directives and static variable
+declarations.
+
+This option also tells Bison to write the C code for the grammar actions
+into a file named <TT>`<VAR>filename</VAR>.act'</TT>, in the form of a
+brace-surrounded body fit for a <CODE>switch</CODE> statement.
+
+<DT><SAMP>`-o <VAR>outfile</VAR>'</SAMP>
+<DD>
+<DT><SAMP>`--output-file=<VAR>outfile</VAR>'</SAMP>
+<DD>
+Specify the name <VAR>outfile</VAR> for the parser file.
+
+The other output files' names are constructed from <VAR>outfile</VAR>
+as described under the <SAMP>`-v'</SAMP> and <SAMP>`-d'</SAMP> options.
+
+<DT><SAMP>`-p <VAR>prefix</VAR>'</SAMP>
+<DD>
+<DT><SAMP>`--name-prefix=<VAR>prefix</VAR>'</SAMP>
+<DD>
+Rename the external symbols used in the parser so that they start with
+<VAR>prefix</VAR> instead of <SAMP>`yy'</SAMP>.  The precise list of symbols renamed
+is <CODE>yyparse</CODE>, <CODE>yylex</CODE>, <CODE>yyerror</CODE>, <CODE>yynerrs</CODE>,
+<CODE>yylval</CODE>, <CODE>yychar</CODE> and <CODE>yydebug</CODE>.
+
+For example, if you use <SAMP>`-p c'</SAMP>, the names become <CODE>cparse</CODE>,
+<CODE>clex</CODE>, and so on.
+
+See section <A HREF="bison_6.html#SEC58">Multiple Parsers in the Same Program</A>.
+
+<DT><SAMP>`-r'</SAMP>
+<DD>
+<DT><SAMP>`--raw'</SAMP>
+<DD>
+Pretend that <CODE>%raw</CODE> was specified.  See section <A HREF="bison_6.html#SEC57">Bison Declaration Summary</A>.
+
+<DT><SAMP>`-t'</SAMP>
+<DD>
+<DT><SAMP>`--debug'</SAMP>
+<DD>
+Output a definition of the macro <CODE>YYDEBUG</CODE> into the parser file,
+so that the debugging facilities are compiled.  See section <A HREF="bison_11.html#SEC86">Debugging Your Parser</A>.
+
+<DT><SAMP>`-v'</SAMP>
+<DD>
+<DT><SAMP>`--verbose'</SAMP>
+<DD>
+Write an extra output file containing verbose descriptions of the
+parser states and what is done for each type of look-ahead token in
+that state.
+
+This file also describes all the conflicts, both those resolved by
+operator precedence and the unresolved ones.
+
+The file's name is made by removing <SAMP>`.tab.c'</SAMP> or <SAMP>`.c'</SAMP> from
+the parser output file name, and adding <SAMP>`.output'</SAMP> instead.
+Therefore, if the input file is <TT>`foo.y'</TT>, then the parser file is
+called <TT>`foo.tab.c'</TT> by default.  As a consequence, the verbose
+output file is called <TT>`foo.output'</TT>.
+<DT><SAMP>`-V'</SAMP>
+<DD>
+<DT><SAMP>`--version'</SAMP>
+<DD>
+Print the version number of Bison and exit.
+
+<DT><SAMP>`-h'</SAMP>
+<DD>
+<DT><SAMP>`--help'</SAMP>
+<DD>
+Print a summary of the command-line options to Bison and exit.
+
+<DT><SAMP>`-y'</SAMP>
+<DD>
+<DT><SAMP>`--yacc'</SAMP>
+<DD>
+<DT><SAMP>`--fixed-output-files'</SAMP>
+<DD>
+Equivalent to <SAMP>`-o y.tab.c'</SAMP>; the parser output file is called
+<TT>`y.tab.c'</TT>, and the other outputs are called <TT>`y.output'</TT> and
+<TT>`y.tab.h'</TT>.  The purpose of this option is to imitate Yacc's output
+file name conventions.  Thus, the following shell script can substitute
+for Yacc:
+
+<PRE>
+bison -y $*
+</PRE>
+
+</DL>
+
+
+
+<H2><A NAME="SEC89" HREF="index.html#SEC89">Option Cross Key</A></H2>
+
+<P>
+Here is a list of options, alphabetized by long option, to help you find
+the corresponding short option.
+
+</P>
+
+
+
+<H2><A NAME="SEC90" HREF="index.html#SEC90">Invoking Bison under VMS</A></H2>
+<P>
+<A NAME="IDX195"></A>
+<A NAME="IDX196"></A>
+
+</P>
+<P>
+The command line syntax for Bison on VMS is a variant of the usual
+Bison command syntax--adapted to fit VMS conventions.
+
+</P>
+<P>
+To find the VMS equivalent for any Bison option, start with the long
+option, and substitute a <SAMP>`/'</SAMP> for the leading <SAMP>`--'</SAMP>, and
+substitute a <SAMP>`_'</SAMP> for each <SAMP>`-'</SAMP> in the name of the long option.
+For example, the following invocation under VMS:
+
+</P>
+
+<PRE>
+bison /debug/name_prefix=bar foo.y
+</PRE>
+
+<P>
+is equivalent to the following command under POSIX.
+
+</P>
+
+<PRE>
+bison --debug --name-prefix=bar foo.y
+</PRE>
+
+<P>
+The VMS file system does not permit filenames such as
+<TT>`foo.tab.c'</TT>.  In the above example, the output file
+would instead be named <TT>`foo_tab.c'</TT>.
+
+</P>
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_11.html">previous</A>, <A HREF="bison_13.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

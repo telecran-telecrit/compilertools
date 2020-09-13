@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Vids Samanta">
+   <TITLE>JTB: The Java Tree Builder Homepage</TITLE>
+<style type="text/css"><!-- 
+body{background-color:#FFFFFF;color:#000000;font-family:Arial,sans-serif;}
+b{color:#500000;}
+a:link,a:visited{color:#336699}
+h2{background-color:#efefef;color:#000000;width:"100%";border-style:none;border-width:thin;padding:0cm;align:center;text-align:center;}
+--></style>
+
+</HEAD>
+<BODY>
+<center>
+<img src="Images/jtb-sm.GIF">
+<BR><B><FONT COLOR="#FF6666">J</FONT><FONT SIZE=-2>AVA</FONT> <FONT COLOR="#FF6666">T</FONT><FONT SIZE=-2>REE</FONT><FONT COLOR="#FF6666">B</FONT><FONT SIZE=-2>UILDER</FONT></B>
+</center>
+<br><br>
+
+<B>Overview</B>
+<BR><br>
+
+JTB is a syntax tree builder to be used with the Java
+Compiler Compiler (JavaCC) parser generator.&nbsp; It takes a plain
+JavaCC grammar file as input and automatically generates the following:&nbsp;
+<UL>
+<LI>
+A set of syntax tree classes based on the productions in the grammar, utilizing
+the Visitor design pattern.</LI>
+
+<LI>
+Two interfaces: <TT>Visitor</TT> and <TT>GJVisitor</TT>.&nbsp; Two
+depth-first visitors: <TT>DepthFirstVisitor</TT> and <TT>GJDepthFirst</TT>,
+whose default methods simply visit the children of the current node.</LI>
+
+<LI>
+A JavaCC grammar <TT>jtb.out.jj</TT> with the proper annotations to build the syntax tree during
+parsing.</LI>
+</UL>
+New visitors, which subclass <TT>DepthFirstVisitor</TT> or <TT>GJDepthFirst</TT>,
+can then override the default methods and perform various operations on
+and manipulate the generated syntax tree.&nbsp; For more information about
+the Visitor design pattern, see the book <A HREF="http://www.awl.com/cseng/titles/0-201-63361-2/">Design
+Patterns: Elements of Reusable Object-Oriented Software</A>.&nbsp;
+<BR>&nbsp;
+
+<pre>
+Usage:   java -jar jtb.jar [OPTIONS] [input-file]
+         java -jar jtb.jar -h     # to view all available options
+</pre>
+
+<br>
+
+<br>
+<B>Download</B>
+<br><br>
+<i>The current version of JTB is 1.3.2.</i> It requires Java 1.5 or higher. 
+
+<p> You can download it here: <a href="http://compilers.cs.ucla.edu/jtb/Files/jtb132.jar">jtb132.jar</a>
+<p> You can download the source code for jtb 1.3.2 here: <a href="http://compilers.cs.ucla.edu/jtb/Files/jtb132.src.jar">jtb132.src.jar</a>
+
+<BR>
+<br>
+<B>Tools</B>
+<BR><BR>
+<FONT SIZE=-1>
+The Tools are under the same license as JTB <a href="http://compilers.cs.ucla.edu/jtb/license.html">JTB License</a>  
+</FONT>
+<ul>
+<li> <i>LineNumberInfo:</i> 
+This is a tool that lets you easily look at the line and column number info. for a node in the JTB syntax tree so you can print errors with line number informantion. (<a href="http://compilers.cs.ucla.edu/jtb/Tools/LineNumberInfo/">Javadoc</a>, <a href="http://compilers.cs.ucla.edu/jtb/Tools/LineNumberInfo/LineNumberInfo.java">Source Class file</a>). 
+</ul>
+
+<br>
+<br>
+<B>Documentation</B>
+<br><br>
+The documentation for JTB 1.3.2 is not available yet. You can look at the documentation for previous versions here: <a href="http://compilers.cs.ucla.edu/jtb/jtb-2003">OLD JTB</a> 
+
+<br><br>
+<B>License</B>
+<br><br>
+JTB is licensed under the BSD license. You can get a copy of the license here: <a href="http://compilers.cs.ucla.edu/jtb/license.html">JTB License</a>
+
+
+<br><br><br><br>
+<FONT SIZE=-2>Copyright &copy; 2004, 2005, <a href="http://compilers.cs.ucla.edu">UCLA Compilers Group</a></FONT>
+</BODY>
+</HTML>

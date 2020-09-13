@@ -1,0 +1,535 @@
+<!-- Quirk on -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="X-UA-Compatible" content="IE=8" >
+
+
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>DMS Software Reengineering Toolkit</TITLE>
+<META NAME="keywords" CONTENT="software reengineering, reverse engineering, software porting, software analysis, legacy translation, legacy software, program transformation, COBOL, C/C++, Fortran, PL/1, Java, C#">
+<META NAME="description" CONTENT="DMS Software Reengineering Toolkit">
+<meta name="author" content="Semantic Designs, Inc.">
+<!--
+<link rel="stylesheet" href="/SDprint.css" type="text/css" media="print">
+<link rel="stylesheet" href="./BBstyle.css" type="text/css" media="screen">
+-->
+
+<link rel="stylesheet" href="../../SDstyle.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../SDmenustyle.css" type="text/css" media="screen">
+
+</head>
+
+<script type="text/javascript" src="../../jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="../../jquery.masonry.min.js"></script>
+<script type="text/javascript" src="../../LanguagesAndProducts.js"></script>
+<script type="text/javascript" src="../../jquery.getUrlParam.js"></script>
+
+<script type="text/javascript">
+
+$(window).load(function () {
+
+	var speed = 1000;
+
+  	$('.posts').masonry({
+  	columnWidth: 185,
+  	// only apply masonry layout to visible elements
+ 		itemSelector: '.post-block:not(.invis)',
+ 		animate: true,
+ 		animationOptions: {
+ 	  		duration: speed,
+ 	  		queue: false }
+  		  })
+
+  		   var catClass = '.' + $(document).getUrlParam("class");
+
+  		  	if(catClass=='.cat-all' || catClass=='.null') {
+  		  	 // show all hidden boxes
+  		  	 $('.posts').children('.invis')
+  		  		 .toggleClass('invis').animate({opacity: 1},{ duration: speed });
+  		  		 $('.posts').masonry();
+  		  	} else {
+  		  	 // hide visible boxes
+  		  	 $('.posts').children().not(catClass).not('.invis')
+  		  		 .toggleClass('invis').animate({opacity: 0},{ duration: speed });
+  		  	 // show hidden boxes
+  		  	 $('.posts').children(catClass+'.invis')
+  		  		 .toggleClass('invis').animate({opacity: 1},{ duration: speed });
+  		  		$('.posts').masonry();
+  		  	}
+
+
+ });
+
+  $(document).ready(function(){
+
+
+ 	$("#cats li a").click(function(){
+  	 var catClass = '.' + $(this).attr('class');
+ 	 var speed = 1000;
+ 	 if(window.location.pathname!= "/index.html") window.location.assign("/index.html" + '?class=' + $(this).attr('class'));
+  	 if(catClass=='.cat-all') {
+  		 // show all hidden boxes
+  		 $('.posts').children('.invis')
+  			 .toggleClass('invis').animate({opacity: 1},{ duration: speed });
+  	 } else {
+  		 // hide visible boxes
+  		 $('.posts').children().not(catClass).not('.invis')
+  			 .toggleClass('invis').animate({opacity: 0},{ duration: speed });
+  		 // show hidden boxes
+  		 $('.posts').children(catClass+'.invis')
+  			 .toggleClass('invis').animate({opacity: 1},{ duration: speed });
+  	 }
+
+  	   $('.posts').masonry();
+
+  	   return false;
+   	});
+
+  });
+
+</script>
+
+
+<noscript>
+<div style="display:inline;">
+</div>
+</noscript>
+
+<body>
+	<!--<div class="mainpage">-->
+
+ <div id="container">
+    <div id="home">
+        <div id="header">
+          <table id="banner"><tbody>
+          <tr>
+             <td id="company_name_with_legal_mark_box">
+<!--                 <a href="/index.html"><img src="/images/name.png" alt="Semantic Designs (SM)"></a> -->
+               <a href="http://www.semdesigns.com/index.html">
+                  <div id="company_name_with_legal_mark">
+                    Semantic Designs<sup>SM</sup>
+                  </div>
+               </a>
+             </td>
+             <td id="slogan_box" align="right">
+                 <table><tbody>
+                     <tr><td class="slogan_text" align="center">Automated Tools</td></tr>
+                     <tr><td class="slogan_text" align="center">for Software Engineering</td></tr>
+                 </tbody></table>
+   <!--       The Truth is in the Details&#0153; -->
+             </td>
+          </tr></tbody>
+          </table>
+          <p id="succinct_summary">Code Search (Find, Follow), Analysis (Metrics, Static, Dynamic, Bugs) and Change (Modernization, Migration, Generation, Optimization, Rearchitecting)</p>
+<!--
+          System Analysis, Modification, Translation and Generation</a></h2>
+<!--
+          <h3>Automated Large-Scale Software System Analysis, Modification, Translation and Generation</h3>
+		            <h1><a href="/index.html">Semantic Designs</a></h1>
+          <h2><a href="/index.html">The Truth is in the Details</a></h2>
+
+
+         <h3>Automated Large-Scale Software System Analysis, Modification, Translation and Generation&#0153;</h3>
+          <h1><a href="/index.html">Semantic Designs</a></h1>
+          <h2><a href="/index.html">The Truf is in the ARF Details&#0153;</a></h2>
+-->
+        </div>
+
+<ul id="css3menu">
+	<li class="topfirst"><a href="http://www.semdesigns.com/index.html" title="Semantic Designs Home Page"><span>Home</span></a></li>
+
+	<li class="topitem"><a href="http://www.semdesigns.com/Products/Services" title="Services"><span>Services</span></a>
+	<ul>
+		<li class="subfirst"><a href="http://www.semdesigns.com/Products/Services/LegacyMigration.html" title="Automated Migration">Automated Migration &#x25BA;</a>
+		    <ul>
+			    <li class="subfirst"><a href="http://www.semdesigns.com/Products/Services/COBOLMigration.html" title="COBOL Migration">COBOL Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/MainframeAssemblerMigration.html" title="HLASM Migration">HLASM Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/PL1Migration.html" title="PL/1 Migration">PL/1 Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/NaturalMigration.html" title="Natural Migration">Natural Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/SASMigration.html" title="SAS Migration">SAS Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/SabreTalkMigration.html" title="SabreTalk Migration">SabreTalk Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/ColdFusionMigration.html" title="ColdFusion Migration">ColdFusion Migration</a></li>
+			    <li><a href="http://www.semdesigns.com/Products/Services/CppMigration.html" title="C/C++ Migration">C/C++ Migration</a></li>
+		    </ul>
+                </li>
+		<li><a href="DMSToolkit.html" title="Custom Analysis and Transformation">Custom Analysis and Transformation</a></li>
+		<li><a href="http://www.semdesigns.com/Products/FrontEnds/" title="Custom Development Toolkit">Custom Development Toolkit</a></li>
+		<li> <a href="http://www.semdesigns.com/Products/Services/SoftwareModernization.html" title="Application Modernization">Application Modernization</a></li>
+		<li><a href="http://www.semdesigns.com/Products/Tools.html" title="Software Quality Analysis">Software Quality Analysis</a></li>
+		<li><a href="http://www.semdesigns.com/Products/Understanding/index.html" title="Understanding Software Structure">Understanding Software Structure</a></li>
+		<li><a href="http://www.semdesigns.com/Products/DMS/Refactoring.html" title="Code Refactoring">Code Refactoring</a></li>
+		<li><a href="DMSToolkit.html" title="DMS Licensing and Training">DMS Licensing and Training</a></li>
+	</ul>
+	</li>
+
+	<li class="topitem"><a href="http://www.semdesigns.com/Products" title="Products"><span>Products</span></a>
+	<ul>
+
+        	<li class="subfirst"><a href="DMSToolkit.html" title="DMS"><span>DMS<sup>&reg;</sup></span></a></li>
+
+                <li><a href="http://www.semdesigns.com/Products/LanguageTools" title="By Language"><span>By Language &#x25BA;</span></a>
+		<ul>
+			<li class="subfirst"><a href="http://www.semdesigns.com/Products/LanguageTools/CTools.html" title="C">C</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/CppTools.html" title="C++">C++</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/JavaTools.html" title="Java">Java</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/COBOLTools.html" title="COBOL">COBOL</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/CSharpTools.html" title="C#/.Net">C#/.Net</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/PHPTools.html" title="PHP">PHP</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/VHDLTools.html" title="VHDL">VHDL</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools/VerilogTools.html" title="Verilog">Verilog</a></li>
+			<li><a href="http://www.semdesigns.com/Products/LanguageTools" title="More...">More...</a></li>
+		</ul>
+                </li>
+
+                <li><a href="http://www.semdesigns.com/Products/Tools.html" title="By Tool"><span>By Tool &#x25BA;</span></a>
+		<ul>
+			<li class="subfirst"><a href="http://www.semdesigns.com/Products/SearchEngine/" title="Search Engine">Search Engine</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Clone/" title="Clone Detection">Clone Detection</a></li>
+			<li><a href="http://www.semdesigns.com/Products/TestCoverage/" title="Test Coverage">Test Coverage</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Formatters/" title="Formatters">Formatters</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Obfuscators/" title="Obfuscators">Obfuscators</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Metrics/index.html" title="Metrics">Metrics</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Profilers/index.html" title="Profilers">Profilers</a></li>
+			<li><a href="http://www.semdesigns.com/Products/SmartDifferencer/" title="Smart Differencer">Smart Differencer</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Tools.html" title="More...">More...</a></li>
+		</ul>
+		</li>
+
+                <li><a href="http://www.semdesigns.com/Products/Applications/" title="By Application"><span>By Application &#x25BA;</span></a>
+		<ul>
+			<li class="subfirst"><a href="http://www.semdesigns.com/Products/Architecture/HoganSystems.html" title="Hogan Analysis">Hogan (Banking) Analysis</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Applications/MoreEffectiveTesting.html" title="Effective Testing">More Effective Testing</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Applications/PatentInfringement/" title="Patent Infringement">Detecting Infringement</a></li>
+			<li><a href="http://www.semdesigns.com/Products/Applications/Agile/AgileTesting.html" title="Agile Testing">Agile Testing</a></li>
+		</ul>
+		</li>
+
+		<li><a href="http://www.semdesigns.com/Purchase/Justifications.html" title="Why Buy">Why Buy</a></li>
+		<li><a href="http://www.semdesigns.com/Purchase" title="Purchase">Prices</a></li>
+		<li><a href="http://www.semdesigns.com/Registration" title="Register">Register</a></li>
+		<li><a href="http://www.semdesigns.com/Products/Downloads.html" title="Downloads">Downloads</a></li>
+	</ul>
+	</li>
+
+	<li class="topitem"><a href="http://www.semdesigns.com/Company" title="Company"><span>Company</span></a>
+	<ul>
+		<li class="subfirst"><a href="http://www.semdesigns.com/Company" title="About SD">About SD</a></li>
+		<li><a href="http://www.semdesigns.com/SuccessStories/index.html" title="Success Stories">Success Stories</a></li>
+		<li><a href="http://www.semdesigns.com/Announce" title="News and Events">News and Events</a></li>
+		<li><a href="http://www.semdesigns.com/Partners" title="Partners">Partners</a></li>
+		<li><a href="http://www.semdesigns.com/Company/CustomerList.html" title="Customers">Customers</a></li>
+		<li><a href="http://www.semdesigns.com/Careers" title="Careers">Careers</a></li>
+		<li><a href="http://www.semdesigns.com/Company/Publications" title="Papers">Papers</a></li>
+		<li><a href="http://www.semdesigns.com/Company/Visions" title="Visions">Visions</a></li>
+	</ul>
+	</li>
+
+	<li class="topitem"><a href="http://www.semdesigns.com/Contact/Support.html" title="Support"><span>Support</span></a>
+	<ul>
+		<li class="subfirst"><a href="http://www.semdesigns.com/Contact/Support.html" title="Support Policies">Support Policies</a></li>
+		<li><a href="http://www.semdesigns.com/Registration" title="Register">Register</a></li>
+		<li><a href="http://www.semdesigns.com/Products/Downloads.html" title="Downloads">Downloads</a></li>
+	</ul>
+	</li>
+
+	<li class="toplast"><a href="http://www.semdesigns.com/Contact" title="Contact"><span>Contact</span></a></li>
+</ul>
+
+        <div id="main">
+<!--          <h3>Semantic Designs provides <a href="./Products/DMS/DMSToolkit.html?Home=Main">generalized compiler technology</a> and <a href="./Products/?Home=Main">services</a> across a wide variety of computer languages, application types, and architectures.</h3>
+          -->
+
+
+<h1>DMS<sup>&reg;</sup> Software Reengineering Toolkit&#153;</h1>
+
+<P>... is a sophisticated set of infrastructure and highly customizable tools for <i>automating</i>:
+<ul>
+<li>source program analysis</li>
+<li>modification of source code</li>
+<li>generation of software</li>
+</ul>
+DMS/SRT (or just "DMS") can operate at large scale, on arbitrary mixtures of <a
+href="http://www.semdesigns.com/Products/FrontEnds/index.html?Home=DMSToolkit"><i>domains</i> (computer languages, e.g., C++, Java, COBOL, SQL, HTML, Verilog, ...)</a>.</p>
+
+<P>The purpose of DMS is to provide sufficient infrastructure
+so that a custom tool builder can spend her time
+working on the custom tool details,
+<a href="http://www.semdesigns.com/Products/DMS/LifeAfterParsing.html?Home=DMSToolkit">rather than trying to build
+the necessary infrastructure machinery from the ground floor up</a>.
+This can save the tool builder literally years of engineering
+by leveraging the man-century already invested by SD.
+Sophisticated infrastructure enables the tool builder to
+produce more effective results than what could be obtained
+from a custom standalone tool.
+</P>
+
+<p>The term "software" for DMS is very broad and covers
+any formal notation, including programming languages, markup languages, hardware
+description languages, design notations, data descriptions, and
+<a href="http://www.semdesigns.com/Products/DMS/DomainSpecificLanguage.html">domain-specific languages</a>.
+This toolkit is the first step towards the implementation of the <a
+href="http://www.semdesigns.com/Products/DMS/index.html?Home=DMSToolkit">Design Maintenance
+System<sup>&reg;</sup>,</a> an ambitious vision of a 21st Century software
+engineering environment that supports the incremental construction and
+maintenance of large application systems, driven by semantics and
+captured designs.
+</P>
+
+<h2>DMS: Generalized Compiler Infrastructure</h2>
+
+<p>A very simple model (see Figure below) of DMS is that of an extremely generalized
+compiler, having
+<ul>
+<li> a parser (producing compiler-like data structures capturing code),</li>
+<li> a <i>set of semantic analyzers</i>,
+     <br>including a variety of <i>pattern matching (using surface syntax)</i> engines</li>
+<li> a <i>set of compiler data structure modification</i> engines,
+    <br> including a
+<a href="http://www.semdesigns.com/Products/DMS/ProgramTransformation.html?Home=DMSToolkit">source-to-source program transformation engine (using surface syntax)</a>
+<li>and final output formatting components (converting compiler data structures back to valid source code rather than binary code),</li>
+</ul>
+parameterized by descriptions of computer languages to process.</P>
+
+</P>Unlike a conventional compiler, in which each
+component is specific to its task of translating one source language
+to one target machine language, each DMS component is highly
+parameterized by the desired task,
+enabling a stunningly wide variety of effects.  This
+means one can change the input language, change the analysis, change
+the transforms, and change the output in arbitrary ways.</P>
+
+<P>DMS can be used "just" to construct analyzers that generate reports.
+Or, it can be used to find <i>and fix</i> coding and structural issues.
+using analyzer output (<i>analysis focus</i> arc)
+to locate issues, and choose/apply transformations to resolve them.</P>
+
+<P>Unlike a conventional compiler, DMS can process thousands of files
+from multiple languages at the same moment, allowing analyses and/or
+consistent code changes across complex systems of files.</P>
+
+<P>An interesting property is that DMS reads formal descriptions
+of languages, analyses and transforms.  DMS is consequently
+used to support itself, including producing new language descriptions.
+</p>
+
+<img src="DMS.png"/>
+
+<P>See a <a href="http://www.semdesigns.com/Products/DMS/DMSComparison.html">comparison of DMS to other well-known types of compiler technologies</a>.<P>
+
+<P>The Software Reengineering Toolkit can be used to implement
+<a href="http://www.semdesigns.com/Products/DMS/DMSApplicationIdeas.html?Home=DMSToolkit">a wide variety of program enhancing tools</A>.
+A very simple, but <a href="http://www.semdesigns.com/Products/DMS/SimpleDMSDomainExample.html?Home=DMSToolkit"> detailed example, shows how DMS can be easily used
+to define and manipulate a notation system that is equivalent to standard algebra.</a>
+A white paper on how DMS can be used to enhance software quality is available
+<a href="http://www.semdesigns.com/Products/DMS/WhyDMSForSoftwareQuality.pdf?Home=DMSToolkit">(PDF,
+  100Kb)</a>.
+Think of DMS as <a href="http://www.semdesigns.com/Products/DMS/LifeAfterParsing.html?Home=DMSToolkit">Life After Parsing</a>.
+</P>
+
+<P>
+Our <A HREF="http://www.semdesigns.com/Products/CloneDR/index.html?Home=DMSToolkit">CloneDR</A> is an example of a DMS-enabled custom reengineering application. The CloneDR has a particular DMS configuration designed to find exact and almost-identical blocks of code ("clones") in large systems, and remove them by replacing them with invocations of abstractions (macros, procedures, etc.). The technology is generic enough so we have applied it to COBOL, C/C++, Java, Fortran 90, and to VHDL.  You can download a demo COBOL clone detector/reporter.</P>
+
+<h2>DMS Capabilities</h2>
+
+<p>DMS provides a <a href="http://www.semdesigns.com/Products/DMS/DMSDomains.html?Home=DMSToolkit">large set of robust, integrated facilities</a> for
+building software analysis and modification tools,
+<a href="http://www.semdesigns.com/Products/FrontEnds/index.html?Home=DMSToolkit">proven on dozens of real languages</a>:</p>
+
+<UL>
+<LI>Full UNICODE-based <B>parser and lexer generation</B> with automatic error recovery. Accepts/generates files encoded in UTF-8 and UTF-16, 7 bit ASCII (ISO-646-US), 8 bit ASCII (ISO-8859-1 thru -16), EBCDIC (CP-37, CP-500), a number of Microsoft code pages (CP-1250 thru -1258), and Japanese Shift-JIS (CP-932 and JIS-0208).  Standard support is included for reading multiple source files to enable INCLUDE file management and construct suitable preprocessors. The parser technology is based on GLR, and can handle any context-free language, even with ambiguities (much stronger than YACC/LALR). (See <a href="http://www.semdesigns.com/Products/DMS/DMSLexers.html?Home=DMSToolkit">details here.</a>)</LI>
+<LI>Automatic construction of <B>abstract</B> (not concrete) <B>syntax trees</B> (non-value-carrying terminals and unit productions are suppressed; syntax-lists are converted into AST list nodes). Literal values (numbers, escaped strings) are converted to native, normalized binary values for fast internal manipulation. Source comments are captured and attached to AST nodes. (See <a href="http://www.semdesigns.com/Products/DMS/DMSParsers.html#DMSASTs?Home=DMSToolkit">details here.</a>)</LI>
+<LI><B>Pretty-printer generation</B> converts ASTs back to nicely formatted legal source file form, according to a specified layout information, including source comments. In <B>fidelity-printing</B> mode, comments, spacing and lexical formatting information of unchanged code is preserved. (See <a href="http://www.semdesigns.com/Products/DMS/DMSPrettyPrinters.html?Home=DMSToolkit">details here.</a>) Customizing allows generation of source code <a href="http://www.semdesigns.com/Products/Formatters/JavaBrowser.html?Home=DMSToolkit">HTML </a> form,
+or even as <a href="http://www.semdesigns.com/Products/Obfuscators/index.html?Home=DMSToolkit">obfuscated source text</a>.  Trees may be output directly in XML format.</LI>
+<LI>Multi-pass <B>attribute-evaluator generation</B> from grammar, to allow arbitrary analysis (including name/type analysis procedures) to be specified in terms of the concrete grammar provided. Attributes may be local or long-distance.  (See <a href="http://www.semdesigns.com/Products/DMS/DMSAttributeGrammars.html?Home=DMSToolkit">details here</a>.)</LI>
+<LI>Sophisticated <B>symbol-table support facilities</B> for global, local, inherited, overloaded and other language-dependent name lookup and namespace management rules. This handles even the complexity of C++14. (See <a href="http://www.semdesigns.com/Products/DMS/DMSSymbolTables.html?Home=DMSToolkit">details here.</a>)</LI>
+<LI><B>Control-flow graph construction</B> including traditional entry/exit/action/condition nodes, but also fork/join nodes to model parallelism and/or indeterminate order (e.g., C sequence points). There predefined analyzers for constructing (post) dominators, and inducing structured control-flow regions.  Additional machinery can compute compilation-unit local and system/global call graphs.</LI>
+<LI><B>Data flow analysis framework</B>, to allow data-flow analysis problems to be posed and answered, including predefined analyzers for constructing use-def and def-use chains. <a href="http://www.semdesigns.com/Products/DMS/FlowAnalysis.html?Home=DMSToolkit">(See sample control and data flow graphs)</a></LI>
+<LI><B>Points-to analysis</B> for computing local or global points-to data, tested on systems of 13+ million lines of code.</LI>
+<LI><B>Symbolic Range Analysis</B> computing range constraints on program variables in terms of other variables.  This is useful to detecting array-access errors, determining which switch case is selected, ... in conjunction with other analyses.</LI>
+<LI><B>Binary- (and Finite) Decision Diagrams</B> are used to construct and combine symbolic boolean formulas (or formulas over exclusive sets of choices)
+efficiently. It is straightforward to convert an AST representing a boolean formula to a BDD, and vice-versa.</LI>
+<LI><B>Multiple domains (notations/languages)</B> can be represented at the same time. This enables processing or generating systems composed of parts from more than one domain (COBOL and JCL, C and Makefiles, etc.), and/or translation from one domain language to another. </LI>
+<LI><B>Transforms</B> and <B>patterns</B> can be written directly in surface-to-surface domain syntax form. Patterns can be matched against syntax trees and return bindings for parameter subtrees. Alternatively, procedural code can implement transforms, or refer to existing transforms and patterns to enable construction of very sophisticated transforms. (See <a href="http://www.semdesigns.com/Products/DMS/DMSRewriteRules.html?Home=DMSToolkit">details here</a>.)</LI>
+<LI>A full <B>Associative/Commutative rewrite engine</B> that operates on trees and DAGs, which can be used to apply sets of transforms. </LI>
+<LI>A metaprogramming language, XCL, provides the ability to <B>control</B> the sequencing of the <B>application of transforms</B> and sets of transforms. (Future Release)</LI>
+<LI>An <B>algebraic specification subsystem</B> can be used to specify arbitrary algebras (this is just a DMS domain!). The axioms can be treated as a set of rewrite rules. (This allows one to code arbitrary simplification procedures. (We have done simplification on boolean equations that are essentially 1 million terms in size; we have also modeled optimization of transistor [not gates!] circuits this way). </LI>
+</UL>
+<P>A technical paper detailing these facilities was published
+at the <a href="http://conferences.iee.org/icse2004/Welcome.html">2004 International Conference of Software Engineering</a>.
+You can get a paper <a href="http://www.semdesigns.com/Company/Publications/DMS-for-ICSE2004-reprint.pdf">reprint</a>
+and the corresponding <a href="http://www.semdesigns.com/Company/Publications/DMS-for-ICSE2004-slides.pdf">slides</a>.
+To get a concrete feel for DMS,
+we provide an <a href="http://www.semdesigns.com/Products/DMS/DMSDomains.html?Home=DMSToolkit">example of how aspects of DMS are specified for the Oberon language.</a></p>
+
+<h2>Industrial Scale</h2>
+
+<p>These foundations have been used for an amazing variety of industrial tasks,
+including quality analysis, restructuring, automated porting, pretty printing and highly optimized <a href="http://www.semdesigns.com/Products/DMS/CodeGenerator.html?Home=DMSToolkit">code generation</a>.</p>
+
+<p>DMS is designed to work on large scale source systems
+<UL>
+<LI>with up to <B>several million lines</B> of source code or specification</LI>
+<LI>across <B>tens of thousands of source files</B></LI>
+<LI>having <B>multiple languages</B> at the same time</LI>
+</P>
+</UL>
+
+<P><a href="http://www.semdesigns.com/Products/DMS/ParlanseForDMS.html?Home=DMSToolkit">DMS is implemented using our parallel language, PARLANSE, to provide computational horsepower consistent with this scale</a>. While DMS runs on a single processor system at unit speed, it also runs on symmetric multiple processor workstations with enhanced performance. As an example, the attribute evaluation process is automatically parallelized, and can often provide a linear speedup on an N-way SMP system.</P>
+
+<P>DMS is hosted on Windows (any version) using Intel or AMD single or symmetric multiprocessing (SMP) hardware.  Using Wine, DMS runs on Linux, Solaris and MAC OS X.</P>
+
+<P>If you are still reading,
+you will probabably like this <a href="http://www.youtube.com/watch?v=C-_dw9iEzhA">invited Google Tech Talk video on DMS</a>.</P>
+
+<h2><a name="AvailableLanguages">Available Languages</a></h2>
+
+<P>While complex legacy grammars can be defined quickly
+to enable DMS to operate on source programs in those languages,
+SD already has <a href="http://www.semdesigns.com/Products/FrontEnds/index.html?Home=DMSDomains">language modules and grammars available for many languages.</a></P>
+
+<h2>Business Focus</h2>
+
+<p>
+We are primarily interested in training our customers to use DMS for their own purposes, whether that be for internal applications or external services. SD will provide expert advice and implementation support as desired by the customer.
+</p>
+
+<p>
+While we can train interested customers to use DMS, for some customers this may not be appropriate.
+Semantic Designs will contract DMS-related
+<a href="http://www.semdesigns.com/Products/Services/index.html?Home=DMSToolkit">service activities</a> for customers.
+</p>
+
+<P>
+Semantic Designs offers <a href="http://www.semdesigns.com/Purchase/index.html#DMSTraining">training classes on DMS</a>.
+SD also offers <a href="http://www.semdesigns.com/index.html#UpcomingActivities">a number of public tutorials about program transformation systems</a> in general,
+including some discussion of DMS.  Research licenses are also available.
+</P>
+
+<h2>Platform</h2>
+
+<p>DMS is designed to run on symmetric multiple processor x86 architectures.
+</p>
+<img src="../../images/Intel-Software_Partner-Logo-SWp_RGB_85.gif">
+<br>
+<p>The Intel logo is a registered trademark of Intel Corporation.
+</p>
+
+<br>
+<br>
+
+  </div>
+ </div>
+
+       <div id="sidebar">
+          <div class="block block-series block-list">
+           <!-- Show the SD logo on the right stripe -->
+           <a href="http://www.semdesigns.com/index.html"><img border="0" src="../../images/SDLogo-nowords.png" width="160" height="58" alt="Semantic Designs, Inc. logo"></a>
+
+           <!-- Show special Contact button on the right stripe -->
+          <form name="FreeAssessment" action="http://www.semdesigns.com/Products/DMS/FreeConsultation.jsp" method="post">
+            <div class="block block-categories">
+              <ul>
+                <li class="free-consultation">
+                  <a class="free-consultation" href="http://www.semdesigns.com/Contact/FreeConsultation.jsp">
+                    Request a Free Migration Consultation
+                    </a>
+                  </li>
+                </ul>
+            </div>
+          </form>
+
+           <!-- Show free trial-software button on the right stripe -->
+	   <!--
+          <form name="TrialSoftware" action="FreeTrial.jsp" method="post">
+            <div class="block block-categories">
+              <ul>
+                <li class="free-trial">
+                  <a class="free-trial" href="/Contact/FreeTrialSoftware.html">
+                    Free Trial Software<br>
+                    (New&nbsp;Year&nbsp;Special)
+                    </p>
+                    </a>
+                  </li>
+                </ul>
+            </div>
+          </form>
+          -->
+
+
+          <!-- <div class="download-button" style="width:60px;height:100px;">This is a button</div> -->
+
+
+
+
+
+
+            <div class="block block-categories">
+              <h3>Topics</h3>
+              <ul id="cats">
+                                <li class="cat-reengineering"><a class="cat-reengineering" href="http://www.semdesigns.com/index.html">Re-engineering</a></li>
+                                <li class="cat-documentation"><a class="cat-documentation" href="http://www.semdesigns.com/index.html">Documentation</a></li>
+                                <li class="cat-assessment"><a class="cat-assessment" href= "http://www.semdesigns.com/index.html">Assessment</a></li>
+                                <li class="cat-improvement"><a class="cat-improvement" href="http://www.semdesigns.com/index.html">Improvement</a></li>
+                                <li class="cat-codegen"><a class="cat-codegen" href="http://www.semdesigns.com/index.html">Code Generation</a></li>
+                                <li class="cat-hdl"><a class="cat-hdl" href="http://www.semdesigns.com/index.html">Hardware Description Languages</a></li>
+                                <li class="cat-all"><a class="cat-all" href="http://www.semdesigns.com/index.html">All Topics</a></li>
+              </ul>
+            </div>
+
+            <form name="drops" method="post" action="http://semanticdesigns.com" id="drops">
+              Language:<br>
+              <select name="language" size="1" onchange="changeList(this)">
+                <option value="AdaProducts">
+                  language
+                </option>
+              </select><br>
+              Product:<br>
+              <select name="product" size="1">
+                <option>
+                  products
+                </option>
+              </select> <input type="button" onclick="location = ''+document.drops.product.options[document.drops.product.selectedIndex].value;" value="Go!">
+            </form>
+
+
+
+           </div>
+
+          <h3>Semantic Designs- Our Goal</h3>
+          <div id="home-mission">
+            To enable our customers to produce and maintain timely, robust and economical software by providing world-class Software Engineering tools using deep language and problem knowledge with high degrees of automation.
+          </div>
+
+      </div>
+
+        <div class="push"></div>
+        </div> <!--Container-->
+
+
+      <div class="block-masthead">For more information: <a href="mailto:info@semanticdesigns.com">info@semanticdesigns.com</a>&nbsp;&nbsp;&nbsp;&nbsp;Follow us at Twitter: <a href="http://twitter.com/SemanticDesigns">@SemanticDesigns</a><br>
+      <br>
+      <div class="copyright" >Copyright 1995-2018 Semantic Designs, Incorporated<br>
+      DMS, "Design Maintenance System" and Refactor++ are registered trademarks of Semantic Designs, Inc.<br>
+      The SD logo and "Semantic Designs" are registered service marks of Semantic Designs, Inc.<br>
+      Software Reengineering Toolkit, CloneDR, PARLANSE, JOVIAL2C, Thicket, Smart Differencer, CheckPointer are trademarks of Semantic Designs, Inc.<br>
+      The OMG logo is a registered trademark of the Object Management Group, Inc. in the United States and other countries.<br>
+      To view our Privacy Policy, click <a href="http://www.semdesigns.com/PrivacyPolicy.html">here</a><br>
+      <br>
+      Comments or problems: <a
+      href="mailto:webmaster@semanticdesigns.com">webmaster@semanticdesigns.com</a>
+      <font size="-1"><br></font>
+      </div>
+
+    </div>
+
+
+
+
+
+<div class="slogan">
+DMS<BR>Software Reengineering Toolkit
+</div>
+</body>
+</html>

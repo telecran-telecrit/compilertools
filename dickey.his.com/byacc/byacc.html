@@ -1,0 +1,413 @@
+<!--
+  $Id: byacc.html,v 1.65 2019/04/20 15:25:46 tom Exp $
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+
+  <title>BYACC &ndash; Berkeley Yacc &ndash; generate LALR(1)
+  parsers</title>
+  <link rel="author" href="mailto:dickey@invisible-island.net">
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=us-ascii">
+  <meta name="keywords" content="yacc, parser">
+  <meta name="description" content=
+  "Berkeley Yacc is a tool to generate LALR(1) parsers originally written by Robert Corbett. This page gives some background and pointers to byacc resources.">
+  <link rel="SHORTCUT ICON" href="../../invisible-island.net/img/icons/vile.ico" type=
+  "image/x-icon">
+  <link rel="stylesheet" href="../../invisible-island.net/css/simplestyle.css" type=
+  "text/css">
+  <style type="text/css">
+@import "../../invisible-island.net/css/simplenavXX.css" all;
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <hr>
+
+  <p><a href="https://invisible-island.net/">http://invisible-island.net/</a><br>
+  Copyright &copy; 2002-2017,2018 by Thomas E. Dickey</p>
+  <hr>
+
+  <div class="nav">
+    <ul>
+      <li class="nav-top"><a href=
+      "byacc.html">(top)</a></li>
+
+      <li><a href="byacc.html#synopsis">Synopsis</a></li>
+
+      <li><a href="byacc.html#history">History</a></li>
+
+      <li><a href="byacc.html#involved">My Involvement</a></li>
+
+      <li><a href="byacc.html#licensing">Licensing</a></li>
+
+      <li><a href="byacc.html#future">Future Plans</a></li>
+
+      <li><a href="byacc.html#documentation">Documentation</a></li>
+
+      <li><a href="byacc.html#download">Download</a></li>
+
+      <li><a href="byacc.html#related">Related Links</a></li>
+    </ul>
+  </div>
+
+  <h1 class="no-header">BYACC &ndash; Berkeley Yacc &ndash;
+  generate LALR(1) parsers</h1>
+
+  <h2 id="synopsis-toc"><a name="synopsis" id=
+  "synopsis">Synopsis</a></h2>
+
+  <p>Berkeley Yacc (<strong>byacc</strong>) is generally conceded
+  to be the <a href=
+  "https://web.archive.org/web/20130327184430/http://foldoc.org/byacc">
+  best yacc variant</a> available. In contrast to bison, it is
+  written to avoid dependencies upon a particular compiler. <!--
+Programs such as bison
+which are dependent upon a particular compiler are at best
+a form of vendor lock-in, which is a variety of non-free software
+--></p>
+
+  <h2 id="history-toc"><a name="history" id=
+  "history">History</a></h2>
+
+  <p><strong>Byacc</strong> was written around 1990 by Robert
+  Corbett who is the original author of bison.
+  <strong>Byacc</strong> is noted in <em>Lex &amp; Yacc</em> by
+  John Levine et al (O'Reilly, 1992) for its compatibility with the
+  original <code>yacc</code> program.</p>
+
+  <p>Later, in <em>Flex &amp; Bison</em> (O'Reilly, 2009), John
+  Levine states that because Corbett's implementation was faster
+  than Bell (AT&amp;T) <code>yacc</code>, and because it was
+  distributed under the BSD license, "it quickly became the most
+  popular version of yacc". See <a href="byacc.html#licensing">below</a> for
+  comments on licensing.</p>
+
+  <h2 id="involved-toc"><a name="involved" id="involved">My
+  Involvement</a></h2>
+
+  <p>Originally written in K&amp;R C, I have modified it to conform
+  to ANSI C, and made other improvements.</p>
+
+  <p>See the changelog for details:</p>
+
+  <ul>
+    <li><a href="https://invisible-island.net/byacc/CHANGES">plain text</a></li>
+
+    <li><a href="https://invisible-island.net/byacc/CHANGES.html">changes with
+    links...</a></li>
+  </ul>
+
+  <p>Early (when <strong>byacc</strong> was first released), Alex
+  Blakemore told me that <strong>byacc</strong> was "the cleanest
+  piece of code that (he) had ever seen". At the time, I was not
+  interested in <strong>byacc</strong> in particular, although it
+  was around the time that I started working on <a href=
+  "https://invisible-island.net/cproto/cproto.html">cproto</a>. Since <strong>byacc</strong>
+  was <em>compatible</em> with <code>yacc</code>, there was nothing
+  to change.</p>
+
+  <p>Later, I was reminded of the differences between
+  <strong>byacc</strong> and <code>bison</code>, when the latter
+  dumped core attempting to build the <code>bind</code> program.
+  Since that point, I have used <strong>byacc</strong> except for
+  those programs that have been modified to rely upon
+  <code>bison</code>.</p>
+
+  <p>My motivation for working on <strong>byacc</strong> was to use
+  it in a port of the <a href="https://invisible-island.net/tin/tin.html">tin</a> newsreader on
+  VMS, early in 2000. The compiler reminded me that the source was
+  K&amp;R, so I converted it to ANSI C, and submitted it along with
+  the other programs I was working on at that point to the VMS
+  freeware cdrom. For instance, <a href=
+  "http://h71000.www7.hp.com/openvms/freeware/v5_00freeware_abstract.txt">
+  here</a> is an abstract referencing that port.</p>
+
+  <p>ANSI C of course refers to <code>c89</code>, not
+  <code>c99</code> or <code>gcc</code>. The latter have features
+  which are useful in a <em>few</em> specific applications, but
+  none of those include programs such as <strong>byacc</strong>. In
+  contrast, <code>bison</code> in its different versions has
+  dependencies on <code>gcc</code> or <code>c99</code>.</p>
+
+  <p>I started by modifying the original <em>byacc&nbsp;1.9</em>
+  distribution. For reference, there is an unmodified copy on my
+  <a href=
+  "ftp://ftp.invisible-island.net/byacc/byacc.1.9.tar.Z">ftp
+  site</a>. That done, I took a look around for a maintainer, to
+  "own" the changes. There was none. Alternatively, I could
+  continue to maintain it. So I looked further, found a different
+  variant with some possibly useful changes for MS-DOS. (I set that
+  aside and did not return to it).</p>
+
+  <p>Initially, I ignored the source repositories for FreeBSD,
+  NetBSD and the like, for the usual reasons:</p>
+
+  <ul>
+    <li>sources don't come in nice, neat tarballs (only via rather
+    cumbersome CVS and son-of-CVS interfaces).</li>
+
+    <li>changes made for the BSD's tend to make the manpages
+    unusable by substituting the portable macros for BSD-specific
+    ones.</li>
+
+    <li>changes to program source code tend to be cluttered with
+    BSD-specific types, again reducing portability.</li>
+  </ul>
+
+  <p>However, I did make a note in 2005 to review the FreeBSD vs
+  bison use of <code>YYPARSE_PARAM</code> (a similar idea
+  implemented in two incompatible ways). Eventually I wrote my own
+  version, which bridges the two.</p>
+
+  <h2 id="licensing-toc"><a name="licensing" id=
+  "licensing">Licensing</a></h2>
+
+  <p>The original distribution of <strong>byacc</strong> states in
+  its <code>README</code> file:</p>
+
+  <blockquote>
+    <p>Berkeley Yacc is in the public domain. The data structures
+    and algorithms used in Berkeley Yacc are all either taken from
+    documents available to the general public or are inventions of
+    the author. Anyone may freely distribute source or binary forms
+    of Berkeley Yacc whether unchanged or modified. Distributers
+    may charge whatever fees they can obtain for Berkeley Yacc.
+    Programs generated by Berkeley Yacc may be distributed
+    freely.</p>
+  </blockquote>
+
+  <p>As a rule, I'm license-neutral unless someone offers some
+  reason to change it. For instance, I relicensed <a href=
+  "https://invisible-island.net/dialog/dialog.html">dialog</a> to address user requests.
+  <strong>Byacc</strong> is public domain. If I were to change it,
+  e.g., to reflect my improvements, then it would likely be to the
+  same MIT X11 license which I use the most.</p>
+
+  <p>Perry Metzger mentioned in correspondence during 2008 that
+  having it remain public domain would suit his goals. On the other
+  hand, Xin LI (a FreeBSD packager) asked me late in 2009 to add a
+  copyright notice (license), and that making it on the same terms
+  as FreeBSD's would suit his goals.</p>
+
+  <p>After discussing it with Perry, I did investigate further.
+  Here is a recap:</p>
+
+  <ul>
+    <li><strong>byacc</strong> 1.9 didn't have copyright.</li>
+
+    <li><strong>byacc</strong> 1.9 doesn't appear in the 4.3BSD
+    "reno" sources dated 1990</li>
+
+    <li>Free/Net/OpenBSD all applied a 1989 copyright date for UCB
+    to their import:
+
+      <ul>
+        <li>FreeBSD from "BSD 4.4 Lite Usr.bin Sources" May 27,
+        1994 by rgrimes</li>
+
+        <li>NetBSD from ? Mar 21 09:59:10 1993 by cgd</li>
+
+        <li>NetBSD from vangogh May 28 12:30:09 1993 by cgd</li>
+
+        <li>NetBSD applied copyright from 4.4lite2 Mar 19 03:21:29
+        1996 by jtc</li>
+
+        <li>NetBSD changed to BSD-3 on Aug 7 11:17:52 2003 by
+        agc</li>
+
+        <li>OpenBSD started with 1.9 on Oct 18 08:47:05 1995</li>
+
+        <li>OpenBSD imported NetBSD Apr 21 23:45:04 1996</li>
+
+        <li>OpenBSD changed to BSD-3 on Jun 3 02:56:24 2003</li>
+      </ul>
+
+      <p>But BSD 4.4 Lite was released June 1994 or Lite2 in
+      1995.</p>
+    </li>
+  </ul>
+
+  <p>I've found no reliable source which states that
+  <strong>byacc</strong> must bear a UCB copyright.</p>
+
+  <p><a href="https://invisible-island.net/byacc/byacc-20091027.patch.html">Here</a> is a
+  summary of the amount of change prompted by the discussion of
+  licensing in 2009. For context, see <a href=
+  "http://lists.freebsd.org/pipermail/freebsd-arch/2010-November/010772.html">
+  this</a> mailing list discussion.</p>
+  <hr>
+
+  <h2 id="future-toc"><a name="future" id="future">Future
+  Plans</a></h2>
+
+  <p>Some additional amount of compatibility with
+  <code>bison</code> would be useful (to me, and others), with the
+  caveat that <code>bison</code> itself is no longer compatible
+  with <code>yacc</code>. The most obvious difference was the
+  support for reentrant code, which has evolved in
+  <strong>byacc</strong> to the point where it can be compared and
+  tuned against <code>bison</code>.</p>
+
+  <p>However, even after factoring out that feature, there are a
+  few of the half-dozen or so programs that I have seen using
+  <code>bison</code>'s reentrancy feature which are also relying
+  upon inferences which do not appear to match <code>yacc</code>
+  (and some investigation is needed to isolate the exact problem).
+  Ironically, one of <code>bison</code>'s maintainers <a href=
+  "http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=333231">advised</a>
+  the developers of "new" flex to avoid making their program
+  incompatible with the POSIX lex. Again, my motivation for working
+  on <a href="https://invisible-island.net/reflex/reflex.html">relocalizable flex</a> was that
+  "new" flex was incompatible with both "old" flex and POSIX
+  lex.</p>
+
+  <p>Another area to explore would be integrating the
+  <code>Perl</code> feature, which appears to have no
+  maintainer.</p>
+
+  <h2 id="documentation-toc"><a name="documentation" id=
+  "documentation">Documentation</a></h2>
+
+  <ul>
+    <li><a href="https://invisible-island.net/byacc/manpage/yacc.html">byacc program</a>
+    (<a href="https://invisible-island.net/byacc/manpage/yacc.pdf">pdf</a>) (<a href=
+    "https://invisible-island.net/byacc/manpage/yacc.ps">postscript</a>) (<a href=
+    "https://invisible-island.net/byacc/manpage/yacc.txt">plain text</a>)</li>
+  </ul>
+  <hr>
+
+  <h2 id="download-toc"><a name="download" id=
+  "download">Download</a></h2>
+
+  <ul>
+    <li><a href=
+    "ftp://ftp.invisible-island.net/byacc/byacc.tar.gz">The source
+    (ftp)</a></li>
+
+    <li><a href="https://invisible-island.net/datafiles/release/byacc.tar.gz">The source
+    (http)</a></li>
+  </ul>
+
+  <h2 id="related-toc"><a name="related" id="related">Related
+  links</a></h2>
+
+  <p>There are numerous references on the net to
+  <strong>byacc</strong>. Here are a few of the more interesting
+  ones:</p>
+
+  <ul>
+    <li><a href="http://foldoc.org/byacc">Berkeley Yacc from
+    FOLDOC</a></li>
+
+    <li><a href=
+    "ftp://ftp.cs.berkeley.edu/pub/4bsd/byacc.1.9.tar.Z">byacc.1.9.tar.Z
+    (on ftp.cs.berkeley.edu)</a></li>
+
+    <li>Perl, i.e., <a href=
+    "http://free-compilers.sharnoff.org/LANG/Perl-1.html">Perl-Byacc</a>.
+
+      <p>Some of the history of Perl-Byacc is covered in
+      <em>Computer Science &amp; Perl Programming</em>, by Jon
+      Orwant (O'Reilly Media Inc., 2002).</p>
+
+      <ul>
+        <li><a href="http://packages.debian.org/perl-byacc">Debian
+        -- perl-byacc</a></li>
+
+        <li><a href="http://www.bodenstab.org/#YACC">Perl-Byacc
+        extended to Tcl</a></li>
+
+        <li><a href=
+        "http://www.mathematik.uni-ulm.de/help/perl5/doc/Parse/YYLex.html">
+        Parse::YYLex &ndash; version of Parse::Lex to be used by a
+        byacc parser</a></li>
+
+        <li><a href=
+        "https://web.archive.org/web/20070420183605/http://cpan.org/src/misc/perl5-byacc-patches-0.5.readme">
+        Byacc patches to generate a Perl 5 class</a>. (<a href=
+        "http://search.cpan.org/~jake/perl5-byacc-patches-0.6/">current
+        version</a></li>
+
+        <li><a href="http://egparser.sourceforge.net/">Contrasts
+        Perl-Byacc with other approaches</a></li>
+      </ul>
+    </li>
+
+    <li><a href="../../byaccj.sourceforge.net/index.html">BYACC/J (Java or
+    Jay) Home Page</a>. See also <a href=
+    "http://jflex.de/manual.html">JFlex</a>.</li>
+
+    <li><a href="../../www.siber.com/btyacc/index.html">BtYacc: BackTracking
+    Yacc</a></li>
+
+    <li>Packages for BYacc
+
+      <ul>
+        <!-- pkgsrc provides 4.9.9 -->
+
+        <li><a href=
+        "https://web.archive.org/web/20141029062652/http://oswatershed.org/pkg/byacc">
+        OS<em>Watershed</em>.org</a> (archived 2014)</li>
+
+        <li><a href=
+        "http://packages.debian.org/search?searchon=names&amp;keywords=byacc">
+        Debian</a></li>
+
+        <li><a href=
+        "https://www.freshports.org/devel/byacc/">FreeBSD
+        ports</a></li>
+
+        <li><a href=
+        "http://cvsweb.netbsd.org/bsdweb.cgi/src/external/bsd/byacc/">
+        NetBSD src/external</a></li>
+
+        <li><a href=
+        "http://cvsweb.netbsd.org/bsdweb.cgi/pkgsrc/devel/byacc/">NetBSD
+        pkgsrc/devel</a></li>
+      </ul>
+    </li>
+
+    <li>Other Yacc Sources
+
+      <ul>
+        <li>FreeBSD has no <strong>byacc</strong> port, though it
+        has one for <a href=
+        "http://svnweb.freebsd.org/ports/head/devel/byaccj/">Byacc/J</a>.
+        However, the <strong>byacc</strong> in base (see <a href=
+        "http://svnweb.freebsd.org/base/head/usr.bin/yacc/">CVS
+        repository</a>. was replaced in May 2012 by an import of
+        this version to the /vendor tree (see <a href=
+        "http://svnweb.freebsd.org/base/vendor/byacc/">svnweb</a>).</li>
+
+        <li>OpenSolaris <strong>yacc</strong> started with AT&amp;T
+        source code, and has evolved somewhat. The source browser
+        shows a <a href=
+        "https://web.archive.org/web/20061112134844/http://src.opensolaris.org/source/xref/onnv/onnv-gate/usr/src/cmd/sgs/yacc/common/">
+        view</a>.</li>
+      </ul>
+    </li>
+
+    <li>Other Information about Yacc
+
+      <ul>
+        <li><a href="http://dinosaur.compilertools.net/yacc/">Yacc:
+        Yet Another Compiler-Compiler</a> (Stephen C. Johnson)</li>
+
+        <li><a href=
+        "http://pubs.opengroup.org/onlinepubs/7908799/xcu/yacc.html">
+        yacc</a> (The Open Group, 1997)</li>
+
+        <li><a href=
+        "http://luv.asn.au/overheads/lex_yacc/yacc.html">Yacc
+        &ndash; A parser generator</a> (George Hansper)</li>
+      </ul>
+    </li>
+  </ul>
+</body>
+</html>

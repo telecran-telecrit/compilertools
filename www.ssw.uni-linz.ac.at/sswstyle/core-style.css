@@ -1,0 +1,114 @@
+@import url('alumni.css');
+@import "bootstrap.min.css";
+@import url('../../ssw.jku.at/sswstyle/bootstrap.min.css');
+
+
+* {
+}
+
+body {
+  margin-top:    5px;
+  margin-bottom: 5px;
+  margin-left:  20px;
+  margin-right: 10px;
+	max-width: 1280px;
+}
+
+table {
+	margin-bottom: 5px;
+}
+
+body, table  {
+  color: black;
+	background-color: white;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 8pt;
+}
+
+h1 {font-size:14pt; font-weight:bold; color:#666666;}
+h2 {font-size:13pt; font-weight:bold; color:#666666;}
+h3 {font-size:11pt; font-weight:bold; color:#666666;}
+h4 {font-size:9pt;  font-weight:bold; color:#666666;}
+
+
+p,ul,ol   {margin-top:10px; margin-bottom:20px;}
+
+a:link    {color:#336699; text-decoration:none; font-weight:bold;}
+a:visited {color:#336699; text-decoration:none; font-weight:bold;}
+a:hover   {color:red; text-decoration:none; font-weight:bold;}
+
+td {vertical-align:top;}
+
+table.liste    { border-collapse: collapse; }
+table.liste th { text-align:left; padding:2px; padding-left:5px; }
+table.liste td { padding:2px; padding-left:5px; padding-right:5px; }
+
+table.announcement { width: 100% }
+table.announcement td { padding-right:5px }
+
+.image { margin: 0 1em; }
+
+.image .caption { padding: 0 0em; margin: 0; font-weight: bolder; }
+
+
+pre {
+  font-family: Courier New,monospace;
+  font-size: 9pt;
+  background-color: white;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #AAAAAA;
+  padding: 0.50em;
+  margin: 0 2.3em 0 0;
+}
+
+.breadcrumbs {
+	padding-bottom: 10px;
+}
+
+#header {
+	font-weight: bold;
+	font-size: 2.2em;
+	color: #888888;
+	min-height: 100px;
+	width: 100%;
+}
+
+#header a {
+	text-decoration: none;
+	color: inherit;
+}
+
+#header img {
+	height: 50px;
+}
+
+#header div.row {
+	height: 80px;
+}
+
+#navigation {
+	padding-right: 25px;
+	margin-top: 30px;
+}
+
+#navigation {
+	width: 85px;
+}
+
+#navigation ul {
+	list-style-type: none;
+	padding-left: 0px;
+	margin-top: 0px;
+}
+
+#navigation ul a {
+	font-weight: normal;
+}
+	
+
+#content {
+	width: 100%;
+	line-height: 15px;
+}
+

@@ -1,0 +1,572 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; SunOS 5.8 sun4u) [Netscape]">
+   <title> ALE Homepage </title>
+</head>
+<body>
+
+<h1>
+The ALE Homepage</h1>
+This page contains descriptions of the Attribute-Logic Engine (ALE), Version
+3.2, a freeware logic programming and grammar parsing and generation system.
+This includes information on obtaining the system, user's guide, graphical
+interfaces, and grammars.
+<h2>
+What's New</h2>
+
+<ul>
+<li>
+January, 2003: Bug fixed in SWI port of ALE 3.2.1 - compilation of grammar
+source would fail in some circumstances.</li>
+
+<br>&nbsp;
+<li>
+December, 2001: <a href="ale.html#Obtain">ALE 3.2.1 is available</a>.&nbsp; This
+version patches ALE and its source-level debugger so that they work with
+SICStus 3.8.6 and SWI 4.0.</li>
+
+<br>&nbsp;
+<li>
+June, 1999: <a href="ale.html#Obtain">ALE 3.2 is available</a>. In this version:</li>
+
+<ul>
+<li>
+<b>ALE is faster (again)</b>, both at compile-time and run-time,</li>
+
+<li>
+<b>A new parsing compilation algorithm (Empty-First-Daughter closure)</b>,
+which:</li>
+
+<ul>
+<li>
+corrects a long-standing problem in ALE with combining empty categories
+- EFD closure closes the phrase structure rules of a grammar under prefixes
+of empty category daughters, so any permutation of empty categories can,
+in principle, be combined to form a new empty category;</li>
+
+<li>
+works around a problem that non-ISO-compatible Prologs, including SICStus
+Prolog, have with asserted predicates that results in leftmost empty category
+daughters not being able to combine with their own outputs;</li>
+
+<li>
+allows parsers to establish a precondition that rules only need to be closed
+with non-empty leftmost daughters at run-time - this allows ALE, at each
+step in its right-to-left pass throught the string, to copy all of the
+edges in the internal database back onto the heap before they can be used
+again, and thus reduces edge copying to a constant 2 copies per edge for
+non-empty edges (edges with different left and right nodes). Keeping a
+copy of the chart on the heap also allows for more sophisticated indexing
+strategies that would otherwise be overwhelmed by the cost of copying the
+edge before matching. This puts to rest the misconception that Prolog-based
+parsers are necessarily inefficient because of copying overhead.</li>
+</ul>
+
+<li>
+<b>Shallow cuts (if-then-else predicates)</b> have been added to the definite
+clause language</li>
+
+<li>
+<b>Faster extensionalisation code</b>, particularly with grammars that
+have few or no extensional types,</li>
+
+<li>
+<b>Faster subsumption checking code</b> for chart edges,</li>
+
+<li>
+<b>ALE Source-level Debugger 3.0,</b> which has been integrated with the
+new SICStus 3.7 source-level debugger,</li>
+
+<li>
+More compile-time error and warning messages,</li>
+
+<li>
+Several bug corrections,</li>
+
+<li>
+An updated user's manual,</li>
+
+<li>
+An SWI Prolog port.</li>
+
+<br>&nbsp;</ul>
+
+<li>
+September, 1998: <a href="ale.html#Obtain">ALE 3.1 is available</a>. In this version:</li>
+
+<ul>
+<li>
+<b>ALE is now substantially faster</b>. Extensively revised code, making
+better use of shallow cuts, first-argument indexing, and other tricks of
+the Prolog trade,</li>
+
+<li>
+<b>A new, faster, term-expansion-based compiler</b>. ALE now uses only
+one zero-byte intermediate file to compile its intermediate code. Intermediate
+code is saved for future use by saving the Prolog database itself,</li>
+
+<li>
+<b>ALE Source-level Debugger 2.0</b>, which now supports semantic-head-driven
+generation,</li>
+
+<li>
+<b>Lexicon compile/consult options</b> (lex_compile/0, lex_consult/0).
+Consulting the lexicon substantially reduces compilation time, with negligible
+consequences at run-time for most grammars,</li>
+
+<li>
+<b>New commands to modify the lexicon incrementally </b>(update_lex/1,
+retract_lex/1). Also export_words/2, to write the words of a lexicon to
+a stream,</li>
+
+<li>
+<b>New parsing commands</b> to filter solutions through a description and
+for batch parsing (rec/2,5, rec_best/2, rec_list/2,3),</li>
+
+<li>
+<b>Prolog character escapes</b> can be used in conjunction with ALE,</li>
+
+<li>
+Several bug corrections,</li>
+
+<li>
+An updated user's manual,</li>
+
+<li>
+An updated SWI Prolog port.</li>
+</ul>
+</ul>
+
+<h2>
+Contents</h2>
+
+<ul>
+<li>
+<a href="ale.html#AleOverview">Overview</a></li>
+
+<li>
+<a href="ale.html#AleDoc">Documentation</a></li>
+
+<li>
+<a href="ale.html#SysReq">System Requirements</a></li>
+
+<li>
+<a href="ale.html#Obtain">Obtaining ALE</a></li>
+
+<li>
+<a href="ale.html#AleGrammars">ALE Grammars</a></li>
+
+<li>
+<a href="ale.html#Interface">Third-Party Interfaces</a></li>
+
+<li>
+<a href="ale.html#Teaching">Teaching Materials</a></li>
+
+<li>
+<a href="ale.html#Feedback">Mailing List and Feedback</a></li>
+
+<li>
+<a href="ale.html#Users">User Project Reports</a></li>
+
+<li>
+<a href="ale.html#About">About ALE</a></li>
+</ul>
+
+<h2>
+<a NAME="AleOverview"></a>Overview</h2>
+ALE 3.2, a freeware system written in Prolog by <a href="http://216.25.95.35/carp/index.html">Bob
+Carpenter</a>, and <a href="http://www.cs.toronto.edu/~gpenn">Gerald Penn</a>
+integrates phrase structure parsing, semantic-head-driven generation and
+constraint logic programming with typed feature structures as terms. This
+generalizes both the feature structures of PATR-II and the terms of Prolog
+II to allow type inheritance and appropriateness specifications for features
+and values. Arbitrary constraints may be attached to types, and types may
+be declared as having extensional structural identity conditions. Grammars
+may also interleave unification steps with logic program goal calls (as
+can be done in DCGs), thus allowing parsing to be interleaved with other
+system components. ALE was developed with an eye toward <a href="http://ling.ohio-state.edu/HPSG/Hpsg.html">Head-Driven
+Phrase Structure Grammar</a> (HPSG), but it can also execute PATR-II grammars,
+definite clause grammars (DCGs), Prolog, Prolog-II, and LOGIN programs,
+etc. With suitable coding, it can also execute several aspects of <a href="http://clwww.essex.ac.uk/LFG/">Lexical-Functional
+Grammar</a> (LFG).
+<p>The terms involved in ALE grammars and logic programs are specified
+using a typed extension of Rounds-Kasper attribute-value logic, which includes
+variables, full disjunction, inequations, and functional descriptions.
+Programs are then compiled into low-level Prolog instructions corresponding
+to the basic operations of the typed Rounds-Kapser logic. There is a strong
+type discipline enforced on descriptions, allowing many errors to be detected
+at compile-time.
+<p>The logic programming, parsing, and generating systems may be used independently
+or together. Features of the logic programming system include negation,
+disjunction and cuts. It has last call optimization, but does not perform
+any argument indexing.
+<p>The phrase structure system employs a bottom-up, all-paths dynamic chart
+parser. A general lexical rule component is provided, including procedural
+attachment and general methods for orthographic transformations using pattern
+matching or Prolog. Empty categories are permitted in the grammar. A mini-interpreter
+is included for stepping through the parsing process. Both the phrase structure
+and logic programming components of the system allow parametric macros
+to be defined and freely employed in descriptions. The language allows
+hooks to general Prolog routines, allowing the grammars and programs to
+be embedded in Prolog, and thus also in C and Unix. Parser performance
+is similar to that of the logic programming system.
+<p>The generation component also uses the phrase structure system plus
+a user-defined semantics definite clause that identifies semantically relevant
+information in feature structures. It uses an adaptation of the algorithm
+presented in:
+<p><a href="http://www.eecs.harvard.edu/~shieber">Shieber, S.</a>, <a href="http://grid.let.rug.nl/~vannoord">van
+Noord, G.</a>, Moore, R., and <a href="http://www.cis.upenn.edu/~pereira">Pereira,
+F.</a> (1990). <a href="http://grid.let.rug.nl/~vannoord/papers/cl90.ps.gz">Semantic-head-driven
+Generation</a>.
+<i><a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=4&tid=10">Computational
+Linguistics</a></i>, 16.
+<p>This algorithm is very well suited to large-scale HPSG generation, since
+it avoids the non-termination problems inherent to top-down processing
+of lexicocentric theories, but at the same time, does not require the semantic
+contribution of every daughter in a grammar rule to subsume some portion
+of the semantic contribution of the mother, as, for example, is the case
+with Earley-based strategies. Some example glue code is provided to show
+how to attach two SICStus Prolog processes, one running a parser and one
+running a generator, to build a simple machine translation with ALE.
+<p>The source-level debugger can be used to trace nearly every operation
+in ALE's built-in parser, generator and definite clause resolver down to
+the level of feature structure unification. Based upon the procedural box
+model of control flow, it supports breakpoints, skipping, and leashing,
+and is compatible with ALE's built-in chart interpreter for navigating
+a parsing chart, as well as SICStus Prolog's own source-level debugger
+for on-line debugging of Prolog hooks. When used with its XEmacs interface,
+the buffer will indicate the current line being processed during execution.
+In a future release, the ALE source-level debugger will be extended to
+operations below the level of feature structure unification.
+<h2>
+<a NAME="AleDoc"></a>Documentation</h2>
+Complete documentation for ALE 3.2.x (running to over 130 pages, with examples
+of everything, programming advice, and sample grammars) is available in
+postscript and LaTeX format in the <a href="ale.html#Obtain">general ALE release</a>.
+<p>This document is also available in HTML format by clicking:
+<ul>ALE 3.2 User's Guide, HTML Version (coming soon!)</ul>
+ALE is based on the typed attribute-value logic and associated grammar
+and constraint logic programming model developed in:
+<ul><a href="http://216.25.95.35/carp/index.html">Bob Carpenter</a> (1992)
+<i><a href="http://uk.cambridge.org/computerscience/theoretical/catalogue/0521419328/">The
+Logic of Typed Feature Structures</a></i>. Cambridge Tracts in Theoretical
+Computer Science 32. <a href="http://www.cup.cam.ac.uk/">Cambridge University
+Press</a>.</ul>
+
+<h2>
+<a NAME="SysReq"></a>System Requirements</h2>
+ALE was developed with SICStus Prolog 3.8.6, but only requires that if
+the source-level debugger is used. For cyclic feature structures, at least
+version 2.1#8 is required. ALE itself is rather compact and takes up about
+300K when compiled. The size of grammar that can be compiled and string
+that can be parsed will be determined by the size and structure of the
+grammar itself.
+<p>The efficiency of the system depends on first-argument indexing, last-call
+optimization, and for the chart parser, the indexing of dynamic clauses.
+The system will be very slow if it is interpreted rather than compiled.
+<p>The ALE source-level debugger requires SICStus Prolog 3.8.6. Its XEmacs
+interface requires XEmacs 20.3 or higher.
+<p>The SWI port of ALE can be run on SWI Prolog 4.0 or higher.
+<p>The Quinuts port of ALE 3.0 was the last port of ALE made to Quintus
+Prolog. Its behaviour with cyclic feature structures is unpredictable;
+and there are some hard restrictions on the number of variables in compiled
+clauses that can make the development of grammars with large descriptions
+in rules, lexical rules or the lexicon very difficult.
+<h2>
+<a NAME="Obtain"></a>Obtaining ALE</h2>
+ALE and its documentation are available on the <a href="http://www.gnu.org/copyleft/lesser.html">GNU
+Lesser General Public License</a>. The components of the ALE system are
+available at this address:
+<ul><a href="http://www.cs.toronto.edu/~gpenn/ale/files">http://www.cs.toronto.edu/~gpenn/ale/files/</a></ul>
+The contents of the directory are as follows; the grammars are described
+in the <a href="ale.html#AleGrammars">ALE Grammars Section</a> below.
+<dl>
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/ale.pl">ale.pl</a></dt>
+
+<dd>
+The source code for ALE 3.2.1, for use with <a href="http://www.sics.se/ps/sicstus.html">SICStus
+Prolog 3.8.6</a>.</dd>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/ale.swi.pl">ale.swi.pl</a></dt>
+
+<dl>
+<dt>
+The SWI port of ALE 3.2.1, for use with SWI Prolog 4.0 or higher. To download
+SWI Prolog, choose <a href="ftp://www.swi.psy.uva.nl/pub/SWI-Prolog/pl-4.0.11.tar.gz">Unix</a>
+(version 4.0.11) or <a href="ftp://www.swi.psy.uva.nl/pub/SWI-Prolog/w32pl409.exe">Windows</a>&nbsp;
+(version 4.0.9).</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/aleguide.ps.gz">aleguide.ps.gz</a></dt>
+
+<dl>
+<dt>
+User's guide in compressed postscript format for US letter paper</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/aleguideA4.ps.gz">aleguideA4.ps.gz</a></dt>
+
+<dl>
+<dt>
+User's guide in compressed postscript format for A4 paper</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/debugger.tar.gz">debugger.tar.gz</a></dt>
+
+<dl>
+<dt>
+The ALE source-level debugger and XEmacs interface, for use with SICStus
+3.8.6 and XEmacs 20.3 or higher.</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/glue.tar.gz">glue.tar.gz</a></dt>
+
+<dl>
+<dt>
+Example glue code files to attach two SICStus processes running ALE together
+to build a simple machine translation system.</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/guide.tex">guide.tex</a></dt>
+
+<dd>
+User's guide in LaTeX 2e format; also available online (soon) as ALE 3.2
+User's Guide, HTML Version</dd>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/figs.tar.gz">figs.tar.gz</a></dt>
+
+<dl>
+<dt>
+Some encapsulated postscript figures that you will need to latex guide.tex
+yourself, along with the style file, epsf.sty</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/ale31.pl">ale31.pl</a></dt>
+
+<dl>
+<dt>
+The previous version of ALE (SICStus).</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/ale.qui.pl">ale.qui.pl</a></dt>
+
+<dl>
+<dt>
+The Quintus port of ALE 3.0.</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/ale31.swi.pl">ale31.swi.pl</a></dt>
+
+<dl>
+<dt>
+The previous version of ALE, ported to SWI Prolog.</dt>
+</dl>
+
+<dt>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/files/debugger20.tar.gz">debugger20.tar.gz</a></dt>
+
+<dl>
+<dt>
+The previous version of the source-level debugger and XEmacs interface,
+for use with SICStus 3.0.6, and XEmacs 19.16 or higher.</dt>
+</dl>
+</dl>
+
+<dl>
+<h2>
+<a NAME="AleGrammars"></a>ALE Grammars</h2>
+</dl>
+
+<h3>
+Sample Grammars</h3>
+The source code of the system is distributed with a number of sample grammars,
+which are available at this address:
+<dl>
+<dl><a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars">http://www.cs.toronto.edu/~gpenn/ale/files/grammars</a></dl>
+</dl>
+The grammars, along with a description and their file names are as follows.
+<dl>
+<dt>
+Metrical Phonology Syllabification Grammar (<a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars/syllab.pl">syllab.pl</a>)</dt>
+
+<dd>
+A small grammar for generating syllable structures of English words by
+coding sonority contours, the maximal onset principle, and phonotactic
+constraints via monostratal logical descriptions. (For more on constraint-based
+phonology, see the <a href="http://www.sil.org/computing/comp-morph-phon.html">Computational
+Morphology and Phonology Page </a>.)</dd>
+
+<dt>
+Categorial Grammar with Cooper Storage (<a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars/cg.pl">cg.pl</a>)</dt>
+
+<dd>
+A small unification categorial grammar with forward and backward slashes
+illustrating the use of procedural attachments.</dd>
+
+<dt>
+HPSG 2.0 (<a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars/hpsg.pl">hpsg.pl</a>)</dt>
+
+<dd>
+A fairly comprehensive implementation of a <a href="http://ling.ohio-state.edu/HPSG/Hpsg.html">Head-Driven
+Phrase Structure Grammar</a> for English, following (Pollard and Sag 1994:Chapters
+1--5, 7, and 8). This grammar has changed one of its feature names as of
+ALE 3.1, to work around a problem with SWI Prolog's operator parsing, and
+now contains discontiguity declarations. For the purposes of benchmarking,
+it behaves identically to the old hpsg.pl.</dd>
+
+<dt>
+Sample Grammar from "Semantic-Head-Driven Generation" (<a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars/gengram.pl">gengram.pl</a>)</dt>
+
+<dl>
+<dt>
+The example grammar from the <i>Computational Linguistics</i> article of
+Shieber et al., adapted to the logic of typed feature structures.</dt>
+</dl>
+
+<dt>
+Zebra Puzzle (<a href="http://www.cs.toronto.edu/~gpenn/ale/files/grammars/baby.pl">baby.pl</a>)</dt>
+
+<dd>
+Not a grammar per se, but rather a direct coding of a simplified version
+of the Zebra Puzzle, a simple logic puzzle stated with constraints, for
+illustrating the power of pure constraint resolution.</dd>
+</dl>
+
+<h2>
+<a NAME="Interface"></a>Third-Party User Interfaces</h2>
+
+<h3>
+HDrug</h3>
+The HDrug system, developed by <a href="http://grid.let.rug.nl/~vannoord">Gertjan
+van Noord</a>, is a package for developing logic grammars implemented on
+top of SICStus Prolog 3.0 or later, and Tcl/Tk. It has been tested on HP-UX,
+Linux and Sun platforms. Information is available for it on the:
+<dl><a href="http://odur.let.rug.nl/~vannoord/Hdrug/">HDrug Homepage</a></dl>
+HDrug has extensive features for performance evaluation, including plotting
+of statistical information. It contains methods for viewing parses as they
+are created, modifying them, and comparing them with other parses. It also
+contains an on-line manual.
+<p>The HDrug release includes a number of utilities for grammar formalisms
+other than ALE, including tree adjoining grammar, definite clause grammars,
+categorial grammar, head-driven generation grammar, and extraposition grammars.
+Also interesting is Gertjan's joint work with <a href="http://odur.let.rug.nl/~gosse/">Gosse
+Bouma</a> on delayed evaluation for lexical rules in the context of an
+HPSG grammar for Dutch.
+<h3>
+The Pleuk Grammar Development Environment</h3>
+For those using SICStus 2.1#9 running under X windows, the Pleuk grammar
+development shell has been adapted for ALE. Pleuk is described in the following
+technical report.
+<dl>Calder, Jo (1993) Graphical Interaction with Constraint-Based Grammars.
+In <i>Proceedings of the First Conference of the Pacific Association for
+Computational Linguistics</i> (PACLING '93), Vancouver, BC, Canada. pps.
+160--168.</dl>
+Pleuk provides a graphical user interface, facilities for maintaining and
+testing corpora, and an interactive, incremental derivation checker. Pleuk
+is available free of charge from:
+<dl><a href="ftp://ftp.cogsci.ed.ac.uk/pub/pleuk">ftp://ftp.cogsci.ed.ac.uk/pub/pleuk</a></dl>
+The file README contains instructions for downloading the system. Pleuk
+has been ported to Sun SPARCs SunOS 4.* and HP-UX. For more information,
+send e-mail to pleuk@cogsci.ed.ac.uk. Pleuk was developed by <a href="http://www.cogsci.ed.ac.uk/~jo/">Jo
+Calder </a>and <a href="http://www.ling.ohio-state.edu/~cbrew/">Chris Brew
+</a>of
+the <a href="http://www.hcrc.ed.ac.uk/">Human Communication Research Centre
+</a>(HCRC)
+at the University of Edinburgh, Kevin Humphreys of the Centre for Cognitive
+Science at the University of Edinburgh, and Mike Reape, of the Computer
+Science Department, Trinity College, Dublin.
+<h3>
+Emacs Interface</h3>
+Olivier Laurens is distributing an Emacs-based interface to ALE. It is
+described in a technical report (in compressed postscript format):
+<dl>Laurens, Olivier (1995) An Emacs User Interface for ALE. Technical
+Report CSS-IS TR 95-07, School of Computing Science, Simon Fraser University,
+Burnaby, BC, Canada, June 1995. <a href="ftp://fas.sfu.ca/pub/cs/nl/emacs-ale/tr95-07.ps.Z">ftp://fas.sfu.ca/pub/cs/nl/emacs-ale/tr95-07.ps.Z</a>
+(20pps.)</dl>
+It is also available free of charge for research purposes via ftp as a
+compressed, tarred directory:
+<dl><a href="ftp://fas.sfu.ca/pub/cs/nl/emacs-ale/ale_emacs_1.tar.Z">ftp://fas.sfu.ca/pub/cs/nl/emacs-ale/ale_emacs_1.tar.Z</a></dl>
+
+<h2>
+<a NAME="Teaching"></a>Teaching Materials</h2>
+
+<dl>
+<li>
+<a href="http://www.cs.toronto.edu/~gpenn/ale/course.html">Course on HPSG Grammars and Typed Feature Formalisms</a></li>
+
+<br>December 11--14, 1995
+<br><a href="http://www.cogsci.ed.ac.uk/hcrc/home.html">Human Communication
+Research Centre</a>, <a href="http://www.ed.ac.uk/">University of Edinburgh</a>
+<li>
+<a href="http://www.ltg.hcrc.ed.ac.uk/projects/ledtools/ale-hpsg/index.html">Course
+Notes on HPSG in ALE</a>, created by Colin Matheson, <a href="http://www.cogsci.ed.ac.uk/">Centre
+for Cognitive Science </a>, <a href="http://www.ed.ac.uk/">University of
+Edinburgh</a></li>
+
+<li>
+<a href="http://www.ltg.ed.ac.uk/projects/ledtools/ale-ra">Computational
+Morphology: An Introduction to ALE-RA</a>, created by Colin Matheson, <a href="http://www.cogsci.ed.ac.uk/">Centre
+for Cognitive Science</a>, <a href="http://www.ed.ac.uk/">University of
+Edinburgh</a>. Based on the ALE-RA system, created by Tomaz Erjavec.</li>
+</dl>
+
+<h2>
+<a NAME="Feedback"></a>Mailing List and Feedback</h2>
+Please send all bug reports to <a href="mailto:gpenn+@cmu.edu">gpenn+@cmu.edu</a>.
+<p>If you'd like to be put on the ALE mailing list and be informed of updates,
+new grammars, and so on, send e-mail to Gerald Penn at <a href="mailto:gpenn+@cmu.edu">gpenn+@cmu.edu</a>.
+<p>If you would like to post to the ALE Mailing list, it can be found at:
+<dl><a href="mailto:+dist+~gpenn/dl/ale.dl@andrew.cmu.edu">+dist+~gpenn/dl/ale.dl@andrew.cmu.edu</a></dl>
+You can alias this list to something more readable, or just click on the
+address above to send a mail if your browser supports forms.
+<p>Please let us know if you have any comments, suggestions, or questions.
+We'd be especially interested to hear what you are doing with ALE. As an
+added bonus, if you would like, we can link your project into this page
+so that other people can find out about it; just send us a description
+and a URL if you have one.
+<h2>
+<a NAME="Users"></a>ALE Users' Project Reports</h2>
+
+<dl>
+<li>
+<a href="http://www.coli.uni-sb.de/~fouvry/">Frederik Fouvry</a>'s <a href="http://www.cs.toronto.edu/~gpenn/ale/users1.html">report
+on Dutch HPSG</a> and <a href="http://www.coli.uni-sb.de/~fouvry/thesis-aoti.en.html">his
+thesis</a>.</li>
+
+<li>
+<a href="http://www.iit.demokritos.gr/~ionandr">Ion Androutsopoulos</a>'
+<a href="http://xxx.lanl.gov/abs/cmp-lg/9609004">thesis</a>
+on natural language interfaces to temporal databases, including <a href="http://www.iit.demokritos.gr/~ionandr/nlitdb_thesis/">prototype
+source code</a>.</li>
+
+<h2>
+<a NAME="About"></a>About ALE</h2>
+
+<dt>
+ALE was developed in the Computational Linguistics Program and the Language
+Technologies Institute at Carnegie Mellon University by <a href="http://216.25.95.35/carp/index.html">Bob
+Carpenter</a> and <a href="http://www.cs.toronto.edu/~gpenn">Gerald Penn</a>.
+The semantic-head-driven generator is based on a generator written for
+ALE by Octav Popescu.</dt>
+
+<br>&nbsp;
+<address>
+<font size=-1>Gerald Penn, <a href="mailto:gpenn+@cmu.edu">gpenn+@cmu.edu</a>,
+October 2003</font></address>
+</dl>
+
+</body>
+</html>

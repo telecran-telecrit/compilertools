@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/flex-2.5.4/MISC/texinfo/flex.texi on 30 June 1997 -->
+
+<TITLE>Flex - a scanner generator - Format of the input file</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_5.html">previous</A>, <A HREF="flex_7.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H2><A NAME="SEC6" HREF="index.html#SEC6">Format of the input file</A></H2>
+
+<P>
+The <CODE>flex</CODE> input file consists of three sections, separated
+by a line with just <SAMP>`%%'</SAMP> in it:
+
+</P>
+
+<PRE>
+definitions
+%%
+rules
+%%
+user code
+</PRE>
+
+<P>
+The <STRONG>definitions</STRONG> section contains declarations of simple
+<STRONG>name</STRONG> definitions to simplify the scanner specification,
+and declarations of <STRONG>start conditions</STRONG>, which are explained
+in a later section.
+Name definitions have the form:
+
+</P>
+
+<PRE>
+name definition
+</PRE>
+
+<P>
+The "name" is a word beginning with a letter or an
+underscore ('_') followed by zero or more letters, digits, '_',
+or '-' (dash).  The definition is taken to begin at the
+first non-white-space character following the name and
+continuing to the end of the line.  The definition can
+subsequently be referred to using "{name}", which will
+expand to "(definition)".  For example,
+
+</P>
+
+<PRE>
+DIGIT    [0-9]
+ID       [a-z][a-z0-9]*
+</PRE>
+
+<P>
+defines "DIGIT" to be a regular expression which matches a
+single digit, and "ID" to be a regular expression which
+matches a letter followed by zero-or-more
+letters-or-digits.  A subsequent reference to
+
+</P>
+
+<PRE>
+{DIGIT}+"."{DIGIT}*
+</PRE>
+
+<P>
+is identical to
+
+</P>
+
+<PRE>
+([0-9])+"."([0-9])*
+</PRE>
+
+<P>
+and matches one-or-more digits followed by a '.' followed
+by zero-or-more digits.
+
+</P>
+<P>
+The <VAR>rules</VAR> section of the <CODE>flex</CODE> input contains a series of
+rules of the form:
+
+</P>
+
+<PRE>
+pattern   action
+</PRE>
+
+<P>
+where the pattern must be unindented and the action must
+begin on the same line.
+
+</P>
+<P>
+See below for a further description of patterns and
+actions.
+
+</P>
+<P>
+Finally, the user code section is simply copied to
+<TT>`lex.yy.c'</TT> verbatim.  It is used for companion routines
+which call or are called by the scanner.  The presence of
+this section is optional; if it is missing, the second <SAMP>`%%'</SAMP>
+in the input file may be skipped, too.
+
+</P>
+<P>
+In the definitions and rules sections, any <EM>indented</EM> text or
+text enclosed in <SAMP>`%{'</SAMP> and <SAMP>`%}'</SAMP> is copied verbatim to the
+output (with the <SAMP>`%{}'</SAMP>'s removed).  The <SAMP>`%{}'</SAMP>'s must
+appear unindented on lines by themselves.
+
+</P>
+<P>
+In the rules section, any indented or %{} text appearing
+before the first rule may be used to declare variables
+which are local to the scanning routine and (after the
+declarations) code which is to be executed whenever the
+scanning routine is entered.  Other indented or %{} text
+in the rule section is still copied to the output, but its
+meaning is not well-defined and it may well cause
+compile-time errors (this feature is present for <CODE>POSIX</CODE> compliance;
+see below for other such features).
+
+</P>
+<P>
+In the definitions section (but not in the rules section),
+an unindented comment (i.e., a line beginning with "/*")
+is also copied verbatim to the output up to the next "*/".
+
+</P>
+<HR>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_5.html">previous</A>, <A HREF="flex_7.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,844 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/bison-1.25/bison.texinfo on 30 June 1997 -->
+
+<TITLE>Bison 1.25 - The Bison Parser Algorithm</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_7.html">previous</A>, <A HREF="bison_9.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H1><A NAME="SEC68" HREF="index.html#SEC68">The Bison Parser Algorithm</A></H1>
+<P>
+<A NAME="IDX144"></A>
+<A NAME="IDX145"></A>
+<A NAME="IDX146"></A>
+<A NAME="IDX147"></A>
+<A NAME="IDX148"></A>
+<A NAME="IDX149"></A>
+
+</P>
+<P>
+As Bison reads tokens, it pushes them onto a stack along with their
+semantic values.  The stack is called the <STRONG>parser stack</STRONG>.  Pushing a
+token is traditionally called <STRONG>shifting</STRONG>.
+
+</P>
+<P>
+For example, suppose the infix calculator has read <SAMP>`1 + 5 *'</SAMP>, with a
+<SAMP>`3'</SAMP> to come.  The stack will have four elements, one for each token
+that was shifted.
+
+</P>
+<P>
+But the stack does not always have an element for each token read.  When
+the last <VAR>n</VAR> tokens and groupings shifted match the components of a
+grammar rule, they can be combined according to that rule.  This is called
+<STRONG>reduction</STRONG>.  Those tokens and groupings are replaced on the stack by a
+single grouping whose symbol is the result (left hand side) of that rule.
+Running the rule's action is part of the process of reduction, because this
+is what computes the semantic value of the resulting grouping.
+
+</P>
+<P>
+For example, if the infix calculator's parser stack contains this:
+
+</P>
+
+<PRE>
+1 + 5 * 3
+</PRE>
+
+<P>
+and the next input token is a newline character, then the last three
+elements can be reduced to 15 via the rule:
+
+</P>
+
+<PRE>
+expr: expr '*' expr;
+</PRE>
+
+<P>
+Then the stack contains just these three elements:
+
+</P>
+
+<PRE>
+1 + 15
+</PRE>
+
+<P>
+At this point, another reduction can be made, resulting in the single value
+16.  Then the newline token can be shifted.
+
+</P>
+<P>
+The parser tries, by shifts and reductions, to reduce the entire input down
+to a single grouping whose symbol is the grammar's start-symbol
+(see section <A HREF="bison_4.html#SEC8">Languages and Context-Free Grammars</A>).
+
+</P>
+<P>
+This kind of parser is known in the literature as a bottom-up parser.
+
+</P>
+
+
+
+<H2><A NAME="SEC69" HREF="index.html#SEC69">Look-Ahead Tokens</A></H2>
+<P>
+<A NAME="IDX150"></A>
+
+</P>
+<P>
+The Bison parser does <EM>not</EM> always reduce immediately as soon as the
+last <VAR>n</VAR> tokens and groupings match a rule.  This is because such a
+simple strategy is inadequate to handle most languages.  Instead, when a
+reduction is possible, the parser sometimes "looks ahead" at the next
+token in order to decide what to do.
+
+</P>
+<P>
+When a token is read, it is not immediately shifted; first it becomes the
+<STRONG>look-ahead token</STRONG>, which is not on the stack.  Now the parser can
+perform one or more reductions of tokens and groupings on the stack, while
+the look-ahead token remains off to the side.  When no more reductions
+should take place, the look-ahead token is shifted onto the stack.  This
+does not mean that all possible reductions have been done; depending on the
+token type of the look-ahead token, some rules may choose to delay their
+application.
+
+</P>
+<P>
+Here is a simple case where look-ahead is needed.  These three rules define
+expressions which contain binary addition operators and postfix unary
+factorial operators (<SAMP>`!'</SAMP>), and allow parentheses for grouping.
+
+</P>
+
+<PRE>
+expr:     term '+' expr
+        | term
+        ;
+
+term:     '(' expr ')'
+        | term '!'
+        | NUMBER
+        ;
+</PRE>
+
+<P>
+Suppose that the tokens <SAMP>`1 + 2'</SAMP> have been read and shifted; what
+should be done?  If the following token is <SAMP>`)'</SAMP>, then the first three
+tokens must be reduced to form an <CODE>expr</CODE>.  This is the only valid
+course, because shifting the <SAMP>`)'</SAMP> would produce a sequence of symbols
+<CODE>term ')'</CODE>, and no rule allows this.
+
+</P>
+<P>
+If the following token is <SAMP>`!'</SAMP>, then it must be shifted immediately so
+that <SAMP>`2 !'</SAMP> can be reduced to make a <CODE>term</CODE>.  If instead the
+parser were to reduce before shifting, <SAMP>`1 + 2'</SAMP> would become an
+<CODE>expr</CODE>.  It would then be impossible to shift the <SAMP>`!'</SAMP> because
+doing so would produce on the stack the sequence of symbols <CODE>expr
+'!'</CODE>.  No rule allows that sequence.
+
+</P>
+<P>
+<A NAME="IDX151"></A>
+The current look-ahead token is stored in the variable <CODE>yychar</CODE>.
+See section <A HREF="bison_7.html#SEC67">Special Features for Use in Actions</A>.
+
+</P>
+
+
+<H2><A NAME="SEC70" HREF="index.html#SEC70">Shift/Reduce Conflicts</A></H2>
+<P>
+<A NAME="IDX152"></A>
+<A NAME="IDX153"></A>
+<A NAME="IDX154"></A>
+<A NAME="IDX155"></A>
+
+</P>
+<P>
+Suppose we are parsing a language which has if-then and if-then-else
+statements, with a pair of rules like this:
+
+</P>
+
+<PRE>
+if_stmt:
+          IF expr THEN stmt
+        | IF expr THEN stmt ELSE stmt
+        ;
+</PRE>
+
+<P>
+Here we assume that <CODE>IF</CODE>, <CODE>THEN</CODE> and <CODE>ELSE</CODE> are
+terminal symbols for specific keyword tokens.
+
+</P>
+<P>
+When the <CODE>ELSE</CODE> token is read and becomes the look-ahead token, the
+contents of the stack (assuming the input is valid) are just right for
+reduction by the first rule.  But it is also legitimate to shift the
+<CODE>ELSE</CODE>, because that would lead to eventual reduction by the second
+rule.
+
+</P>
+<P>
+This situation, where either a shift or a reduction would be valid, is
+called a <STRONG>shift/reduce conflict</STRONG>.  Bison is designed to resolve
+these conflicts by choosing to shift, unless otherwise directed by
+operator precedence declarations.  To see the reason for this, let's
+contrast it with the other alternative.
+
+</P>
+<P>
+Since the parser prefers to shift the <CODE>ELSE</CODE>, the result is to attach
+the else-clause to the innermost if-statement, making these two inputs
+equivalent:
+
+</P>
+
+<PRE>
+if x then if y then win (); else lose;
+
+if x then do; if y then win (); else lose; end;
+</PRE>
+
+<P>
+But if the parser chose to reduce when possible rather than shift, the
+result would be to attach the else-clause to the outermost if-statement,
+making these two inputs equivalent:
+
+</P>
+
+<PRE>
+if x then if y then win (); else lose;
+
+if x then do; if y then win (); end; else lose;
+</PRE>
+
+<P>
+The conflict exists because the grammar as written is ambiguous: either
+parsing of the simple nested if-statement is legitimate.  The established
+convention is that these ambiguities are resolved by attaching the
+else-clause to the innermost if-statement; this is what Bison accomplishes
+by choosing to shift rather than reduce.  (It would ideally be cleaner to
+write an unambiguous grammar, but that is very hard to do in this case.)
+This particular ambiguity was first encountered in the specifications of
+Algol 60 and is called the "dangling <CODE>else</CODE>" ambiguity.
+
+</P>
+<P>
+To avoid warnings from Bison about predictable, legitimate shift/reduce
+conflicts, use the <CODE>%expect <VAR>n</VAR></CODE> declaration.  There will be no
+warning as long as the number of shift/reduce conflicts is exactly <VAR>n</VAR>.
+See section <A HREF="bison_6.html#SEC54">Suppressing Conflict Warnings</A>.
+
+</P>
+<P>
+The definition of <CODE>if_stmt</CODE> above is solely to blame for the
+conflict, but the conflict does not actually appear without additional
+rules.  Here is a complete Bison input file that actually manifests the
+conflict:
+
+</P>
+
+<PRE>
+%token IF THEN ELSE variable
+%%
+stmt:     expr
+        | if_stmt
+        ;
+
+if_stmt:
+          IF expr THEN stmt
+        | IF expr THEN stmt ELSE stmt
+        ;
+
+expr:     variable
+        ;
+</PRE>
+
+
+
+<H2><A NAME="SEC71" HREF="index.html#SEC71">Operator Precedence</A></H2>
+<P>
+<A NAME="IDX156"></A>
+<A NAME="IDX157"></A>
+
+</P>
+<P>
+Another situation where shift/reduce conflicts appear is in arithmetic
+expressions.  Here shifting is not always the preferred resolution; the
+Bison declarations for operator precedence allow you to specify when to
+shift and when to reduce.
+
+</P>
+
+
+
+<H3><A NAME="SEC72" HREF="index.html#SEC72">When Precedence is Needed</A></H3>
+
+<P>
+Consider the following ambiguous grammar fragment (ambiguous because the
+input <SAMP>`1 - 2 * 3'</SAMP> can be parsed in two different ways):
+
+</P>
+
+<PRE>
+expr:     expr '-' expr
+        | expr '*' expr
+        | expr '&#60;' expr
+        | '(' expr ')'
+        ...
+        ;
+</PRE>
+
+<P>
+Suppose the parser has seen the tokens <SAMP>`1'</SAMP>, <SAMP>`-'</SAMP> and <SAMP>`2'</SAMP>;
+should it reduce them via the rule for the addition operator?  It depends
+on the next token.  Of course, if the next token is <SAMP>`)'</SAMP>, we must
+reduce; shifting is invalid because no single rule can reduce the token
+sequence <SAMP>`- 2 )'</SAMP> or anything starting with that.  But if the next
+token is <SAMP>`*'</SAMP> or <SAMP>`&#60;'</SAMP>, we have a choice: either shifting or
+reduction would allow the parse to complete, but with different
+results.
+
+</P>
+<P>
+To decide which one Bison should do, we must consider the
+results.  If the next operator token <VAR>op</VAR> is shifted, then it
+must be reduced first in order to permit another opportunity to
+reduce the sum.  The result is (in effect) <SAMP>`1 - (2
+<VAR>op</VAR> 3)'</SAMP>.  On the other hand, if the subtraction is reduced
+before shifting <VAR>op</VAR>, the result is <SAMP>`(1 - 2) <VAR>op</VAR>
+3'</SAMP>.  Clearly, then, the choice of shift or reduce should depend
+on the relative precedence of the operators <SAMP>`-'</SAMP> and
+<VAR>op</VAR>: <SAMP>`*'</SAMP> should be shifted first, but not <SAMP>`&#60;'</SAMP>.
+
+</P>
+<P>
+<A NAME="IDX158"></A>
+What about input such as <SAMP>`1 - 2 - 5'</SAMP>; should this be
+<SAMP>`(1 - 2) - 5'</SAMP> or should it be <SAMP>`1 - (2 - 5)'</SAMP>?  For
+most operators we prefer the former, which is called <STRONG>left
+association</STRONG>.  The latter alternative, <STRONG>right association</STRONG>, is
+desirable for assignment operators.  The choice of left or right
+association is a matter of whether the parser chooses to shift or
+reduce when the stack contains <SAMP>`1 - 2'</SAMP> and the look-ahead
+token is <SAMP>`-'</SAMP>: shifting makes right-associativity.
+
+</P>
+
+
+<H3><A NAME="SEC73" HREF="index.html#SEC73">Specifying Operator Precedence</A></H3>
+<P>
+<A NAME="IDX159"></A>
+<A NAME="IDX160"></A>
+<A NAME="IDX161"></A>
+
+</P>
+<P>
+Bison allows you to specify these choices with the operator precedence
+declarations <CODE>%left</CODE> and <CODE>%right</CODE>.  Each such declaration
+contains a list of tokens, which are operators whose precedence and
+associativity is being declared.  The <CODE>%left</CODE> declaration makes all
+those operators left-associative and the <CODE>%right</CODE> declaration makes
+them right-associative.  A third alternative is <CODE>%nonassoc</CODE>, which
+declares that it is a syntax error to find the same operator twice "in a
+row".
+
+</P>
+<P>
+The relative precedence of different operators is controlled by the
+order in which they are declared.  The first <CODE>%left</CODE> or
+<CODE>%right</CODE> declaration in the file declares the operators whose
+precedence is lowest, the next such declaration declares the operators
+whose precedence is a little higher, and so on.
+
+</P>
+
+
+<H3><A NAME="SEC74" HREF="index.html#SEC74">Precedence Examples</A></H3>
+
+<P>
+In our example, we would want the following declarations:
+
+</P>
+
+<PRE>
+%left '&#60;'
+%left '-'
+%left '*'
+</PRE>
+
+<P>
+In a more complete example, which supports other operators as well, we
+would declare them in groups of equal precedence.  For example, <CODE>'+'</CODE> is
+declared with <CODE>'-'</CODE>:
+
+</P>
+
+<PRE>
+%left '&#60;' '&#62;' '=' NE LE GE
+%left '+' '-'
+%left '*' '/'
+</PRE>
+
+<P>
+(Here <CODE>NE</CODE> and so on stand for the operators for "not equal"
+and so on.  We assume that these tokens are more than one character long
+and therefore are represented by names, not character literals.)
+
+</P>
+
+
+<H3><A NAME="SEC75" HREF="index.html#SEC75">How Precedence Works</A></H3>
+
+<P>
+The first effect of the precedence declarations is to assign precedence
+levels to the terminal symbols declared.  The second effect is to assign
+precedence levels to certain rules: each rule gets its precedence from the
+last terminal symbol mentioned in the components.  (You can also specify
+explicitly the precedence of a rule.  See section <A HREF="bison_8.html#SEC76">Context-Dependent Precedence</A>.)
+
+</P>
+<P>
+Finally, the resolution of conflicts works by comparing the
+precedence of the rule being considered with that of the
+look-ahead token.  If the token's precedence is higher, the
+choice is to shift.  If the rule's precedence is higher, the
+choice is to reduce.  If they have equal precedence, the choice
+is made based on the associativity of that precedence level.  The
+verbose output file made by <SAMP>`-v'</SAMP> (see section <A HREF="bison_12.html#SEC87">Invoking Bison</A>) says
+how each conflict was resolved.
+
+</P>
+<P>
+Not all rules and not all tokens have precedence.  If either the rule or
+the look-ahead token has no precedence, then the default is to shift.
+
+</P>
+
+
+<H2><A NAME="SEC76" HREF="index.html#SEC76">Context-Dependent Precedence</A></H2>
+<P>
+<A NAME="IDX162"></A>
+<A NAME="IDX163"></A>
+<A NAME="IDX164"></A>
+<A NAME="IDX165"></A>
+<A NAME="IDX166"></A>
+
+</P>
+<P>
+Often the precedence of an operator depends on the context.  This sounds
+outlandish at first, but it is really very common.  For example, a minus
+sign typically has a very high precedence as a unary operator, and a
+somewhat lower precedence (lower than multiplication) as a binary operator.
+
+</P>
+<P>
+The Bison precedence declarations, <CODE>%left</CODE>, <CODE>%right</CODE> and
+<CODE>%nonassoc</CODE>, can only be used once for a given token; so a token has
+only one precedence declared in this way.  For context-dependent
+precedence, you need to use an additional mechanism: the <CODE>%prec</CODE>
+modifier for rules.
+</P>
+<P>
+The <CODE>%prec</CODE> modifier declares the precedence of a particular rule by
+specifying a terminal symbol whose precedence should be used for that rule.
+It's not necessary for that symbol to appear otherwise in the rule.  The
+modifier's syntax is:
+
+</P>
+
+<PRE>
+%prec <VAR>terminal-symbol</VAR>
+</PRE>
+
+<P>
+and it is written after the components of the rule.  Its effect is to
+assign the rule the precedence of <VAR>terminal-symbol</VAR>, overriding
+the precedence that would be deduced for it in the ordinary way.  The
+altered rule precedence then affects how conflicts involving that rule
+are resolved (see section <A HREF="bison_8.html#SEC71">Operator Precedence</A>).
+
+</P>
+<P>
+Here is how <CODE>%prec</CODE> solves the problem of unary minus.  First, declare
+a precedence for a fictitious terminal symbol named <CODE>UMINUS</CODE>.  There
+are no tokens of this type, but the symbol serves to stand for its
+precedence:
+
+</P>
+
+<PRE>
+...
+%left '+' '-'
+%left '*'
+%left UMINUS
+</PRE>
+
+<P>
+Now the precedence of <CODE>UMINUS</CODE> can be used in specific rules:
+
+</P>
+
+<PRE>
+exp:    ...
+        | exp '-' exp
+        ...
+        | '-' exp %prec UMINUS
+</PRE>
+
+
+
+<H2><A NAME="SEC77" HREF="index.html#SEC77">Parser States</A></H2>
+<P>
+<A NAME="IDX167"></A>
+<A NAME="IDX168"></A>
+<A NAME="IDX169"></A>
+
+</P>
+<P>
+The function <CODE>yyparse</CODE> is implemented using a finite-state machine.
+The values pushed on the parser stack are not simply token type codes; they
+represent the entire sequence of terminal and nonterminal symbols at or
+near the top of the stack.  The current state collects all the information
+about previous input which is relevant to deciding what to do next.
+
+</P>
+<P>
+Each time a look-ahead token is read, the current parser state together
+with the type of look-ahead token are looked up in a table.  This table
+entry can say, "Shift the look-ahead token."  In this case, it also
+specifies the new parser state, which is pushed onto the top of the
+parser stack.  Or it can say, "Reduce using rule number <VAR>n</VAR>."
+This means that a certain number of tokens or groupings are taken off
+the top of the stack, and replaced by one grouping.  In other words,
+that number of states are popped from the stack, and one new state is
+pushed.
+
+</P>
+<P>
+There is one other alternative: the table can say that the look-ahead token
+is erroneous in the current state.  This causes error processing to begin
+(see section <A HREF="bison_9.html#SEC81">Error Recovery</A>).
+
+</P>
+
+
+<H2><A NAME="SEC78" HREF="index.html#SEC78">Reduce/Reduce Conflicts</A></H2>
+<P>
+<A NAME="IDX170"></A>
+<A NAME="IDX171"></A>
+
+</P>
+<P>
+A reduce/reduce conflict occurs if there are two or more rules that apply
+to the same sequence of input.  This usually indicates a serious error
+in the grammar.
+
+</P>
+<P>
+For example, here is an erroneous attempt to define a sequence
+of zero or more <CODE>word</CODE> groupings.
+
+</P>
+
+<PRE>
+sequence: /* empty */
+                { printf ("empty sequence\n"); }
+        | maybeword
+        | sequence word
+                { printf ("added word %s\n", $2); }
+        ;
+
+maybeword: /* empty */
+                { printf ("empty maybeword\n"); }
+        | word
+                { printf ("single word %s\n", $1); }
+        ;
+</PRE>
+
+<P>
+The error is an ambiguity: there is more than one way to parse a single
+<CODE>word</CODE> into a <CODE>sequence</CODE>.  It could be reduced to a
+<CODE>maybeword</CODE> and then into a <CODE>sequence</CODE> via the second rule.
+Alternatively, nothing-at-all could be reduced into a <CODE>sequence</CODE>
+via the first rule, and this could be combined with the <CODE>word</CODE>
+using the third rule for <CODE>sequence</CODE>.
+
+</P>
+<P>
+There is also more than one way to reduce nothing-at-all into a
+<CODE>sequence</CODE>.  This can be done directly via the first rule,
+or indirectly via <CODE>maybeword</CODE> and then the second rule.
+
+</P>
+<P>
+You might think that this is a distinction without a difference, because it
+does not change whether any particular input is valid or not.  But it does
+affect which actions are run.  One parsing order runs the second rule's
+action; the other runs the first rule's action and the third rule's action.
+In this example, the output of the program changes.
+
+</P>
+<P>
+Bison resolves a reduce/reduce conflict by choosing to use the rule that
+appears first in the grammar, but it is very risky to rely on this.  Every
+reduce/reduce conflict must be studied and usually eliminated.  Here is the
+proper way to define <CODE>sequence</CODE>:
+
+</P>
+
+<PRE>
+sequence: /* empty */
+                { printf ("empty sequence\n"); }
+        | sequence word
+                { printf ("added word %s\n", $2); }
+        ;
+</PRE>
+
+<P>
+Here is another common error that yields a reduce/reduce conflict:
+
+</P>
+
+<PRE>
+sequence: /* empty */
+        | sequence words
+        | sequence redirects
+        ;
+
+words:    /* empty */
+        | words word
+        ;
+
+redirects:/* empty */
+        | redirects redirect
+        ;
+</PRE>
+
+<P>
+The intention here is to define a sequence which can contain either
+<CODE>word</CODE> or <CODE>redirect</CODE> groupings.  The individual definitions of
+<CODE>sequence</CODE>, <CODE>words</CODE> and <CODE>redirects</CODE> are error-free, but the
+three together make a subtle ambiguity: even an empty input can be parsed
+in infinitely many ways!
+
+</P>
+<P>
+Consider: nothing-at-all could be a <CODE>words</CODE>.  Or it could be two
+<CODE>words</CODE> in a row, or three, or any number.  It could equally well be a
+<CODE>redirects</CODE>, or two, or any number.  Or it could be a <CODE>words</CODE>
+followed by three <CODE>redirects</CODE> and another <CODE>words</CODE>.  And so on.
+
+</P>
+<P>
+Here are two ways to correct these rules.  First, to make it a single level
+of sequence:
+
+</P>
+
+<PRE>
+sequence: /* empty */
+        | sequence word
+        | sequence redirect
+        ;
+</PRE>
+
+<P>
+Second, to prevent either a <CODE>words</CODE> or a <CODE>redirects</CODE>
+from being empty:
+
+</P>
+
+<PRE>
+sequence: /* empty */
+        | sequence words
+        | sequence redirects
+        ;
+
+words:    word
+        | words word
+        ;
+
+redirects:redirect
+        | redirects redirect
+        ;
+</PRE>
+
+
+
+<H2><A NAME="SEC79" HREF="index.html#SEC79">Mysterious Reduce/Reduce Conflicts</A></H2>
+
+<P>
+Sometimes reduce/reduce conflicts can occur that don't look warranted.
+Here is an example:
+
+</P>
+
+<PRE>
+%token ID
+
+%%
+def:    param_spec return_spec ','
+        ;
+param_spec:
+             type
+        |    name_list ':' type
+        ;
+return_spec:
+             type
+        |    name ':' type
+        ;
+type:        ID
+        ;
+name:        ID
+        ;
+name_list:
+             name
+        |    name ',' name_list
+        ;
+</PRE>
+
+<P>
+It would seem that this grammar can be parsed with only a single token
+of look-ahead: when a <CODE>param_spec</CODE> is being read, an <CODE>ID</CODE> is 
+a <CODE>name</CODE> if a comma or colon follows, or a <CODE>type</CODE> if another
+<CODE>ID</CODE> follows.  In other words, this grammar is LR(1).
+
+</P>
+<P>
+<A NAME="IDX172"></A>
+<A NAME="IDX173"></A>
+However, Bison, like most parser generators, cannot actually handle all
+LR(1) grammars.  In this grammar, two contexts, that after an <CODE>ID</CODE>
+at the beginning of a <CODE>param_spec</CODE> and likewise at the beginning of
+a <CODE>return_spec</CODE>, are similar enough that Bison assumes they are the
+same.  They appear similar because the same set of rules would be
+active--the rule for reducing to a <CODE>name</CODE> and that for reducing to
+a <CODE>type</CODE>.  Bison is unable to determine at that stage of processing
+that the rules would require different look-ahead tokens in the two
+contexts, so it makes a single parser state for them both.  Combining
+the two contexts causes a conflict later.  In parser terminology, this
+occurrence means that the grammar is not LALR(1).
+
+</P>
+<P>
+In general, it is better to fix deficiencies than to document them.  But
+this particular deficiency is intrinsically hard to fix; parser
+generators that can handle LR(1) grammars are hard to write and tend to
+produce parsers that are very large.  In practice, Bison is more useful
+as it is now.
+
+</P>
+<P>
+When the problem arises, you can often fix it by identifying the two
+parser states that are being confused, and adding something to make them
+look distinct.  In the above example, adding one rule to
+<CODE>return_spec</CODE> as follows makes the problem go away:
+
+</P>
+
+<PRE>
+%token BOGUS
+...
+%%
+...
+return_spec:
+             type
+        |    name ':' type
+        /* This rule is never used.  */
+        |    ID BOGUS
+        ;
+</PRE>
+
+<P>
+This corrects the problem because it introduces the possibility of an
+additional active rule in the context after the <CODE>ID</CODE> at the beginning of
+<CODE>return_spec</CODE>.  This rule is not active in the corresponding context
+in a <CODE>param_spec</CODE>, so the two contexts receive distinct parser states.
+As long as the token <CODE>BOGUS</CODE> is never generated by <CODE>yylex</CODE>,
+the added rule cannot alter the way actual input is parsed.
+
+</P>
+<P>
+In this particular example, there is another way to solve the problem:
+rewrite the rule for <CODE>return_spec</CODE> to use <CODE>ID</CODE> directly
+instead of via <CODE>name</CODE>.  This also causes the two confusing
+contexts to have different sets of active rules, because the one for
+<CODE>return_spec</CODE> activates the altered rule for <CODE>return_spec</CODE>
+rather than the one for <CODE>name</CODE>.
+
+</P>
+
+<PRE>
+param_spec:
+             type
+        |    name_list ':' type
+        ;
+return_spec:
+             type
+        |    ID ':' type
+        ;
+</PRE>
+
+
+
+<H2><A NAME="SEC80" HREF="index.html#SEC80">Stack Overflow, and How to Avoid It</A></H2>
+<P>
+<A NAME="IDX174"></A>
+<A NAME="IDX175"></A>
+<A NAME="IDX176"></A>
+
+</P>
+<P>
+The Bison parser stack can overflow if too many tokens are shifted and
+not reduced.  When this happens, the parser function <CODE>yyparse</CODE>
+returns a nonzero value, pausing only to call <CODE>yyerror</CODE> to report
+the overflow.
+
+</P>
+<P>
+<A NAME="IDX177"></A>
+By defining the macro <CODE>YYMAXDEPTH</CODE>, you can control how deep the
+parser stack can become before a stack overflow occurs.  Define the
+macro with a value that is an integer.  This value is the maximum number
+of tokens that can be shifted (and not reduced) before overflow.
+It must be a constant expression whose value is known at compile time.
+
+</P>
+<P>
+The stack space allowed is not necessarily allocated.  If you specify a
+large value for <CODE>YYMAXDEPTH</CODE>, the parser actually allocates a small
+stack at first, and then makes it bigger by stages as needed.  This
+increasing allocation happens automatically and silently.  Therefore,
+you do not need to make <CODE>YYMAXDEPTH</CODE> painfully small merely to save
+space for ordinary inputs that do not need much stack.
+
+</P>
+<P>
+<A NAME="IDX178"></A>
+The default value of <CODE>YYMAXDEPTH</CODE>, if you do not define it, is
+10000.
+
+</P>
+<P>
+<A NAME="IDX179"></A>
+You can control how much stack is allocated initially by defining the
+macro <CODE>YYINITDEPTH</CODE>.  This value too must be a compile-time
+constant integer.  The default is 200.
+
+</P>
+<HR>
+Go to the <A HREF="bison_1.html">first</A>, <A HREF="bison_7.html">previous</A>, <A HREF="bison_9.html">next</A>, <A HREF="bison_15.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

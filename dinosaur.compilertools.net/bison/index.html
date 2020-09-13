@@ -1,0 +1,151 @@
+<HTML>
+<HEAD>
+<TITLE>Bison, The YACC-compatible Parser Generator</TITLE>
+</HEAD>
+
+<BODY bgcolor="white">
+<a href="../index.html">The Lex & Yacc Page</a>
+<p>
+<H1>
+Bison<br>
+The YACC-compatible Parser Generator
+</H1>
+
+<b>
+<i>
+November 1995, Bison Version 1.25<br>
+by Charles Donnelly and Richard Stallman
+</i>
+</b>
+<br>
+<br>
+<br>
+<UL>
+<LI><A NAME="SEC1" HREF="bison_1.html#SEC1">Introduction</A>
+<LI><A NAME="SEC2" HREF="bison_2.html#SEC2">Conditions for Using Bison</A>
+<LI><A NAME="SEC3" HREF="bison_3.html#SEC3">GNU GENERAL PUBLIC LICENSE</A>
+<UL>
+<LI><A NAME="SEC4" HREF="bison_3.html#SEC4">Preamble</A>
+<LI><A NAME="SEC5" HREF="bison_3.html#SEC5">TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</A>
+<LI><A NAME="SEC6" HREF="bison_3.html#SEC6">How to Apply These Terms to Your New Programs</A>
+</UL>
+<LI><A NAME="SEC7" HREF="bison_4.html#SEC7">The Concepts of Bison</A>
+<UL>
+<LI><A NAME="SEC8" HREF="bison_4.html#SEC8">Languages and Context-Free Grammars</A>
+<LI><A NAME="SEC9" HREF="bison_4.html#SEC9">From Formal Rules to Bison Input</A>
+<LI><A NAME="SEC10" HREF="bison_4.html#SEC10">Semantic Values</A>
+<LI><A NAME="SEC11" HREF="bison_4.html#SEC11">Semantic Actions</A>
+<LI><A NAME="SEC12" HREF="bison_4.html#SEC12">Bison Output: the Parser File</A>
+<LI><A NAME="SEC13" HREF="bison_4.html#SEC13">Stages in Using Bison</A>
+<LI><A NAME="SEC14" HREF="bison_4.html#SEC14">The Overall Layout of a Bison Grammar</A>
+</UL>
+<LI><A NAME="SEC15" HREF="bison_5.html#SEC15">Examples</A>
+<UL>
+<LI><A NAME="SEC16" HREF="bison_5.html#SEC16">Reverse Polish Notation Calculator</A>
+<UL>
+<LI><A NAME="SEC17" HREF="bison_5.html#SEC17">Declarations for <CODE>rpcalc</CODE></A>
+<LI><A NAME="SEC18" HREF="bison_5.html#SEC18">Grammar Rules for <CODE>rpcalc</CODE></A>
+<UL>
+<LI><A NAME="SEC19" HREF="bison_5.html#SEC19">Explanation of <CODE>input</CODE></A>
+<LI><A NAME="SEC20" HREF="bison_5.html#SEC20">Explanation of <CODE>line</CODE></A>
+<LI><A NAME="SEC21" HREF="bison_5.html#SEC21">Explanation of <CODE>expr</CODE></A>
+</UL>
+<LI><A NAME="SEC22" HREF="bison_5.html#SEC22">The <CODE>rpcalc</CODE> Lexical Analyzer</A>
+<LI><A NAME="SEC23" HREF="bison_5.html#SEC23">The Controlling Function</A>
+<LI><A NAME="SEC24" HREF="bison_5.html#SEC24">The Error Reporting Routine</A>
+<LI><A NAME="SEC25" HREF="bison_5.html#SEC25">Running Bison to Make the Parser</A>
+<LI><A NAME="SEC26" HREF="bison_5.html#SEC26">Compiling the Parser File</A>
+</UL>
+<LI><A NAME="SEC27" HREF="bison_5.html#SEC27">Infix Notation Calculator: <CODE>calc</CODE></A>
+<LI><A NAME="SEC28" HREF="bison_5.html#SEC28">Simple Error Recovery</A>
+<LI><A NAME="SEC29" HREF="bison_5.html#SEC29">Multi-Function Calculator: <CODE>mfcalc</CODE></A>
+<UL>
+<LI><A NAME="SEC30" HREF="bison_5.html#SEC30">Declarations for <CODE>mfcalc</CODE></A>
+<LI><A NAME="SEC31" HREF="bison_5.html#SEC31">Grammar Rules for <CODE>mfcalc</CODE></A>
+<LI><A NAME="SEC32" HREF="bison_5.html#SEC32">The <CODE>mfcalc</CODE> Symbol Table</A>
+</UL>
+<LI><A NAME="SEC33" HREF="bison_5.html#SEC33">Exercises</A>
+</UL>
+<LI><A NAME="SEC34" HREF="bison_6.html#SEC34">Bison Grammar Files</A>
+<UL>
+<LI><A NAME="SEC35" HREF="bison_6.html#SEC35">Outline of a Bison Grammar</A>
+<UL>
+<LI><A NAME="SEC36" HREF="bison_6.html#SEC36">The C Declarations Section</A>
+<LI><A NAME="SEC37" HREF="bison_6.html#SEC37">The Bison Declarations Section</A>
+<LI><A NAME="SEC38" HREF="bison_6.html#SEC38">The Grammar Rules Section</A>
+<LI><A NAME="SEC39" HREF="bison_6.html#SEC39">The Additional C Code Section</A>
+</UL>
+<LI><A NAME="SEC40" HREF="bison_6.html#SEC40">Symbols, Terminal and Nonterminal</A>
+<LI><A NAME="SEC41" HREF="bison_6.html#SEC41">Syntax of Grammar Rules</A>
+<LI><A NAME="SEC42" HREF="bison_6.html#SEC42">Recursive Rules</A>
+<LI><A NAME="SEC43" HREF="bison_6.html#SEC43">Defining Language Semantics</A>
+<UL>
+<LI><A NAME="SEC44" HREF="bison_6.html#SEC44">Data Types of Semantic Values</A>
+<LI><A NAME="SEC45" HREF="bison_6.html#SEC45">More Than One Value Type</A>
+<LI><A NAME="SEC46" HREF="bison_6.html#SEC46">Actions</A>
+<LI><A NAME="SEC47" HREF="bison_6.html#SEC47">Data Types of Values in Actions</A>
+<LI><A NAME="SEC48" HREF="bison_6.html#SEC48">Actions in Mid-Rule</A>
+</UL>
+<LI><A NAME="SEC49" HREF="bison_6.html#SEC49">Bison Declarations</A>
+<UL>
+<LI><A NAME="SEC50" HREF="bison_6.html#SEC50">Token Type Names</A>
+<LI><A NAME="SEC51" HREF="bison_6.html#SEC51">Operator Precedence</A>
+<LI><A NAME="SEC52" HREF="bison_6.html#SEC52">The Collection of Value Types</A>
+<LI><A NAME="SEC53" HREF="bison_6.html#SEC53">Nonterminal Symbols</A>
+<LI><A NAME="SEC54" HREF="bison_6.html#SEC54">Suppressing Conflict Warnings</A>
+<LI><A NAME="SEC55" HREF="bison_6.html#SEC55">The Start-Symbol</A>
+<LI><A NAME="SEC56" HREF="bison_6.html#SEC56">A Pure (Reentrant) Parser</A>
+<LI><A NAME="SEC57" HREF="bison_6.html#SEC57">Bison Declaration Summary</A>
+</UL>
+<LI><A NAME="SEC58" HREF="bison_6.html#SEC58">Multiple Parsers in the Same Program</A>
+</UL>
+<LI><A NAME="SEC59" HREF="bison_7.html#SEC59">Parser C-Language Interface</A>
+<UL>
+<LI><A NAME="SEC60" HREF="bison_7.html#SEC60">The Parser Function <CODE>yyparse</CODE></A>
+<LI><A NAME="SEC61" HREF="bison_7.html#SEC61">The Lexical Analyzer Function <CODE>yylex</CODE></A>
+<UL>
+<LI><A NAME="SEC62" HREF="bison_7.html#SEC62">Calling Convention for <CODE>yylex</CODE></A>
+<LI><A NAME="SEC63" HREF="bison_7.html#SEC63">Semantic Values of Tokens</A>
+<LI><A NAME="SEC64" HREF="bison_7.html#SEC64">Textual Positions of Tokens</A>
+<LI><A NAME="SEC65" HREF="bison_7.html#SEC65">Calling Conventions for Pure Parsers</A>
+</UL>
+<LI><A NAME="SEC66" HREF="bison_7.html#SEC66">The Error Reporting Function <CODE>yyerror</CODE></A>
+<LI><A NAME="SEC67" HREF="bison_7.html#SEC67">Special Features for Use in Actions</A>
+</UL>
+<LI><A NAME="SEC68" HREF="bison_8.html#SEC68">The Bison Parser Algorithm</A>
+<UL>
+<LI><A NAME="SEC69" HREF="bison_8.html#SEC69">Look-Ahead Tokens</A>
+<LI><A NAME="SEC70" HREF="bison_8.html#SEC70">Shift/Reduce Conflicts</A>
+<LI><A NAME="SEC71" HREF="bison_8.html#SEC71">Operator Precedence</A>
+<UL>
+<LI><A NAME="SEC72" HREF="bison_8.html#SEC72">When Precedence is Needed</A>
+<LI><A NAME="SEC73" HREF="bison_8.html#SEC73">Specifying Operator Precedence</A>
+<LI><A NAME="SEC74" HREF="bison_8.html#SEC74">Precedence Examples</A>
+<LI><A NAME="SEC75" HREF="bison_8.html#SEC75">How Precedence Works</A>
+</UL>
+<LI><A NAME="SEC76" HREF="bison_8.html#SEC76">Context-Dependent Precedence</A>
+<LI><A NAME="SEC77" HREF="bison_8.html#SEC77">Parser States</A>
+<LI><A NAME="SEC78" HREF="bison_8.html#SEC78">Reduce/Reduce Conflicts</A>
+<LI><A NAME="SEC79" HREF="bison_8.html#SEC79">Mysterious Reduce/Reduce Conflicts</A>
+<LI><A NAME="SEC80" HREF="bison_8.html#SEC80">Stack Overflow, and How to Avoid It</A>
+</UL>
+<LI><A NAME="SEC81" HREF="bison_9.html#SEC81">Error Recovery</A>
+<LI><A NAME="SEC82" HREF="bison_10.html#SEC82">Handling Context Dependencies</A>
+<UL>
+<LI><A NAME="SEC83" HREF="bison_10.html#SEC83">Semantic Info in Token Types</A>
+<LI><A NAME="SEC84" HREF="bison_10.html#SEC84">Lexical Tie-ins</A>
+<LI><A NAME="SEC85" HREF="bison_10.html#SEC85">Lexical Tie-ins and Error Recovery</A>
+</UL>
+<LI><A NAME="SEC86" HREF="bison_11.html#SEC86">Debugging Your Parser</A>
+<LI><A NAME="SEC87" HREF="bison_12.html#SEC87">Invoking Bison</A>
+<UL>
+<LI><A NAME="SEC88" HREF="bison_12.html#SEC88">Bison Options</A>
+<LI><A NAME="SEC89" HREF="bison_12.html#SEC89">Option Cross Key</A>
+<LI><A NAME="SEC90" HREF="bison_12.html#SEC90">Invoking Bison under VMS</A>
+</UL>
+<LI><A NAME="SEC91" HREF="bison_13.html#SEC91">Bison Symbols</A>
+<LI><A NAME="SEC92" HREF="bison_14.html#SEC92">Glossary</A>
+<LI><A NAME="SEC93" HREF="bison_15.html#SEC93">Index</A>
+</UL>
+</BODY>
+</HTML>

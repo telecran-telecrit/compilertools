@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/flex-2.5.4/MISC/texinfo/flex.texi on 30 June 1997 -->
+
+<TITLE>Flex - a scanner generator - Description</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_3.html">previous</A>, <A HREF="flex_5.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H2><A NAME="SEC4" HREF="index.html#SEC4">Description</A></H2>
+
+<P>
+<CODE>flex</CODE> is a tool for generating <STRONG>scanners</STRONG>: programs which
+recognized lexical patterns in text.  <CODE>flex</CODE> reads the given
+input files, or its standard input if no file names are
+given, for a description of a scanner to generate.  The
+description is in the form of pairs of regular expressions
+and C code, called <STRONG>rules</STRONG>. <CODE>flex</CODE> generates as output a C
+source file, <TT>`lex.yy.c'</TT>, which defines a routine <SAMP>`yylex()'</SAMP>.
+This file is compiled and linked with the <SAMP>`-lfl'</SAMP> library to
+produce an executable.  When the executable is run, it
+analyzes its input for occurrences of the regular
+expressions.  Whenever it finds one, it executes the
+corresponding C code.
+
+</P>
+<HR>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_3.html">previous</A>, <A HREF="flex_5.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

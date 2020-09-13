@@ -1,0 +1,606 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>BYACC/J Home Page</title>
+</head>
+
+<body bgcolor="#aaaadd" background="bfg.jpg">
+<center>
+	<table border="1" cellpadding="2" cellspacing="2" bgcolor="#c0c0c0" style="page-break-before: always;">
+		<tbody><tr>
+			<td>
+				<h1 align="center">BYACC/J</h1>
+				<p align="center" style="margin-bottom: 0cm;"><i>Java extension </i>
+				</p>
+				<p align="center" style="margin-bottom: 0cm;"><i>v 1.15</i></p>
+			</td>
+			<td>
+				<p><img src="byaccj2.jpg"></p>
+			</td>
+		</tr>
+	</tbody></table>
+</center>
+<p align="center" style="margin-bottom: 0cm;">
+<a href="http://sourceforge.net/projects/byaccj">Project</a>&nbsp;
+<a href="index.html#download">Download</a>&nbsp;
+<a href="index.html#changes">Changes</a>
+</p>
+
+<hr>
+<h2>What is it?</h2>
+<p>BYACC/J is an extension of the Berkeley v 1.8 YACC-compatible
+parser generator. Standard YACC takes a YACC source file, and
+generates one or more C files from it, which if compiled properly,
+will produce a LALR-grammar parser. This is useful for expression
+parsing, interactive command parsing, and file reading. Many
+megabytes of YACC code have been written over the years. 
+</p>
+<p style="margin-bottom: 0cm;"> This is the standard YACC tool
+that is in use every day to produce C/C++ parsers. I have added a
+"<b>-J</b>" flag which will cause BYACC to generate Java
+source code, instead. So there finally <b>is</b> a YACC for Java now!
+</p>
+
+
+
+<hr>
+<h2>How does BYACC/J compare to other parser generators?</h2>
+<p>Of course, the original YACC design is about twenty years old now,
+and newer and better technologies are currently available. I think
+<b>Jacc</b> is great, and so is <b>Java Cup</b>. Both of these
+provide more thorough parsing of LALR and LL grammars than the
+venerable YACC. Yet the idea of a YACC for Java is, in my opinion,
+extremely valuable. <br>Several benefits are derived from a Java
+parser-generator of this sort: 
+</p>
+<ul>
+	<li><p style="margin-bottom: 0cm;">BYACC/J can be executed from
+	existing Makefiles and IDE's. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">BYACC/J is coded in C, so the
+	generation of Java code is <i>extremely</i> fast. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">The resulting byte code is small
+	-- starting at about 11 kbytes. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">Only one or two classfiles are
+	included. If you need only a single type or an Object class, then
+	one class file is generated. If you need a simple generic type, a
+	simple data class is generated for you, making another small file. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">No additional runtime libraries
+	are required. The generated source code is the <i>entire</i> parser.
+		</p>
+	</li><li><p style="margin-bottom: 0cm;">It can parse existing YACC
+	grammars, enabling the 'Javanizing' ;-) of a large installed base of
+	YACC source code (of course, your 'actions' need to be in Java). 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">Many developers are already very
+	familiar with the workings of YACC. 
+	</p>
+	</li><li><p>It is absolutely free; no license, no royalties, free! 
+	</p>
+</li></ul>
+
+<hr>
+<h2>How do I use it?</h2>
+<p>First of all, read a YACC book. Since this is actual Berkeley
+YACC, all of the usual procedures using YACC apply here. Some good
+descriptions and tutorials of YACC grammar and procedures are
+available in book form and on the Net. Here is the standard YACC
+<a href="http://byaccj.sourceforge.net/yacc.cat">manual
+page</a>. Since Java's syntax is different from C, certain format
+differences must be followed. A typical YACC source file consists of
+the following: 
+</p>
+<ol>
+	<li><p style="margin-bottom: 0cm;">The first part of the file is the
+	DECLARATIONS area, where you define tokens, precedences, etc. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;">The second part is the ACTIONS
+	area, where the grammar and the user's C actions are parsed. 
+	</p>
+	</li><li><p>The third part is the CODE area, where user functions are
+	added. 
+	</p>
+</li></ol>
+<p>They are separated by '%%' at the start of a line. Visually:
+<br><b>DECLARATIONS</b> <br><b>%%</b> <br><b>ACTIONS</b> <br><b>%%</b>
+<br><b>CODE</b> 
+</p>
+<p>Portions of the file can be set off and ignored by YACC by
+surrounding them with %{ and %} . This ability is typically used in
+YACC C files to insert definitions and #include statements.
+BYACC/J uses this area for the Java <b>package</b> and <b>import</b>
+statements. Everything after this will be wrapped in a Java class
+called <b>Parser</b>. Thus all functions you write will become
+methods belonging to <b>Parser</b>. <br>All of the user actions you
+write will be Java code inserted into a method called <b>yyparse()</b>.
+This means that only curly braces <b><i>'{,}'</i></b> are allowed. No
+classes or methods can be defined in the ACTIONS area. Of course,
+your code can <b>instantiate</b> classes and <b>call</b> methods. 
+</p>
+<p style="margin-bottom: 0cm;">Here is our example Java implementation
+of the classic YACC calculator demo: 
+</p>
+<table border="5" cellpadding="2" cellspacing="2">
+	<tbody><tr>
+		<td bgcolor="#eeeeee">
+			<pre>%{
+import java.lang.Math;
+import java.io.*;
+import java.util.StringTokenizer;
+%}
+
+/* YACC Declarations */
+%token NUM
+%left '-' '+'
+%left '*' '/'
+%left NEG /* negation--unary minus */
+%right '^' /* exponentiation */
+
+/* Grammar follows */
+%%
+input: /* empty string */
+ | input line
+ ;
+
+line: '\n'
+ | exp '\n' { System.out.println(" " + $1.dval + " "); }
+ ;
+
+exp: NUM { $$ = $1; }
+ | exp '+' exp { $$ = new ParserVal($1.dval + $3.dval); }
+ | exp '-' exp { $$ = new ParserVal($1.dval - $3.dval); }
+ | exp '*' exp { $$ = new ParserVal($1.dval * $3.dval); }
+ | exp '/' exp { $$ = new ParserVal($1.dval / $3.dval); }
+ | '-' exp %prec NEG { $$ = new ParserVal(-$2.dval); }
+ | exp '^' exp { $$ = new ParserVal(Math.pow($1.dval, $3.dval)); }
+ | '(' exp ')' { $$ = $2; }
+ ;
+%%
+
+String ins;
+StringTokenizer st;
+
+void yyerror(String s)
+{
+ System.out.println("par:"+s);
+}
+
+boolean newline;
+int yylex()
+{
+String s;
+int tok;
+Double d;
+ //System.out.print("yylex ");
+ if (!st.hasMoreTokens())
+ if (!newline)
+ {
+ newline=true;
+ return '\n'; //So we look like classic YACC example
+ }
+ else
+ return 0;
+ s = st.nextToken();
+ //System.out.println("tok:"+s);
+ try
+ {
+ d = Double.valueOf(s);/*this may fail*/
+ <b><font color="#ff0000">yylval = new ParserVal(d.doubleValue()); //SEE BELOW</font></b>
+ tok = NUM;
+ }
+ catch (Exception e)
+ {
+ tok = s.charAt(0);/*if not float, return char*/
+ }
+ return tok;
+}
+
+void dotest()
+{
+BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+ System.out.println("BYACC/J Calculator Demo");
+ System.out.println("Note: Since this example uses the StringTokenizer");
+ System.out.println("for simplicity, you will need to separate the items");
+ System.out.println("with spaces, i.e.: '( 3 + 5 ) * 2'");
+ while (true)
+ {
+ System.out.print("expression:");
+ try
+ {
+ ins = in.readLine();
+ }
+ catch (Exception e)
+ {
+ }
+ st = new StringTokenizer(ins);
+ newline=false;
+ yyparse();
+ }
+}
+
+public static void main(String args[])
+{
+ Parser par = new Parser(false);
+ par.dotest();
+}</pre>
+		</td>
+	</tr>
+</tbody></table>
+<p>If this code were in a file called <b>calc.y</b>, you would
+yacc-process it with the command: <br><b>yacc -J calc.y</b> <br>This
+will generate the file <b>Parser.java</b>, which can then be compiled
+by: <br><b>javac Parser.java</b> <br>to create the file <b>Parser.class</b>
+which can be run with: <br><b>java Parser</b> 
+</p>
+<p style="margin-bottom: 0cm;">The same file, but using the
+<b>semantic_type</b> option, as in <br><b>yacc -Jsemantic=double tf.y</b>
+<br>is available <a href="http://byaccj.sourceforge.net/tf.y">here.</a>
+</p>
+<hr>
+<h2>Command Line Options</h2>
+<p>In addition to the normal yacc command line switches, I have
+supplied these: <br>  
+</p>
+<ul>
+	<li><p style="margin-bottom: 0cm;"><b><span style="font-style: normal;">-J</span><i> </i></b>
+	Switches from C/C++ to Java output. Not necessary if other -J flags
+	are used.</p>
+	</li><li><p style="margin-bottom: 0cm;"><b>-Jclass=&lt;<i>classname</i>&gt;</b>
+	Changes the name of the Java class (and .java file) to <b><i>classname</i></b>.
+		</p>
+	</li><li><p style="margin-bottom: 0cm;"><b><span style="font-style: normal;">-Jpackage</span><i>=&lt;packagename&gt;
+	</i></b>Changes the package in which the parser resides from the
+	default &lt;nothing&gt; to<b><i> packagename</i></b>. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;"><b><span style="font-style: normal;">-Jextends</span><i>=&lt;extendname&gt;
+	</i></b>Changes the class the parser extends from the default
+	&lt;nothing&gt; to<b><i> extendname</i></b>. 
+	</p>
+	</li><li><p style="margin-bottom: 0cm;"><b><span style="font-style: normal;">-Jimplements</span></b><i>=<b>&lt;implement_name&gt;
+	</b></i>Changes the interface the parser implements from the default
+	&lt;nothing&gt; to<b><i> implement_name</i></b>. 
+	</p>
+	</li><li><p><b><span style="font-style: normal;">-Jsemantic</span><i>=&lt;semantic_type&gt;
+	</i></b>Changes the semantic (value of the rules' variables) type to
+	<b><i>semantic_type</i></b>. No extra class will be generated. 
+	</p>
+	</li><li><p><b><span style="font-style: normal;">-Jnorun</span> </b>Informs
+	Byacc to not generate a run() method. Useful when working with
+	threads. 
+	</p>
+	</li><li><p><b><span style="font-style: normal;">-Jnoconstruct</span>
+	</b>Informs Byacc to not generate constructors. Useful when
+	extending classes. 
+	</p>
+        </li><li><p><b><span style="font-style: normal;">-Jstack=<i>&lt;NNN&gt;</i></span>
+        </b>Changes the stack size from default 500 to <b><i>NNN</i></b>.
+        </p>
+        </li><li><p><b><span style="font-style: normal;">-Jnodebug</span>
+        </b>Informs Byacc to omit debugging code for further better performance. 
+        </p>
+        </p>
+        </li><li><p><b><span style="font-style: normal;">-Jfinal</span>
+        </b>This option makes generated class final.  
+        </p>
+        </li><li><p><b><span style="font-style: normal;">-Jthrows</span></b><i>=<b>&lt;excaption_list&gt;
+        </b></i>Informs Byacc to declare thrown exceptions for yyparse() method.
+        </p>
+</li></ul>
+<hr>
+<h2>User-Supplied Methods</h2>
+<p>In order for <b>javac</b> to compile the code properly, the user
+must supply two methods in the YACC source: 
+</p>
+<ul>
+	<li><p style="margin-bottom: 0cm;"><b>void yyerror(String msg)</b> --
+	This method is expected by BYACC/J, and is used to provide error
+	messages to be directed to the channels the user desires. 
+	</p>
+	</li><li><p><b>int yylex()</b> -- This method is the one where BYACC/J
+	expects to obtain its input tokens. Wrap any file/string scanning
+	code you have in this function. This method should return &lt;0 if
+	there is an error, and 0 when it encounters the end of input. See
+	the examples to clarify what we mean. 
+	</p>
+</li></ul>
+<hr>
+<h2>About the Generated Java File</h2>
+<p>I suggest heartily that the user peruse the file <b>Parser.java</b>
+to see how YACC's parsing algorithm works. I have done an immense
+amount of analysis and reverse engineering of the original BYACC
+sources. The Java code that is generated is heavily commented, and is
+amenable to debugging, and can provide a nice education in the
+workings of a YACC parser. 
+</p>
+<p>Optionally, the class generated is made an extension of <b>Thread</b>,
+as a convience, so that parsing may be performed as a background
+thread, allowing the current execution to continue unimpeded.  A
+<b>run()</b> method and a <b>constructor</b> are also inserted into
+the code. 
+</p>
+<p style="margin-bottom: 0cm;">However, it may occur that the
+programmer needs to extend a different class.  In this case, the
+<b>-x&lt;classname&gt;</b> option is provided, which will create an
+alternate extension.  Since it is impossible to predict the
+needs of the other class, the <b>run()</b> and <b>constructor</b>
+will be omitted. 
+</p>
+<hr>
+<h2><a name="parserval"></a>About the <i>ParserVal</i> class</h2>
+<p>Previously, BYACC/J gave the programmer a choice of either
+<b>double</b> or <b>int</b> semantic (the value of a number or
+string) values.  This worked for very simple parsing, but was
+extremely limiting.  It would have been very difficult to mix
+value types within a file, thus making things like interpreters and
+compilers impossible. 
+</p>
+<p style="margin-bottom: 0cm;"><font color="#000000">The semantic
+value is stored in a public class called <b>ParserVal</b>, which is
+defined thusly:</font> <br>  
+</p>
+<table border="2" cellpadding="2" cellspacing="2" bgcolor="#ffffff">
+	<tbody><tr>
+		<td>
+			<p><tt><b><font color="#000000">public class ParserVal</font></b></tt>
+			<br><tt><b><font color="#000000">{</font></b></tt> <br><tt><b><font color="#000000"> 
+			public int ival;</font></b></tt> <br><tt><b><font color="#000000"> 
+			public double dval;</font></b></tt> <br><tt><b><font color="#000000"> 
+			public String sval;</font></b></tt> <br><tt><b><font color="#000000"> 
+			public Object obj;</font></b></tt> <br><tt><b><font color="#000000"> 
+			public ParserVal(int val)</font></b></tt> <br><tt><b><font color="#000000"> 
+			{</font></b></tt> <br><tt><b><font color="#000000">   
+			ival=val;</font></b></tt> <br><tt><b><font color="#000000"> 
+			}</font></b></tt> <br><tt><b><font color="#000000">  public
+			ParserVal(double val)</font></b></tt> <br><tt><b><font color="#000000"> 
+			{</font></b></tt> <br><tt><b><font color="#000000">   
+			dval=val;</font></b></tt> <br><tt><b><font color="#000000"> 
+			}</font></b></tt> <br><tt><b><font color="#000000">  public
+			ParserVal(String val)</font></b></tt> <br><tt><b><font color="#000000"> 
+			{</font></b></tt> <br><tt><b><font color="#000000">   
+			sval=val;</font></b></tt> <br><tt><b><font color="#000000"> 
+			}</font></b></tt> <br><tt><b><font color="#000000">  public
+			ParserVal(Object val)</font></b></tt> <br><tt><b><font color="#000000"> 
+			{</font></b></tt> <br><tt><b><font color="#000000">   
+			obj=val;</font></b></tt> <br><tt><b><font color="#000000">  }</font></b></tt>
+			<br><tt><b><font color="#000000">}//end class</font></b></tt></p>
+		</td>
+	</tr>
+</tbody></table>
+<p style="margin-bottom: 0cm;"><font color="#000000">So now a semantic
+value can be an <b>int,</b> a <b>double</b>, a <b>String</b>, or an
+<b>Object</b>. In your scanner (or something that <b>yylex()</b>
+calls), you may use this like:</font> <br>  
+</p>
+<table border="1" cellpadding="2" cellspacing="2" bgcolor="#ffffff">
+	<tbody><tr>
+		<td>
+			<p><tt><b><font color="#000000">yylval = new ParserVal(doubleval);</font></b></tt>
+			<br><tt><b><font color="#000000">yylval = new
+			ParserVal(integerval);</font></b></tt> <br><b><i>...or even
+			something like...</i></b> <br><tt><b><font color="#000000">yylval
+			= new ParserVal(new myTypeOfObject());</font></b></tt></p>
+		</td>
+	</tr>
+</tbody></table>
+<p style="margin-bottom: 0cm;"><font color="#000000">And on the Left
+Hand Side (the YACC side) you can use the values of the <b>$</b> and
+the <b>$$</b> just as easily:</font> <br>  
+</p>
+<table border="1" cellpadding="2" cellspacing="2" bgcolor="#ffffff">
+	<tbody><tr>
+		<td>
+			<p><tt><b><font color="#000000">$$.ival = $1.ival + $2.ival;</font></b></tt>
+			<br><tt><b><font color="#000000">$$.dval = $1.dval - $2.dval;</font></b></tt></p>
+		</td>
+	</tr>
+</tbody></table>
+<p>A side effect of using this inner class is that the default parser
+no longer fits into one .class file, however, the resulting
+<b>ParserVal.class</b> is extremely small. 
+</p>
+<hr>
+<h2>Examples</h2>
+<p>As time goes on, we will provide some examples and templates to
+speed you on your way. 
+</p>
+<ul>
+	<li><p>Here is an example of what a <a href="http://byaccj.sourceforge.net/3d.db">3d
+	object file</a> might look like. A corresponding bare-bones <a href="http://byaccj.sourceforge.net/3d.y">YACC
+	parser</a> is implemented in Java! This is also a good example of
+	how to read a file from a URL. 
+	</p>
+</li></ul>
+<hr>
+<h2>Why?</h2>
+<p style="margin-bottom: 0cm;">Because someone said YACC couldn't be
+done in Java. Silly person! 
+</p>
+<hr>
+<h2>Credits</h2>
+<p style="margin-bottom: 0cm;">Of course, thanks go to Tom Corbett for
+<b><i>BYACC</i></b>, a fine implementation of YACC. And thanks to his
+altruistic nature for putting it in the Public Domain. I just added
+the Java switch. Check the <a href="http://byaccj.sourceforge.net/ACKNOWLEDGEMEN">ACKNOWLEDGEMENTS</a>
+file for more contributors.  
+</p>
+<hr>
+<p style="margin-bottom: 0cm;"><a name="changes"></a><br>
+</p>
+<p align="center" style="margin-bottom: 0cm;"><font color="#ffff99"><font size="4"><i><b>Changes</b></i></font></font></p>
+<center>
+	<table width="949" border="1" cellpadding="2" cellspacing="3" style="page-break-before: always;">
+		<col width="118">
+		<col width="812">
+		<tbody><tr>
+			<td width="118">
+				<p><font color="#ffff99"><i>Changes from 0.92 to 1.0a</i></font></p>
+			</td>
+			<td width="812">
+				<p>This version has one minor change from 0.91. <br>Instead of
+				"extends Thread" being the default description of the
+				P<b>arser</b> class, it must be stated on the command line. <br>The
+				default declaration is: <br><b>public class Parser</b> <br>This
+				can be changed with <b>yacc -Jclass=&lt;classname&gt;</b> to
+				something like: <br><b>public class MyParserClass</b> <br>This
+				can be modified with  <b>-Jextends=&lt;classname&gt;</b> to
+				something like: <br><b>public class MyParserClass extends
+				MyBaseClass</b> <br>Finally, it can be further modified with 
+				<b>-Jimplements=&lt;interfaceName&gt;</b> to something like:
+				<br><b>public class MyParserClass extends MyBaseClass implements
+				MyInterface</b><br>Another nice change, is that the package name
+				can be more easily set with <b>-Jpackage=&lt;packageName&gt;</b>
+				to read:<br><b>package org.fluffy.poodle;</b></p>
+			</td>
+		</tr>
+		<tr>
+			<td width="118">
+				<p><font color="#ffff99"><i>New in 1.0a</i></font></p>
+			</td>
+			<td width="812">
+				<p><font color="#000000">We have performed considerable debug,
+				reorganization, and output cleaning. The output code is now
+				Javadoc capable.</font></p>
+			</td>
+		</tr>
+		<tr>
+			<td width="118">
+				<p><font color="#ffff99"><i>New in 1.1</i></font></p>
+			</td>
+			<td width="812">
+				<p><font color="#000000">Added the option <b>-Jstack=NNN</b> to
+				allow users to set the semantic stack size.</font></p>
+			</td>
+		</tr>
+                <tr>
+                        <td width="118">
+                                <p><font color="#ffff99"><i>New in 1.11</i></font></p>
+                        </td>
+                        <td width="812">
+                                <p><font color="#000000"><b>-d</b> option is now supported with <b>-J</b>. It creates interface with token constants.<br>
+                                Workaround for problem when static class initializer of the generated Parser is larger than 64Kb.<br>
+                                Improved performance by removing some unused code and making use of exceptions.<br>
+                                Added <b>-Jnodebug</b> option to omit debugging code for further better performance<br>
+                                Added <b>-Jfinal</b> option to make generated class final<br>
+                                Added <b>-Jthrows</b> option to declare thrown exceptions for yyparse() method<br>
+                                Added the ability to specify options within the grammar file
+                                </font></p>
+                        </td>
+                </tr>
+                <tr>
+                        <td width="118">
+                                <p><font color="#ffff99"><i>New in 1.12</i></font></p>
+                        </td>
+                        <td width="812">
+                                <p><font color="#000000"><a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1406129&group_id=48171&atid=452200">
+                                                          bug #1406129 [ -Jclass=X12345678 -&gt; Segmentation fault ]</a> fixed<br>
+                                </font></p>
+                        </td>
+                </tr>
+                <tr>
+                        <td width="118">
+                                <p><font color="#ffff99"><i>New in 1.13</i></font></p>
+                        </td>
+                        <td width="812">
+                                <p><font color="#000000"><a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1506924&group_id=48171&atid=452200">
+                                                          bug #1506924 - ArrayIndexOutOfBoundException in yyparse()</a> fixed<br>
+                                </font></p>
+                        </td>
+                </tr>
+                <tr>
+                        <td width="118">
+                                <p><font color="#ffff99"><i>New in 1.14</i></font></p>
+                        </td>
+                        <td width="812">
+                                <p><font color="#000000">Generics can be now used in semantic type.<br>
+                                fixed problem with the name of verbose file<br>
+                                <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1598776&group_id=48171&atid=452200">
+                                                          bug #1598776 - '-Jnodebug' option is broken</a> fixed<br>
+                                <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1600683&group_id=48171&atid=452200">
+                                                          bug #1600683 - error recovery throws ArrayIndexOutOfBoundsException: -1</a> fixed<br>
+                                </font></p>
+                        </td>
+                </tr>
+                <tr>
+                        <td width="118">
+                                <p><font color="#ffff99"><i>New in 1.15</i></font></p>
+                        </td>
+                        <td width="812">
+                                <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1638577&group_id=48171&atid=452200">
+                                                          bug #1638577 - stack corruption when generating a java parser</a> fixed<br>
+                                <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1630851&group_id=48171&atid=452200">
+                                                          bug #1630851 - Targets with empty right-hand side problematic in Java mode</a> fixed<br>
+                                </font></p>
+                        </td>
+                </tr>
+
+	</tbody></table>
+</center>
+
+
+<hr>
+<h2><a href="http://sourceforge.net/projects/byaccj">BYACC/J Project Page</a></h2>
+We are now hosted at SourceForge!<br>
+
+<A href="http://sourceforge.net"> <IMG
+src="../sourceforge.net/sflogo.php?group_id=48171&amp;type=2" width="125" height="37" 
+border="0" alt="SourceForge Logo"></A> 
+
+
+<hr>
+<img src="byacc.jpg"/>
+<h2><a name="download"></a>Download</h2>
+<p>The latest modified/cleaned up/updated Berkeley Yacc source files, GNU
+makefile, and Borland C++ 5 Makefile can be obtained bellow, in
+addition to several binary builds. These are native console
+applications, so they do not require any class libraries to work. Of
+course, you will need a Java development environment to process the
+generated source files. <br><i>And remember, this version of YACC
+also parses "standard" C/C++ YACC source files!</i> <br> 
+<br>  
+</p>
+<center>
+	<table width="527" border="1" cellpadding="2" cellspacing="3">
+		<col width="397">
+		<col width="111">
+		<tbody><tr>
+			<td width="397" bgcolor="#ffffff">
+				<p>Binaries for 
+                                <a href="http://downloads.sourceforge.net/byaccj/byaccj1.15_solaris.tar.gz?use_mirror=surfnet&filesize=49638">Solaris/Sparc</a>,
+                                <a href="http://downloads.sourceforge.net/byaccj/byaccj1.15_win32.zip?use_mirror=surfnet&filesize=39929">Win32</a>,
+                                <a href="http://downloads.sourceforge.net/byaccj/byaccj1.15_macosx.tar.gz?use_mirror=surfnet&filesize=87291">Mac OS X</a>,
+                            and <a href="http://downloads.sourceforge.net/byaccj/byaccj1.15_linux.tar.gz?use_mirror=surfnet&filesize=41707">Linux/Intel</a>.
+                                <a href="http://downloads.sourceforge.net/byaccj/byaccj1.15_src.tar.gz?use_mirror=surfnet&filesize=53646">Source files</a>,
+				GNU and Borland Makefiles in a GZIP TAR file. (WinZip can unpack
+				these!)</p>
+			</td>
+		</tr>
+	</tbody></table>
+</center>
+<p style="margin-bottom: 0cm;"><br>
+Older releases are available <a href="http://sourceforge.net/project/showfiles.php?group_id=48171&package_id=41255">here</a>.
+</p>
+
+
+<hr>
+<h2>Questions</h2>
+<p style="margin-bottom: 0cm;">YACC has already been described many
+times, and in great detail, so I would appreciate that BYACC/J
+users' questions about YACC and LALR parsers be directed to the many
+good sources available on the Net and in print. In other words, I
+will not do your homework for you! ;-) However, I would be happy to
+help with the Java file generation, as that is the portion that I
+have implemented.  
+</p>
+<hr>
+
+<p>For more information, please write to <a href="mailto:tom@hukatronic.cz">Tomas Hurka</a><br>
+<i>Last updated: Nov 28 2008</i> <br><br><br>
+</p>
+
+
+</body>
+
+</html>

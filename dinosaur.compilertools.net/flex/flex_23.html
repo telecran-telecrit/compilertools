@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.44
+     from /opt/src/gnu/flex-2.5.4/MISC/texinfo/flex.texi on 30 June 1997 -->
+
+<TITLE>Flex - a scanner generator - Deficiencies / Bugs</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_22.html">previous</A>, <A HREF="flex_24.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+<HR>
+
+
+<H2><A NAME="SEC23" HREF="index.html#SEC23">Deficiencies / Bugs</A></H2>
+
+<P>
+Some trailing context patterns cannot be properly matched
+and generate warning messages ("dangerous trailing
+context").  These are patterns where the ending of the first
+part of the rule matches the beginning of the second part,
+such as "zx*/xy*", where the 'x*' matches the 'x' at the
+beginning of the trailing context.  (Note that the POSIX
+draft states that the text matched by such patterns is
+undefined.)
+
+</P>
+<P>
+For some trailing context rules, parts which are actually
+fixed-length are not recognized as such, leading to the
+abovementioned performance loss.  In particular, parts
+using '|' or {n} (such as "foo{3}") are always considered
+variable-length.
+
+</P>
+<P>
+Combining trailing context with the special '|' action can
+result in <EM>fixed</EM> trailing context being turned into the
+more expensive <VAR>variable</VAR> trailing context.  For example, in
+the following:
+
+</P>
+
+<PRE>
+%%
+abc      |
+xyz/def
+</PRE>
+
+<P>
+Use of <SAMP>`unput()'</SAMP> invalidates yytext and yyleng, unless the
+<SAMP>`%array'</SAMP> directive or the <SAMP>`-l'</SAMP> option has been used.
+
+</P>
+<P>
+Pattern-matching of NUL's is substantially slower than
+matching other characters.
+
+</P>
+<P>
+Dynamic resizing of the input buffer is slow, as it
+entails rescanning all the text matched so far by the
+current (generally huge) token.
+
+</P>
+<P>
+Due to both buffering of input and read-ahead, you cannot
+intermix calls to &#60;stdio.h&#62; routines, such as, for
+example, <SAMP>`getchar()'</SAMP>, with <CODE>flex</CODE> rules and expect it to work.
+Call <SAMP>`input()'</SAMP> instead.
+
+</P>
+<P>
+The total table entries listed by the <SAMP>`-v'</SAMP> flag excludes the
+number of table entries needed to determine what rule has
+been matched.  The number of entries is equal to the
+number of DFA states if the scanner does not use <CODE>REJECT</CODE>, and
+somewhat greater than the number of states if it does.
+
+</P>
+<P>
+<CODE>REJECT</CODE> cannot be used with the <SAMP>`-f'</SAMP> or <SAMP>`-F'</SAMP> options.
+
+</P>
+<P>
+The <CODE>flex</CODE> internal algorithms need documentation.
+
+</P>
+<HR>
+Go to the <A HREF="flex_1.html">first</A>, <A HREF="flex_22.html">previous</A>, <A HREF="flex_24.html">next</A>, <A HREF="flex_25.html">last</A> section, <A HREF="index.html">table of contents</A>.
+</BODY>
+</HTML>

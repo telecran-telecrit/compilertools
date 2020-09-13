@@ -1,0 +1,2159 @@
+/* ################################################################################################################################################ */
+/* @override http://localhost:8086/SDstyle.css */
+
+/*
+Theme Name: Semantic Designs May 2010 site redesign
+Version: 1.0
+Author: krl
+Inspired by http://bygonebureau.com/
+Original Author URI: http://sleepoversf.com/
+*/
+
+
+/*------------
+ Global Reset
+------------*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    font-weight: inherit;
+    font-style: inherit;
+    font-family: inherit;
+    vertical-align: baseline;
+    background: transparent;
+    /*  height: 100%; */
+}
+sup {font-size:xx-small; vertical-align:top;}
+
+body {
+    font-size: 12px;
+    line-height: 1.0;
+    color: #4c4b4b;
+    background: white;
+    font-family: Baskerville, Georgia, Constantia, serif;
+    -webkit-text-size-adjust: none;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+}
+
+:focus {
+    outline: 0;
+}
+
+ins {
+    text-decoration: none;
+}
+del {
+    text-decoration: line-through;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*-------------
+ Shared Styles
+-------------*/
+
+a:link,a:visited h2.a:link h2.a:visited h3.a:link h3.a:visited{
+    text-decoration: none;
+    color: navy;
+}
+
+a:hover {
+    opacity: .8;
+}
+
+.clear {
+    clear: both;
+}
+
+.block {
+    border-bottom: 1px solid #bebebe;
+    border-top: 1px solid #bebebe;
+    margin-bottom: 2px;
+    padding: 4px 0;
+}
+.block:first-of-type {
+    border-top: 0;
+}
+.block:last-of-type {
+    margin-bottom: 0;
+}
+
+#home h3,
+#sidebar h3,
+#archive h3,
+#archives h3 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 14px;
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+
+.article-list li {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 17px;
+}
+.article-list a {
+    display: block;
+    color: navy;
+}
+.article-list strong {
+    display: block;
+    font-weight: bold;
+}
+.article-list span {
+    font-style: italic;
+}
+
+.post-excerpt em {
+    font-style: italic;
+}
+
+
+/*---------------
+ Free Consultation button
+---------------*/
+
+a.free-consultation,
+.free-consultation.post-block a,
+#article.free-consultation #article-meta a,
+#article.free-consultation #article-content a,
+#article.free-consultation h2,
+#article.free-consultation h3,
+#article.free-consultation #article-links h4,
+#article.free-consultation #article-byline { color: #6da474; }
+#article.free-consultation hr { border-top: 1px solid #A3CBA8; }
+/* li.free-consultation a { background: #A3CBA8; } */
+/* Try for a dark green background */
+/* Chosen using http://www.w3schools.com/colors/colors_picker.asp */
+li.free-consultation a { background: #339933; }
+
+a.free-trial
+.free-trial.post-block a,
+#article.free-trial #article-meta a,
+#article.free-trial #article-content a,
+#article.free-trial h2,
+#article.free-trial h3,
+#article.free-trial #article-links h4,
+#article.free-trial #article-byline { color: #6da474; }
+#article.free-trial hr { border-top: 1px solid #A3CBA8; }
+/* li.free-trial a { background: #A3CBA8; } */
+/* Try for a dark green background */
+/* Chosen using http://www.w3schools.com/colors/colors_picker.asp */
+/* Default browser font-size is 3 (according to w3schools.com)    */
+/* font-family seems to have no effect */
+li.free-trial a { background: #ff6600; font-family: "Comic Sans MS", DejaVu, Verdana, Geneva, sans-serif; font-size="4" }
+
+
+/*---------------
+ Category Colors - updated for SD's nerdy categories
+---------------*/
+
+/* Software Enhancement and Reengineering */
+
+a.cat-reengineering,
+.cat-reengineering.post-block a,
+#article.cat-reengineering #article-meta a,
+#article.cat-reengineering #article-content a,
+#article.cat-reengineering h2,
+#article.cat-reengineering h3,
+#article.cat-reengineering #article-links h4,
+#article.cat-reengineering #article-byline cat-reengineering-text { color: #c89f2f; }
+#article.cat-reengineering hr { border-top: 1px solid #E1BD5B; }
+li.cat-reengineering a { background: #E1BD5B; }
+
+/* Source Code Documentation */
+
+a.cat-documentation,
+.cat-documentation.post-block a,
+#article.cat-documentation #article-meta a,
+#article.cat-documentation #article-content a,
+#article.cat-documentation h2,
+#article.cat-documentation h3,
+#article.cat-documentation #article-links h4,
+#article.cat-documentation #article-byline cat-documentation-text { color: #5893bb; }
+#article.cat-documentation hr { border-top: 1px solid #83B0CF; }
+li.cat-documentation a { background: #83B0CF; }
+
+/* Software Quality Assessment */
+
+a.cat-assessment,
+.cat-assessment.post-block a,
+#article.cat-assessment #article-meta a,
+#article.cat-assessment #article-content a,
+#article.cat-assessment h2,
+#article.cat-assessment h3,
+#article.cat-assessment #article-links h4,
+#article.cat-assessment #article-byline { color: #d47752; }
+#article.cat-assessment hr { border-top: 1px solid #EB9776; }
+li.cat-assessment a { background: #EB9776; }
+
+/* Software Quality Improvement */
+
+a.cat-improvement,
+.cat-improvement.post-block a,
+#article.cat-improvement #article-meta a,
+#article.cat-improvement #article-content a,
+#article.cat-improvement h2,
+#article.cat-improvement h3,
+#article.cat-improvement #article-links h4,
+#article.cat-improvement #article-byline { color: #d28fba; }
+#article.cat-improvement hr { border-top: 1px solid #D28FBA; }
+li.cat-improvement a { background: #D28FBA; }
+
+/* Code Generation */ 
+
+a.cat-codegen,
+.cat-codegen.post-block a,
+#article.cat-codegen #article-meta a,
+#article.cat-codegen #article-content a,
+#article.cat-codegen h2,
+#article.cat-codegen h3,
+#article.cat-codegen #article-links h4,
+#article.cat-codegen #article-byline { color: #6da474; }
+#article.cat-codegen hr { border-top: 1px solid #A3CBA8; }
+li.cat-codegen a { background: #A3CBA8; }
+
+/* Hardware Description Languages */
+
+a.cat-hdl,
+.cat-hdl.post-block a,
+#article.cat-hdl #article-meta a,
+#article.cat-hdl #article-content a,
+#article.cat-hdl h2,
+#article.cat-hdl h3,
+#article.cat-hdl #article-links h4,
+#article.cat-hdl #article-byline { color: #999; }
+#article.cat-hdl hr { border-top: 1px solid #CCC; }
+li.cat-hdl a { background: #999999; }
+
+/* Hardware Description Languages */
+
+a.cat-all,
+.cat-all.post-block a,
+#article.cat-all #article-meta a,
+#article.cat-all #article-content a,
+#article.cat-all h2,
+#article.cat-all h3,
+#article.cat-all #article-links h4,
+#article.cat-all #article-byline { color: #999; }
+#article.cat-all hr { border-top: 1px solid #CCC; }
+li.cat-all a { background: Black; }
+
+/*------
+ Layout
+------*/
+
+#container {
+    width: 900px;
+    margin-left: 48px;
+    padding-bottom: 48px;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /*  margin: 0 auto -150px; */
+    margin-bottom: -150px;
+    margin-left: 75px;
+    margin-top: 0px;
+    margin-right: auto;
+}
+
+#page {
+    background: url(http://www.semdesigns.com/images/border-3.png) repeat-y 537px;
+}
+#page #main div.mainpage {
+    width: 530px;
+    float: left;
+
+}
+#page #sidebar {
+    width: 345px;
+    float: right;
+    background: url(http://www.semdesigns.com/images/border-3.png) repeat-y right;
+    padding-right: 18px;
+    margin-right: -18px;
+}
+
+#home #main {
+    width: 728px;
+    float: left;
+    border-right: 1px solid #bebebe;
+}
+#home #sidebar {
+    width: 168px;
+    float: right;
+    padding-top: 150px;
+    border-left: 1px solid #bebebe;
+}
+#sidebar {
+    margin-left: 735px;
+
+}
+
+.block-masthead, .push {
+    height: 150px;
+    clear: both;
+    margin-left:75px;
+}
+
+/*------
+ Header
+------*/
+
+#header {
+    background: Black;
+    padding-top: 25px;
+}
+
+#header #banner {
+    margin: 0 0;
+    padding-top: 55px;
+    padding-bottom: 14px;
+    width: 100%;
+/*    border: 1px solid blue; */
+    border-bottom: 1px solid #ccff00;
+}
+
+#header table td {
+/* enable to help debug layout:
+    border: 1px solid yellow;
+*/
+}
+
+#header #company_name_with_legal_mark {
+    vertical-align: middle;
+}
+
+#header #company_name_with_legal_mark {
+    padding-left: 40px; 
+    color: White;
+    font-family: serif;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#header #slogan_box {
+    vertical-align: middle;
+}
+
+.slogan_text {
+    color: White;
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    vertical-align: middle;
+}
+
+#header #succinct_summary {
+    color: White;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 120%;
+    padding: 10px;
+    padding-bottom: 14px;
+}
+
+/*----------
+ Navigation
+----------*/
+
+#nav {
+    background-color: #c0c0c0;
+    height: 30px;
+    border-bottom: 1px solid #bebebe;
+    position: relative;
+}
+#page #nav {
+    text-align: center;
+    font-size: 10px;
+}
+#nav li {
+    display: inline;
+}
+#nav li a {
+    display: block;
+    float: left;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 30px;
+}
+#home #nav li a {
+    width: 160px;
+    margin-left: 25px;
+}      
+#home #nav li:first-child a {
+    margin-left: 0;
+}
+#page #nav li a {
+    width: auto;
+    display: inline;
+    float: none;
+    margin: 0 .5em;
+}
+#nav .nav-highlight a {
+    color: #a53c1c;
+}
+
+#nav #nav-subscribe {
+    width: 167px;
+    position: absolute;
+    right: 0;
+    top: 30px;
+    z-index: 1;
+    display: none;
+    background: #fff;
+    border-right: 1px solid #bebebe;
+}
+#page #nav #nav-subscribe {
+    border-left: 1px solid #bebebe;
+    width: 179px;
+    right: -8px;
+}
+#nav #nav-subscribe li {
+    display: block;
+}
+#nav #nav-subscribe li a {
+    color: #a53c1c;
+    width: auto;
+    float: none;
+    margin: 0;
+    text-align: left;
+    padding: 0 9px 0 27px;
+    border-bottom: 1px solid #bebebe;
+    background-repeat: no-repeat;
+    background-position: 8px 9px;
+}
+#page #nav #nav-subscribe li a {
+    display: block;
+}
+#nav #nav-subscribe li:first-child a {
+    margin-top: 0;
+}
+#nav #nav-subscribe .nav-subscribe-rss a { background-image: url(http://www.semdesigns.com/images/rss.png); }
+#nav #nav-subscribe .nav-subscribe-twitter a { background-image: url(http://www.semdesigns.com/images/twitter.png); }
+#nav #nav-subscribe .nav-subscribe-email a { background-image: url(http://www.semdesigns.com/images/email.png); }
+
+
+/*-------
+ Sidebar
+-------*/
+
+/* Shared Sidebar */
+
+#sidebar p {
+    line-height: 16px;
+    margin-bottom: 16px;
+    padding-left: 4px;
+}
+#sidebar p:last-of-type {
+    margin-bottom: 0;
+}
+#sidebar p a {
+    font-style: italic;
+}
+
+#sidebar .block-categories h3 {
+    margin-bottom: 10px;
+}
+#sidebar .block-categories li a {
+    display: block;
+    text-align: left;
+    color: #fff;
+    padding: 5px 5px 5px 15px;
+    margin-bottom: 3px;
+    font-family: Helvetica, Calibri, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#sidebar .block-contact {
+    text-align: center;
+}
+
+#sidebar .block-search form {
+    background: #2f2f2f;
+    color: #fff;
+    padding: 18px 0;
+}
+#sidebar .block-search input {
+    border: 0;
+    border-bottom: 1px dashed #ddd;
+    background: transparent;
+    color: #fff;
+    font-family: Baskerville, Georgia, Constantia, serif;
+    font-style: italic;
+    padding: 0 0 6px;
+    text-align: center;
+    font-size: 12px;
+    width: 86%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Page Sidebar */
+
+#page .block-list h3 {
+    background: url(http://www.semdesigns.com/images/bracket.png) no-repeat bottom center;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+}
+
+#page #sidebar-split {
+    background: url(http://www.semdesigns.com/images/border-1.png) repeat-y 172px;
+    margin: 12px 0;
+}
+#page #sidebar-left,
+#page #sidebar-right {
+    width: 160px;
+    float: left;
+    padding-bottom: 12px;
+}
+#page #sidebar-left {
+    margin-right: 25px;
+}
+#page #sidebar-split div .block:first-child {
+    padding-top: 0;
+}
+#page #sidebar-split p {
+    padding-left: 0;
+}
+
+#page .block-best .block-best-more {
+    text-align: center;      
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.block-masthead {
+    text-align: left;
+    border-bottom: 2px solid #bebebe;
+}
+.block-masthead p:last-of-type {
+    border-bottom: 1px solid #bebebe;
+    padding-bottom: 12px;
+    margin-bottom: -9px;
+}
+.block-masthead a {
+    color: navy;
+}
+
+/* Home Sidebar */
+
+#home #sidebar {
+    text-align: center;
+} 
+#home #sidebar .block-series {
+    /*       text-align: left; */
+    padding-left: 0px;                            
+    text-align: center;
+
+}
+#home #sidebar .block-series ul {
+    padding: 8px 0 0 8px;
+}
+
+/*---------
+ Home Main
+---------*/
+
+#home .outer {
+    width: 728px;
+    overflow: hidden;
+    margin-top: 0px;
+}
+#home .inner {
+    width: 752px;
+    margin-left: -12px;
+}
+
+#home-posts {
+    padding-bottom: 0;
+}
+#home-posts .inner {
+    background: url(images/posts-4.png) repeat-y 12px;
+}
+#home-posts-more {      
+    text-align: center;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 6px 8px;
+    border-top: 1px solid #bebebe;
+}
+
+#home-featured {
+    padding-bottom: 0;
+}
+#home-featured .inner div {
+    padding: 11px 13px 11px 12px;
+    border: 1px solid #bebebe;
+    border-right: 0;
+    border-bottom: 0;
+    float: left;
+    margin-left: -1px;
+}
+
+#home-best {
+    padding-bottom: 0;
+}
+#home-best .inner {
+    background: url(http://www.semdesigns.com/images/border-1.png) repeat-y 369px;
+}
+#home-best .post-block {
+    width: 370px;
+}
+#home-best .home-best-more {
+    width: 346px;
+    float: left;
+    padding: 12px;      
+    border-top: 1px solid #bebebe;
+}
+#home-best .home-best-more a {
+    background: #2f2f2f;
+    color: #fff;
+    text-align: center;
+    display: block;
+    font-family: Helvetica, Calibri, Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    padding: 12px 0;
+    border-top: 0;
+}
+#home-best .home-best-more a:hover {
+    opacity: .9;
+}
+
+#home-mission {
+}
+#home-mission h4 {
+    border-top: 1px solid #bebebe;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 10px;
+    padding: 24px 0 18px;
+}
+#home-mission h5 {
+    border-top: 1px solid #bebebe;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 10px;
+    padding: 24px 0 18px;
+}
+
+#home-mission-left,
+#home-mission-right {
+    width: 345px;
+    float: left;
+}
+#home-mission-left {
+    margin-right: 25px;
+}
+#home-mission {
+    font-size: 14px;
+    line-height: 14px;
+    text-indent: 1.3em;
+    text-align: left;
+}
+#home-mission p:first-child {
+    text-indent: 0;
+}
+
+/*------------
+ Post Listing
+------------*/ 
+
+.post-block {
+    width: 185px;
+    float: left;
+}
+.post-block a {
+    display: block;
+    padding: 7px 12px 12px 12px;
+    font-size: 14px;
+    line-height: 16px;
+    border-top: 1px solid #cbcbcb;
+}
+.post-block p {
+    padding: 0 12px 7px;
+    font-size: 14px;
+    line-height: 16px;
+    margin-top: -8px;
+}
+.post-block .post-excerpt p {
+    padding: 0;
+    margin: 0;
+}
+.post-block p a {
+    display: inline;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+    border: 0;
+}
+
+.post-block .post-meta {
+    display: block;
+    height: 10px;
+    font-size: 10px;
+    font-family: Helvetica, Calibri, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+.post-block .post-meta-left {
+    float: left;
+}
+.post-block .post-meta-right {
+    float: right;
+}
+.post-block strong {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+    color: #4c4b4b;
+}
+
+
+/*-------
+ Article
+-------*/
+
+#article {
+    padding: 38px 18px 0 0;
+}
+#article #article-meta {
+    font-family: Helvetica, Calibri, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+#article h1, #main h1 {
+    font-size: 38px;
+    margin: 8px 0 12px;
+}
+#main h1 sup {
+    font-size: small;
+    vertical-align: 18px;
+}
+#article h2, #main h2 {
+    padding-right: 38px;
+    margin: 12px 0;
+    font: bold 17px/26px Georgia, Constantia, serif;
+}
+#article hr {
+    border-top: 1px solid #ccc;
+    border-bottom: 0;
+    width: 385px;
+    margin: 1.5em 0;
+    display: block;
+}
+
+#article-content, #main {
+    font-size: 14px;
+    font-family: Georgia, Constantia, serif;
+    -webkit-text-size-adjust: auto;
+    border-top: 1px solid #c4c4c4;
+    border-bottom: 2px solid #c4c4c4;
+}
+#article-content h3, #main h3 {
+    font-family: Baskerville, Georgia, Constantia, serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 28px 0 12px;
+}
+#article-content a, #main p a{
+    color: navy;
+}
+#article-content em {
+    font-style: italic;
+}
+#article-content strong {
+    font-weight: bold;
+}
+#article-content p, #main p{
+    line-height: 18px;
+    margin: 4px 12px 16px 0;
+}
+#article-content p:first-of-type,
+#article-content h3+p,
+#article-content hr+p {
+    text-indent: 0;
+}
+#article-content ul,#article-content ol, #main ul {
+    margin: 1.5em 2em;
+}
+#main ul li {
+    line-height: 20px;
+    list-style-type: disc;
+}
+#main p strong, #main b {
+    font-weight: bold;
+}
+#main i {
+    font-style: italic;
+}
+
+#article-content ol li, #main ul ul li {
+    list-style-type: disc;
+}
+#main ul li a{
+    color: navy;
+}
+#article-content li #main ul li{
+    margin: .75em 0;
+    line-height: 1.50;
+    list-style-type: disc;
+}
+#article-content ol ol,#article-content ul ul, #main ul {
+    margin: .75em 2em;
+}
+#article-content li ol li, #main li {
+    list-style-type: lower-alpha;
+}
+#article-content li ul li, #main ul ul li {
+    list-style-type: circle;
+}
+#article-content blockquote {
+    line-height: 22px;
+    margin: 1.35em 3em;
+    font-style: italic;
+}
+#article-content .alignleft,
+#article-content .left {
+    margin: 1.5em 1.5em 1.5em 0;
+    float: left;
+}
+#article-content .alignright,
+#article-content .right {
+    margin: 1.5em 0 1.5em 1.5em;
+    float: right;
+}
+#article-content .center {
+    margin: 1.5em auto;
+    display: block;
+}
+#article-content .caption {
+    font-style: italic;
+    margin-bottom: 18px;
+    font-family: Baskerville, Georgia, Constantia, serif;
+    font-size: 15px;
+}
+
+#article-byline {
+    font-size: 14px;
+    font-family: Georgia, Constantia, serif;
+    line-height: 18px;
+    margin-bottom: 18px;
+}
+#article-byline strong {
+    font-family: Helvetica, Arial, Calibri, sans-serif;
+    font-weight: bold;
+}
+#article-byline a {
+    color: inherit;
+    /*        text-decoration: underline;  */
+}
+
+#article-links {
+    border-top: 1px solid #bebebe;
+    border-bottom: 2px solid #bebebe;
+    padding: 4px 0;
+}
+#article-links .inner {
+    border-top: 1px solid #bebebe;
+    border-bottom: 1px solid #bebebe;
+    padding: 12px 0;      
+}
+#article-links h4 {
+    font-family: Helvetica, Calibri, Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 15px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+#article-links #article-links-author,
+#article-links #article-links-category {
+    float: left;
+    width: 245px;
+    min-height: 10px;
+}
+#article-links #article-links-category {
+    margin-left: 8px;
+    border-left: 1px solid #bebebe;
+    padding-left: 8px;
+}
+
+/*-----
+ Video
+-----*/
+
+.video {
+    background: #2F2F2F;
+    color: #fff;
+}
+.video a {
+    color: #fff;
+}
+.video #nav .nav-highlight a {
+    color: #fff;
+}
+
+/*---------
+ Interview
+---------*/
+
+.interview #article-content p {
+    text-indent: 0;
+    margin: 18px 0;
+}
+
+
+/*---
+ 404
+---*/
+
+#fourohfour {
+    font-size: 36px;
+    margin: 24px 0 36px;
+    text-align: center;
+    background: #fff;
+}
+#fourohfour h1 {
+    font-size: 120px;
+    color: #eee;
+}
+#fourohfour h2 {
+    font-style: italic;
+}
+
+
+/* Start of older SD Styles */   
+
+div.hor
+{
+    position: absolute;
+    top: 140px;
+    left: 0;
+    width: 150px;
+}
+div.vert
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 92%;
+    height: 140px;
+}
+div.logo {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 160px;
+    height: 90px;
+    margin: 10px;
+    border: 0px;
+}
+
+div.UpperStripe {
+    position: absolute;
+    left: 200px;
+    top: 0px;
+    height: 5px;
+    width: 98%;
+    background: rgb(51, 205, 255);
+    overflow:visible;
+}
+div.slogan {
+    background: black;
+    position: relative;
+    left: 75px;
+    top: 40px;
+    height: 60px;
+    width: 900px;
+    color: rgb(245,245,245);
+    vertical-align: text-bottom; 
+    font-size: 200%;
+    overflow:visible;
+    text-align: center;
+    line-height: normal;
+    padding-bottom: 20px;
+}
+
+div.LowerStripe {
+    position: absolute;
+    left: 200px;
+    top: 75px;
+    height: 5px;
+    width: 98%;
+    background: rgb(51, 205, 255);
+    overflow:visible;
+}
+
+/* Define artsy banner */
+div.banner {
+    position: absolute;
+    width: 80%;
+    /*  width: 920px;  */
+    left: 130px;
+    top: 90px;
+    height: 50px;
+    background: rgb(245,245,245);
+    overflow:visible;
+}
+
+div.banner td {
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 100%; 
+}
+
+div.dropdown {
+    position: absolute;
+    width: 42%;
+    /*  width: 920px;  */
+    left: 0px;
+    top: 90px;
+    height: 50px;
+    background: rgb(255,255,255);  
+}
+/* Define rotator */
+div.rotator {
+    position: absolute;
+    left: 325px;
+    top: 90px;
+    background: rgb(255,255,255);
+    width: 150px;
+    height: 50px;
+}
+
+
+div.mainpage {
+    width: 100%;
+    background: rgb(245,245,245);  
+}
+div.mainpage tt {  
+    font-size: 120%; 
+}
+div.mainpage p {  
+    font-size: 12px;
+    line-height: 1.5;
+    color: #4c4b4b;
+    background: white;
+    font-family: Baskerville, Georgia, Constantia, serif;
+    -webkit-text-size-adjust: none;
+
+}
+div.mainpage p a {  
+    text-decoration: none;
+}
+
+div.mainpage h1 {  
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 120%;
+    color:  rgb(195, 5, 75); 
+    margin-left: 10px;
+}
+
+div.mainpage h1 a {  
+    text-decoration: none;
+}
+
+div.mainpage h2 {  
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 110%;
+    margin-left: 10px;
+}
+
+div.mainpage h2 a {  
+    text-decoration: none;
+}
+
+div.mainpage h3 {  
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 100%;
+    margin-left: 15px;
+}
+
+div.mainpage h3 a {  
+    text-decoration: none;
+}
+
+div.mainpage ul {  
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 100%;
+    line-height: 150%;
+    margin-left: 30px;
+    margin-right: 18%;
+    margin-top:  10px;
+    margin-bottom:  10px;
+}
+div.mainpage ul a {  
+    text-decoration: none;
+}
+
+div.mainpage ol {  
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    font-size: 100%;
+    line-height: 150%;
+    margin-left: 30px;
+    margin-right: 18%;
+    margin-top:  10px;
+    margin-bottom:  10px;
+}
+div.mainpage ol a {  
+    text-decoration: none;
+}
+
+/* Search */
+div.search {
+    position: absolute;
+    left: 0px;
+    top: 110px;
+    height: 60px;
+    width: 180px;
+    font-family: Tahoma, sans-serif;
+    background: rgb(255,210,205);
+    margin-left: 5px; 
+}
+
+/* Defines the pagelink width and location */
+
+div.pagelinks {
+    position: absolute;
+    left: 5px;
+    top: 180px;
+    width: 170px;
+    margin-top: 3px;
+    margin-left: 5px;
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
+    background: rgb(245, 245, 245);
+    overflow: hidden;
+}
+div.pagelinks ul a:link { 
+    color: rgb(0,0,255);
+    text-decoration: none
+}
+
+div.pagelinks ul a:visited { 
+    color: rgb(0,0,255);
+    text-decoration: none 
+}
+
+div.pagelinks ul a:active { 
+    color: rgb(51,0,153);
+    text-decoration: none 
+}
+
+div.pagelinks ul a:hover { 
+    color: rgb(255,0,51);
+    text-decoration: none 
+}
+
+table {font-size: 100%;
+       background: rgb(255,255,255);
+       font-family: Baskerville, Georgia, Constantia, serif;
+       text-decoration: none;
+       margin-left: 15px;
+}
+
+table td a img {
+    padding-right: 50px;
+}
+
+table td p {
+    padding-top: 20px;
+}
+
+table ul a:link { 
+    color: rgb(0,0,255);
+    text-decoration: none
+}
+
+table ul a:visited { 
+    color: rgb(153, 153, 153);
+    text-decoration: none 
+}
+
+table ul a:active { 
+    color: rgb(51,0,153);
+    text-decoration: none 
+}
+
+table ul a:hover { 
+    color: rgb(255,0,51);
+    text-decoration: none 
+}
+table a:link { 
+    color: rgb(0,0,255);
+    text-decoration: none
+}
+table a:visited { 
+    /*     color: rgb(153, 153, 153); */
+    text-decoration: none 
+}
+
+table a:active { 
+    color: rgb(51,0,153);
+    text-decoration: none 
+}
+
+table a:hover { 
+    color: rgb(255,0,51);
+    text-decoration: none 
+}
+
+table.comparison {
+    margin-left: 0px;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+table.comparison th {
+    border-bottom: 2px solid black;
+    border-left: 1px solid black;
+    text-align:center;
+    padding: 2px;
+    background-color: blue;
+    color: white;
+}
+
+table.comparison td {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    text-align:left;
+    padding: 2px;
+}
+
+table.rt-padded-table td { padding-right:15px; }
+
+p.copyright {
+    /*font-size: "-2";*/
+    line-height: 10px
+}
+
+p.red_accent {
+    color: red;
+}
+
+/* @group My Group */
+
+
+
+/* @end */
+
+/* ################################################################################################################################################ */
+/* ################################################################################################################################################ */
+/* ################################################################################################################################################ */
+/* ################################################################################################################################################ */
+
+
+
+
+
+.content-box .centeralign {
+    font-style:initial;
+    text-align: center;
+}
+
+/*  From http://webdesignerwall.com/tutorials/css3-image-styles
+    Used by every page as the container and should probably be renamed.
+    Originally named as such because it was the type of design on the 
+    aforementioned website. */
+
+/* ############################ CARD DISPLAY ################################ */
+.content-box {
+    /* Set everything to default first */
+    opacity: initial;
+    padding: initial;
+    margin: initial;
+    line-height: initial;
+    font: initial;
+    color: initial;
+    background: initial;
+    list-style: initial;
+    text-decoration: initial;
+    vertical-align: initial;
+    -webkit-margin: initial;
+
+    /* ############################## */
+
+    /* Restore elements from sd_body_layout */
+    font-family:Georgia;
+    font-size:14px;
+    color:#3B3A3A;
+    /* #################################### */
+
+    width: 674px;
+    border: 1px solid grey;
+    background-color: rgb(245, 245, 245);
+    color: #555;
+    text-shadow: 0px 1px 1px rgba(44, 44, 44, 0.15);
+
+    padding: 5px;
+    margin-left: 1px;
+    width: 719px;
+
+    float:left;
+}
+
+.content-box .title h1 {
+    margin-bottom: 0px;
+    font-weight: 100;
+    font-family: Helvetica;
+
+}
+
+.content-box .title p {
+    text-transform: uppercase;
+    display: block;
+    margin-top: 0px;
+    margin-bottom: 38px;
+    color: rgba(0,0,0,0.55);
+    font-family: Helvetica;
+    letter-spacing: 3px;
+}
+
+.content-box .title span {
+    text-transform: none;
+}
+
+.content-box h1 {
+    font-family:Georgia;
+    font-weight: lighter;
+    font-size:38px;
+    color: rgba(33,33,33,0.75);
+    text-shadow: 0px 2px 3px rgba(183, 183, 183, 0.75);
+
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: rgb(183, 183, 183);
+    padding-top: 11px;
+}
+
+.content-box h2 {
+    /* Set everything to default first */
+    font: initial;
+    margin: 0;
+    text-decoration: initial;
+    font-weight: 800;
+    /* ############################## */
+
+    padding: 8px 0 8px 0;
+    font-family: Helvetica;
+    letter-spacing: 3px;
+    font-size:17px;
+    text-shadow: 0px 2px 3px rgba(183, 183, 183, 0.75);
+    color: rgba(33,33,33,0.75);
+}
+
+.content-box h3 {
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 14px;
+    margin-top: -5px;
+    margin-bottom:-5px;
+}
+
+.content-box p {
+    padding: 8px 0 8px 0;
+}
+
+.content-box a {
+    opacity: initial;
+    text-decoration: underline;
+    color: rgb(33, 33, 188);
+}
+
+.content-box a:hover {
+    opacity: initial;
+}
+
+.content-box a:visited {
+    opacity: initial;
+    color: rgb(33, 33, 100);
+}
+
+.content-box ul {
+    list-style: disc;
+    margin: auto auto;
+    width: 90%;
+}
+/* ########################################################################## */
+
+
+
+/* ####################### A SIMPLE AND CLEAN LIST ########################## */
+.simple-list {
+    width: 90%;
+    margin: auto auto;
+}
+
+.simple-list h2 {
+    font: 400 40px/1.5 Helvetica, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.simple-list ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+.simple-list li {
+    font: 200 14px/1.5 Helvetica, Verdana, sans-serif;
+    border-bottom: 1px solid #ccc;
+    padding: 0;
+}
+
+.simple-list li span {
+    color: black;
+    font-size: 12px; 
+    opacity: 0.5; 
+    float: none; 
+    font-weight: initial;
+}
+
+.simple-list li:last-child {
+    border: none;
+}
+
+.simple-list li:hover {
+    background: #EEEEEE;
+}
+
+.simple-list li a {
+    text-decoration: none;
+    color: blue;
+    display: block;
+}
+
+.simple-list li a:hover {
+    background: #eeeeff;
+
+    background-color: rgba(0,0,200,0.05);
+}
+/* ########################################################################## */
+
+
+/* ################################# QUOTE ################################## */
+/*  3D Box effect for quotes - should be integrated with class realistic-paper
+    since it's only used for quotes */
+.box {
+    width:70%;
+    background:#FFF;
+    margin:40px auto;
+}
+
+.box h3 {
+    text-align:center;
+    position:relative;
+    padding-top: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    text-transform: uppercase;
+    line-height: 17px;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.box h3 span {
+    font-size: 15px;
+}
+
+.box p {
+    color: rgba(0, 0, 0, 0.33);
+    text-align: right;
+    position: relative;
+
+    padding-right: 15px;
+    padding-bottom: 30px;
+}
+
+.left-quote {
+    font-size: 17px;
+    position: relative;
+    right: 5px;
+    top: 3px;
+}
+
+.right-quote {
+    font-size: 50px;
+    position: relative;
+    left: 5px;
+    top: 6px;
+}
+
+.realistic-paper {
+    position:relative;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+
+.realistic-paper:before, .realistic-paper:after {
+    content:"";
+    position:absolute;
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:10px;
+    bottom:10px;
+    left:0;
+    right:0;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+}
+
+.realistic-paper:after {
+    right:10px;
+    left:auto;
+    -webkit-transform:skew(8deg) rotate(3deg);
+    -moz-transform:skew(8deg) rotate(3deg);
+    -ms-transform:skew(8deg) rotate(3deg);
+    -o-transform:skew(8deg) rotate(3deg);
+    transform:skew(8deg) rotate(3deg);
+}
+/* ########################################################################## */
+
+
+
+/* ########################## SCREENSHOT EXAMPLES ########################### */
+.screenshot-examples {
+    padding: 0;
+
+    margin-left: 5px;
+    margin-right: 5px;
+    box-shadow: 
+        10px 0px 12px -12px black,  
+        -10px 0px 12px -12px black; 
+}
+
+.screenshot-examples div {
+    padding-top: 15px;
+    display: none;
+}
+
+.screenshot-examples p {
+    padding-left: 50px;
+}
+
+.screenshot-examples li {
+    background-color: rgba(0,0,0,0.03);
+    padding: 5px 5px 5px 5px;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.10);
+    list-style: none;
+/* WTF? was:   cursor: hand; */
+    cursor: pointer;
+}
+
+.screenshot-examples li:hover {
+    /*-webkit-box-shadow: inset 0 -2px 25px 0 rgba(0, 0, 255, 0.15);*/
+    box-shadow: 
+        10px 0px 12px -12px blue,  
+        -10px 0px 12px -12px blue; 
+    color: blue;
+}
+
+.screenshot-examples li:last-child {
+    border-bottom: none;
+}
+
+.screenshot-examples li:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.screenshot-examples img {
+    margin: auto auto;
+    display: block; 
+    width: 100%; 
+}
+
+.screenshot-examples .centeralign {
+    display: block; 
+    margin: auto auto; 
+    width: 75%;
+}
+
+.content-box .imgref {
+    width: 95%;
+    display: block;
+    margin: auto auto;
+}
+
+.content-box .imgref img {
+    width: 100%;
+    display: block;
+    margin: auto auto;
+}
+
+.content-box .image {
+    width: 100%;
+    height: 100%;
+}
+
+.content-box .imginfo {
+    text-align: center;
+    display: block;
+    font-size: 11px;
+}
+/* ########################################################################## */
+
+
+
+/* ######################### CODE SNIPPETS ################################## */
+.code-snippet {
+    width: 90%;
+    /*min-width: 535px;*/
+    /*height: 250px;*/
+    margin: auto auto;
+    overflow: scroll;
+    resize: vertical;
+    background-color: rgb(218, 218, 218);
+    display: block; 
+
+    /*border: solid 1px rgb(157, 157, 157);*/
+    border: solid 1px grey;
+    /*box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);*/
+    /*color: rgba(0, 0, 0, 0.33);*/
+    color: rgb(175, 175, 175);
+
+    text-shadow: none;
+
+    height: 500px;
+}
+
+.code-snippet div {
+    color: rgb(175, 175, 175);
+    text-align: center;
+    float: top;
+    position: absolute;
+    background-color: rgb(218, 218, 218);
+    padding: 2px;
+
+    border-bottom: solid 1px rgb(157, 157, 157);
+    border-right: solid 1px rgb(157, 157, 157);
+    opacity: 0.25;
+
+    -webkit-transition-duration: 1s;
+    -webkit-transition-property: width height;
+}
+
+.code-snippet div:hover {
+    opacity: 1;
+
+    -webkit-transition-duration: 0.25s;
+    -webkit-transition-property: width height;
+}
+
+.code-snippet div a {
+    text-decoration: none;
+}
+
+.code-snippet div a:hover {
+    text-decoration: underline;
+}
+
+.code-snippet ol {
+    font-family: Helvetica;
+    margin-bottom: -13px;
+}
+
+.code-snippet li {
+    background-color: rgba(255, 255, 255, 0.75);
+    text-shadow: none;
+    font-size: 13px;
+    border-left: solid 1px rgb(133, 133, 133);
+    padding-left: 3px;
+}
+
+.code-snippet li:hover {
+    border-left: solid 1px blue;
+    background-color: rgba(200, 200, 255, 0.65);
+}
+
+.code-snippet li:nth-child(even):hover {
+    border-left: solid 1px blue;
+    background-color: rgba(200, 200, 255, 0.65);
+}
+
+.code-snippet ol li:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.53);
+}
+/* ########################################################################## */
+
+/* Used to make <code> attributes stand out more */
+.code-with-bg code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0px 1px 0px 1px;
+}
+
+
+
+/* ######################### EXAMPLE SHUFFLE ################################ */
+.example-shuffle {
+    display: block;
+    box-shadow: none;
+}
+
+.example-shuffle img {
+    display: block;
+    max-width: 100%;
+    margin: auto auto;
+    box-shadow: none;
+    border: 1px solid grey;
+}
+
+.example-shuffle div {
+    padding-top: 5px;
+
+    background-color: lightgrey;
+    background-color: rgba(0, 0, 0, 0.07);
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.example-shuffle p {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.example-shuffle .centeralign  {
+    margin-top: 0px;
+}
+
+/* Changes the way images appear for the example-shuffle */
+.location-highlight img {
+    width: 100%;
+    margin: auto auto 15px;
+    display: block;
+}
+/* ########################################################################## */
+
+
+
+/* ########################### PROBE HIGHLIGHTS ############################# */
+.probe-location {
+    background-color: rgb(255, 255, 0);
+}
+
+.probe-executed {
+    background-color: rgb(175, 240, 175);
+    /*    
+        Just playing around with some ideas:
+        border-bottom: 2px solid rgb(135, 200, 135);
+        border-right: 2px solid rgb(135, 200, 135);
+        border-left: 2px solid rgb(220, 255, 240);
+        border-top: 2px solid rgb(220, 255, 240);*/
+}
+
+.probe-unexecuted {
+    background-color: rgb(250, 200, 205);
+}
+/* ########################################################################## */
+
+
+
+/* ################################ INTERNAL WEBPAGE ######################## */
+/*  Should be renamed, I don't think it is self-explanatory with the current
+    name.  Maybe internal-page */
+.iframe-display {
+    width: 85%;
+    min-width: 573px;
+    /*height: 250px;*/
+    display: block;
+    margin: auto auto 10px;
+
+    resize: vertical;
+}
+
+.iframe-display iframe {
+    width: 100%;
+    height: 250px;
+    display: block;
+    margin: auto auto 10px;
+
+    border: 1px solid rgb(157, 157, 157);
+}
+
+.iframe-display div {
+    color: rgb(175, 175, 175);
+    text-align: center;
+    float: top;
+    position: absolute;
+    background-color: rgb(218, 218, 218);
+    padding: 2px;
+
+    border: solid 1px rgb(157, 157, 157);
+    opacity: 0.25;
+
+    -webkit-transition-duration: 1s;
+    -webkit-transition-property: width height;
+}
+
+.iframe-display div:hover {
+    opacity: 1;
+
+    -webkit-transition-duration: 0.25s;
+    -webkit-transition-property: width height;
+}
+
+.iframe-display div a {
+    text-decoration: none;
+}
+
+.iframe-display div a:hover {
+    text-decoration: underline;
+}
+/* ########################################################################## */
+
+
+
+/* Changes to original stylesheet without overwriting those changes */
+
+#home #main {
+    /* Set everything to default first */
+    opacity: initial;
+    padding: initial;
+    margin: initial;
+    line-height: initial;
+    font: initial;
+    color: initial;
+    background: initial;
+    list-style: initial;
+    text-decoration: initial;
+    vertical-align: initial;
+    -webkit-margin: initial;
+
+    /* ############################## */
+
+    /* Restore elements from sd_body_layout */
+    font-family:Georgia;
+    font-size:14px;
+    color:#3B3A3A;
+    /* #################################### */
+
+    border: 1px solid grey;
+    background-color: rgb(245, 245, 245);
+    color: #555;
+    text-shadow: 0px 1px 1px rgba(44, 44, 44, 0.15);
+
+    padding: 5px;
+    margin-left: 1px;
+    width: 719px;
+}
+
+#container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.block-masthead {
+    display: block;
+    width: 900px;
+    margin: auto auto;
+}
+
+div.slogan {
+    clear: both;
+    top: 40px;
+    left: 0px;
+    display:block;    
+    margin: auto auto;
+}
+
+/* Added to fix the slogan issue */
+#header p {
+    color: #ffffff;
+    line-height: 120%;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+/* Fixing navigation buttons */
+ul#css3menu>li, ul#css3menu li {
+    margin: 0 0 0 1px;
+    width: 121px;
+}
+
+ul#css3menu li li {
+    /*width: 253px;*/
+    width: 300px;
+}
+
+/* Table backgrounds are screwy */
+table {
+    background: transparent;
+}
+
+#home #main img {
+    display: block;
+    margin :auto auto;
+}
+
+.content-box {
+    -webkit-border-radius: 0px;
+    box-shadow: none;
+    border: 1px solid grey;
+
+}
+
+.fit-to-width-code-snip {
+    font-size: 11px;
+    line-height: 11px;
+    font-family: monospace;
+
+
+    /*    background-image: url('http://www.wallpaperof.net/pictures/2010/12/b/6861_airplanes.gif');
+        color: white;
+        font-size: 12px;
+        text-shadow: 1px 1px 0px black,
+            -1px -1px 0px black;*/
+}
+
+.content-box ul {
+    padding-left: 11px;
+}
+
+.code-snippet ol {
+    list-style-type: decimal;
+    padding-left: 40px;
+}
+
+.code-snippet ol li pre {
+    font-family: monospace;
+    color: black;
+}
+
+.content-box h2 {
+    padding-top: 25px;
+    padding-bottom: 14px;
+}
+
+.content-box .title p {
+    margin-bottom: 0px;
+}
+
+.content-box code {
+    font-family: monospace;
+}
+
+.content-box b {
+    font-weight: bold;
+}
+
+.tinyimages {
+}
+
+.tinyimages img {
+    width: 75px;
+    box-shadow: none;
+    border: 1px solid lightgrey;
+    opacity: 0.5;
+
+    /* Visual cue for the user */
+/* WTF? was:    cursor: hand; */
+    cursor: pointer;
+}
+
+.tinyimages img:hover {
+    opacity: 1;
+}
+
+.tinyimages .active {
+    border: 1px solid black;
+    box-shadow: 0px 0px 5px black;
+    opacity: 1;
+}
+
+.tinyimages img:nth-child(odd):hover {
+    opacity: 1;
+}
+
+.tinyimages ul {
+    list-style: none;   
+    display: block;
+    margin-right: 40px;
+    margin-left: auto;
+    width: 639px; 
+}
+
+.tinyimages img {
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-top: 1px solid grey;
+    border-left: 1px solid grey;
+    margin: 5px;
+}
+
+.tinyimages li {
+    border-top: 1px solid white;
+    border-bottom: 1px solid rgb(175, 175, 175);
+    background: rgb(225, 225, 225);
+}
+
+.tinyimages li:first-child {
+    border-top: none;
+}
+
+.tinyimages li:last-child {
+    border-bottom: none;
+}
+
+.tinyimages li:nth-child(even) {
+    background: rgb(240, 240, 240);
+}
+
+.tinyimages div {
+    position: absolute;
+    width: 545px;
+    margin-left: 89px;
+    margin-top: -60px;
+}
+
+.hidden-imginfo {
+    background-color: lightgrey;
+    background-color: rgba(0, 0, 0, 0.07);
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    margin-left: -5px;
+    margin-right: -5px;
+    box-shadow: inset 1px 4px 9px -6px black,
+        0px 1px 5px white;
+}
+
+.hidden-imginfo>div {
+    width: 90%;
+    margin: auto auto;
+    display: none;
+    padding: 15px;
+}
+
+.hidden-imginfo .query {
+    text-align: center;
+}
+
+.tinyimages div {
+    position: absolute;
+    width: 545px;
+    margin-left: 89px;
+    margin-top: -60px;
+}
+
+.imgref {
+    width: 95%;
+}
+
+.download-button {
+    display: block;
+    padding: 10px 20px 10px 20px;
+    margin-top: 5px;
+    float: right;
+    background: #33B5FF;
+    color: white;
+    font-family: Helvetica;
+    letter-spacing: 2px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.download-button a {
+    text-decoration: none;
+    color: white;
+}
+
+.download-button:hover {
+    background: #07A4FF;
+}
+
+/* Fixes the bottom "push" element, but there is still a 
+slight issue on the main page when the user changes the content
+but it is not that noticeable*/
+.block-masthead, .push {
+    padding-bottom: 20px;
+}
+
+/* Some pages have images that are too large and run off the page,
+which this element addresses */
+img {
+    max-width: 100%;
+}
+
+/* Copyright is difficult to read with the line height being so
+small */
+.copyright{
+    line-height: 16px;
+}
+
+td {
+    max-width: 500px;
+}
+
+#SDSearch {
+    padding-top: 5px;
+}
+
+#home-mission {
+    line-height: 16px;
+}
+
+#drops select {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+ul#css3menu li.topfirst>a, ul#css3menu li.topitem>a, ul#css3menu li.toplast>a {
+    padding-left: 5px; 
+}
+
+/* WTF? was: table { buynow color: #000f00; } */
+table buynow { color: #000f00; }
+

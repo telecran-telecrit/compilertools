@@ -1,0 +1,47 @@
+#name_block, #description_block {
+	width: 600px;
+}
+
+#name_block img{
+	float: left;
+	padding-right: 5px;
+	width: 200px;
+}
+
+#name_block #detail {
+	float: left;
+}
+
+#name_block li hr {
+	margin-bottom: 15px;
+}
+
+#name_block ul {
+	list-style: none;
+	margin: 0;
+	padding: 0 0 20px 0;
+	line-height: 1.5;
+}
+
+#thesis_block {
+	line-height: 2;
+}
+
+#thesis_block #left, #thesis_block #right {
+	float: left;
+}
+
+#thesis_block #left {
+	padding-right: 5px;
+}
+
+img#email {
+	height: 11px;
+	padding-left: 1px;
+	padding-bottom: 1px;
+}
+
+#description_block #back_link {
+	float: right;
+	padding-top: 50px;
+}

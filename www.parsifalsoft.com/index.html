@@ -1,0 +1,300 @@
+<HTML><HEAD>
+
+<TITLE>AnaGram: LALR Parser Generator</TITLE>
+
+<META NAME="description" CONTENT="AnaGram has powerful visual features;
+designed for ease of use. Produces highly configurable C/C++ parsers
+for use on any platform; runs under Windows">
+
+<META NAME="keywords" CONTENT="parsing, parse, parsing tool, LALR, DSL, syntax,
+software development, parsing software, language, grammar, lexer,interpreter,
+script, script language, little language, abstract syntax tree,
+lexical analysis, context free grammar, domain specific language, lalr1,
+lalr-1 parser generator, lex, yacc, flex, bison, software engineering,
+compiler tool, software, program, computer, Windows, NT, Parsifal Software">
+
+</HEAD>
+
+
+<BODY BGCOLOR="#ffffff" BACKGROUND="graphics/bkbfad6b.gif"
+ TEXT="#000000" LINK="#0033CC"
+ VLINK="#CC0033" ALINK="#CC0099">
+
+<H6><IMG
+ALIGN="bottom" SRC="graphics/rbline6k.gif" ALT="----------------------"
+       WIDTH=1010 HEIGHT=3 ></H6>
+
+
+<A HREF="index.html#CompanyInfo"><IMG
+  SRC="graphics/psol6a.gif" ALT="PARSIFAL SOFTWARE" ALIGN=middle
+      WIDTH=460 HEIGHT=60 BORDER=0></A>
+
+<TABLE WIDTH="100%" CELLSPACING=0 CELLPADDING=0>
+<TR VALIGN="top">
+
+<TD WIDTH=5 ROWSPAN=2> <BR> </TD>
+
+<TD VALIGN=top ALIGN=left WIDTH=142 ROWSPAN=2>
+
+<FONT SIZE="-1"> <A
+HREF="http://www.parsifalsoft.com/tryag.html"><STRONG>Trial Copy</STRONG></A><BR> <A
+HREF="http://www.parsifalsoft.com/examples/index.html">Examples</A><BR><A
+HREF="http://www.parsifalsoft.com/gloss.html">Glossary</A><BR> <A
+HREF="http://www.parsifalsoft.com/isdp.html">Introduction</A><BR><A
+HREF="http://www.parsifalsoft.com/examples/xidek/index.html">Freeware: </A><A
+HREF="http://www.parsifalsoft.com/examples/xidek/index.html"> #1, </A><A
+HREF="http://www.parsifalsoft.com/examples/evalexpression/index.html"> #2 </A>
+<BR> <A
+HREF="index.html#CompanyInfo"><STRONG>Contact Parsifal</STRONG></A>
+</FONT>
+
+</TD>
+
+
+<TD VALIGN=top WIDTH=344>
+
+<CENTER>
+ <IMG ALIGN="middle" SRC="graphics/aga6d.gif" ALT=" AnaGram "
+        WIDTH=199 HEIGHT=41>
+<BR CLEAR=all>
+<IMG ALIGN="middle" SRC="graphics/lalr6a.gif" ALT=
+" LALR(1) Parser Generator "
+        WIDTH=254 HEIGHT=34></CENTER>
+</TD>
+
+<TD WIDTH=142>
+  <BR>
+</TD>
+
+</TR>
+
+<TR>
+ <TD COLSPAN=2><A HREF="http://www.parsifalsoft.com/tryag.html"><IMG
+ ALIGN="right" SRC="graphics/downtc6a.gif" ALT=
+             "Download trial copy of AnaGram 2.01"
+              WIDTH=325 HEIGHT=22 BORDER=0></A>
+<BR CLEAR=all>
+</TD>
+
+<TR><TD> <FONT SIZE="-1"><IMG
+ALIGN="top" SRC="graphics/fillwh6b.gif" ALT=""
+     WIDTH=2 HEIGHT=2 HSPACE=1 BORDER="0"> </FONT></TD></TR>
+
+</TABLE>
+
+<IMG
+ALIGN="top" SRC="graphics/rbline6k.gif" ALT="----------------------"
+       WIDTH=1010 HEIGHT=3 >
+<TABLE WIDTH="100%" CELLSPACING=4 CELLPADDING=4><TR>
+    <TD VALIGN=top WIDTH=25>   </TD>
+    <TD
+  VALIGN="middle" ALIGN="center" BGCOLOR="#dddddd" BORDER="1">
+<STRONG><FONT SIZE="-1">
+<HR SIZE="3" NOSHADE>
+ We regret to announce that owing to the death of Jerome T. Holland
+<BR> Parsifal Software has ceased operations.
+<HR SIZE="3" NOSHADE></FONT>
+</STRONG>
+</TD>
+<TD VALIGN=top WIDTH=25>   </TD>
+</TR>
+</TABLE>
+
+
+<TABLE WIDTH="100%" CELLSPACING=0 CELLPADDING=4><TR><TD
+  VALIGN="middle" ALIGN="center"><BR><BR>
+<STRONG><A HREF="http://www.parsifalsoft.com/examples/xidek/index.html">  XIDEK  <FONT SIZE="-1">
+ : extensible interpreter development kit - now available for download
+<BR> - full documentation, many examples, easily extended</FONT></A>
+</STRONG>
+</TD>
+</TR>
+</TABLE>
+
+<H3>The AnaGram Parser Generator</H3>
+
+<TABLE WIDTH="100%" CELLSPACING=5 CELLPADDING=10>
+<TR VALIGN=top>
+
+<TD VALIGN=top WIDTH=300>
+Here's how it works: You create a set of rules, a
+<A HREF="http://www.parsifalsoft.com/gloss.html#Grammar">grammar</A>,
+that describes the input to your computer program. You
+can try the grammar right away <B>interactively</B>, without writing
+  code, using AnaGram's <A
+HREF="http://www.parsifalsoft.com/ftrace.html"><IMG ALIGN="top"
+ SRC="graphics/btnrb6.gif" ALT="to File Trace page"
+            WIDTH=18 HEIGHT=18 BORDER=0></A><A
+HREF="http://www.parsifalsoft.com/ftrace.html">File Trace</A> and <A
+HREF="http://www.parsifalsoft.com/gtrace.html"><IMG ALIGN="top"
+ SRC="graphics/btnrb6.gif" ALT="to Grammar Trace page"
+            WIDTH=18 HEIGHT=18 BORDER=0></A><A
+HREF="http://www.parsifalsoft.com/gtrace.html">Grammar Trace</A>.
+
+Then attach C or C++ code to the rules, and tell AnaGram to
+build a parser for you.
+
+<P>
+The <A HREF="http://www.parsifalsoft.com/gloss.html#Parser">parser</A> is a C/C++ function
+that parses text
+according to the rules in your grammar and, as it matches rules, calls your
+code to deal with them. Using a grammar means you get faster development,
+easier modification and maintainability, and fewer bugs in your software.
+You use an easy-to-understand description of input instead of bug-prone,
+fragile, branching code. You make the rules, and AnaGram makes a parser
+for your input.
+
+<P>
+<H4>AnaGram Makes It Easy!</H4>
+
+AnaGram is explicitly designed to be easy to use, with a powerful notation
+for representing grammars, so you can write grammars fast.
+<P>
+Since AnaGram takes
+care of all the complex parsing logic, you'll get programs up
+and running quickly. You won't need all that heavily nested conditional logic
+where bugs love to hide.
+
+<P>
+Moreover, program maintenance becomes much
+easier. Not only can you work from a description, but certain of
+AnaGram's <A HREF="http://www.parsifalsoft.com/special.html">special features</A> make it
+particularly easy to modify grammars. When the time comes to
+make improvements to your programs, AnaGram will still be helping you.
+
+<P>
+AnaGram has an interactive environment
+ equipped with unique, highly capable tools for visual debugging, viewing and
+ testing of grammars and parsers. Now, you can put the powerful technique
+ of <A HREF="http://www.parsifalsoft.com/gloss.html#SyntaxDirectedParsing">syntax
+directed parsing</A> to work, to speed development of projects
+ both large and small.
+
+<P>
+ The C/C++ parser module
+ generated by AnaGram from your description can be compiled on
+ virtually any platform. By incorporating the parser into a DLL, you
+ can even use it in Delphi or Visual Basic programs.
+
+</TD>
+
+
+
+<TD VALIGN=baseline WIDTH=225 BGCOLOR="#99ccff">
+
+<STRONG> About AnaGram 2.01:</STRONG>
+
+<P>
+<B>AnaGram 2.01</B> runs on Win32 platforms.
+ AnaGram generates ANSI compatible platform independent C or C++ code.
+ No runtime libraries are required. A single user
+commercial license costs US$495 including shipping. <A
+HREF="index.html#CompanyInfo">Contact Parsifal</A> for further information.
+
+<DL>
+<DT><STRONG>Use AnaGram For: </STRONG> keyboard input, database queries,
+  script languages,  configuration files, file translators, domain specific
+languages, interpreters, compilers...
+<P>
+
+<STRONG> More Information:</STRONG>
+</DT>
+</DL>
+
+<UL>
+<LI><A HREF="http://www.parsifalsoft.com/saying.html">What Users Are Saying...</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/new201.html">New 2.01 features</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/special.html">What's Special about AnaGram?</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/isdp.html">Syntax Directed Parsing With AnaGram</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/ftrace.html">File Trace</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/gtrace.html">Grammar Trace</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/yaccdif.html">How is AnaGram different from Lex and Yacc?</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/notate.html">Summary of AnaGram Notation</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/gloss.html">Glossary of Parsing Terms</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/ifelse.html">If-Else Ambiguity, Resolving</A></LI>
+<LI><A HREF="http://www.parsifalsoft.com/tryag.html"><IMG
+ALIGN="top" SRC="graphics/trialc6d.gif" ALT="Trial Copy"
+             BORDER="0"><IMG
+ALIGN="top" SRC="graphics/fillwh6b.gif" ALT=""
+     WIDTH=2 HEIGHT=2 HSPACE=1 BORDER="0">Try AnaGram Yourself </A>
+ </LI>
+</UL>
+
+
+<DL>
+<DT><STRONG>AnaGram Examples</STRONG></DT>
+</DL>
+
+<UL>
+<LI><A HREF="http://www.parsifalsoft.com/examples/xidek/index.html"><IMG
+ ALIGN="top" SRC="graphics/freewr6f.gif" ALT="Freeware"
+          BORDER="0"><IMG
+ ALIGN="top" SRC="graphics/fillwh6b.gif" ALT=""
+     WIDTH=2 HEIGHT=2 HSPACE=1
+BORDER="0">XIDEK:</A> Extensible Interpreter
+Development Kit</LI>
+<LI><A HREF="http://www.parsifalsoft.com/examples/ffcex.html">An Annotated Example:</A> A Simple Four Function
+Calculator</LI>
+<LI><A HREF="http://www.parsifalsoft.com/examples/java.html">A Real Example:</A> A Java Parser</LI>
+<LI><A HREF="http://www.parsifalsoft.com/examples/evalexpression/index.html"><IMG
+ ALIGN="top" SRC="graphics/freewr6f.gif" ALT="Freeware"
+          BORDER="0"><IMG
+ ALIGN="top" SRC="graphics/fillwh6b.gif" ALT=""
+     WIDTH=2 HEIGHT=2 HSPACE=1
+BORDER="0">An Expression Evaluation Function <FONT SIZE="-1">*revised!</FONT></A>
+ </LI>
+<LI><A HREF="http://www.cs.uwf.edu/~wilde/publications/TecRpt76F_ExSum.html">
+White Paper:</A>  Try this technique...</LI>
+
+</UL>
+
+</TD>
+
+
+
+</TR>
+</TABLE>
+
+<P>
+<IMG ALIGN="top" SRC="graphics/rbline6j.gif" ALT="----------------------"
+               WIDTH=1010 HEIGHT=2>
+
+<P>
+<H4><A NAME="CompanyInfo">For more <STRONG>information</STRONG>:</A></H4>
+<TABLE>
+  <TR>
+    <TD>
+        e-mail: <A HREF="mailto:info@parsifalsoft.com">info@parsifalsoft.com</A>
+        <P>
+        1-508-358-2564<BR>
+        <BR>      
+    </TD>
+    <TD  WIDTH="100"><P> </P></TD>
+    <TD VALIGN=top ALIGN="RIGHT">
+       Parsifal Software is no longer in business.
+       <P>
+       <A HREF="http://www.parsifalsoft.com/saying.html">User comments about AnaGram...</A><BR>
+       <BR>
+    </TD>
+  </TR>
+</TABLE>
+<P>
+<IMG ALIGN="top" SRC="graphics/rbline6j.gif" ALT="----------------------"
+                  WIDTH=1010 HEIGHT=2><P>
+<IMG ALIGN="right" SRC="graphics/pslrb6f.gif" ALT="Parsifal Software"
+                  WIDTH=158 HEIGHT=25>
+
+<P>
+ <IMG
+SRC="graphics/aupsd6a.gif" ALIGN=top ALT=""><A
+               HREF="http://www.parsifalsoft.com/ppun.html"> A few puns, in parsing...</A>
+</P>
+
+ Website comments? <A HREF="mailto:webmaster@parsifalsoft.com">webmaster@parsifalsoft.com</A>
+
+
+</BODY></HTML>
+
+
+
+
